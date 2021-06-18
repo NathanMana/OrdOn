@@ -1,0 +1,42 @@
+#doctorInfos{
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+#doctorInfosLeft{
+    padding: 5px;
+}
+
+#doctorInfosRightTop{
+    padding: 5px;
+    border-bottom: 1px #4da7fb;
+}
+
+#doctorInfosRightBottom{
+    padding: 5px;
+}
+
+.doctorText{
+    color: #4da7fb;
+}
+
+#madeWhereWhen{
+    margin-right: 10%;
+    margin-left: auto;
+    margin-top: 10%;
+}
+
+#infosPatient{
+    margin-left: 10%;
+}
+
+#prescription{
+    margin-left: 10%;
+    margin-right: 5%;
+}
+
+input{
+    border-radius: 25px;
+    border: #4da7fb;
+}

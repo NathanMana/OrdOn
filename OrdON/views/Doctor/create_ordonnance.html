@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Créer une ordonnance</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='createPrescription.css'>
+        <script src='js/createPrescription.js'></script>
+    </head>
+    <body>
+        <div id="doctorInfos">
+            <div id="doctorInfosLeft">
+                <h3 class="doctorText">Docteur</h3>
+                <h3 class="doctorText">Nom du docteur</h3>
+            </div>
+            <div id="doctorInfosRightTop">
+                <h3 class="doctorText">Adresse du docteur</h3>
+                <h3 class="doctorText">CP et ville</h3>
+            </div>
+            <div id="doctorsInfosRightBottom">
+                <h3 class="doctorText">Tel cabinet</h3>
+                <h3 class="doctorText">Tel urgence</h3>
+            </div>
+        </div>
+
+        <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le XX/XX/XXXX</h3>
+
+        <div id="infosPatient">
+            <h3>Mmme/M NOM Prenom</h3>
+            <h3>Age, Poids</h3>
+        </div>
+
+        <div id="prescription">
+            <div class="prescriptionLine">
+                <input type="text" name="medicName" required>
+                <input type="text" name="medicDescription" required>
+                <input type="text" name="medicMention" required>
+            </div>
+            <input type="text" name="advice">
+
+        </div>
+
+    </body>
+</html>

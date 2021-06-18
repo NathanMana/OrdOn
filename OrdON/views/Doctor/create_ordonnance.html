@@ -6,7 +6,7 @@
         <title>Créer une ordonnance</title>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link rel='stylesheet' type='text/css' media='screen' href='createPrescription.css'>
-        <script src='js/createPrescription.js'></script>
+        <script src='/src/js/createPrescription.js'></script>
     </head>
     <body>
         <div id="doctorInfos">
@@ -37,6 +37,7 @@
                 <input type="text" name="medicDescription" required>
                 <input type="text" name="medicMention" required>
             </div>
+            <button id="addLine" type="button" onclick="addLine()">Ajouter un médicament</button>
             <input type="text" name="advice">
 
         </div>

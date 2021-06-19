@@ -27,6 +27,10 @@ router.post('/registerDoctor', (req, res) => {
     firstName = req.body.firstName
     email = req.body.email
     password = req.body.password
+    city = req.body.city
+    cabinetLocation = req.body.cabinetLocation
+    zipcode = req.body.zipcode
+    typeProfesionnal = req.body.typeProfesionnal
 
     let isAlreadyRegistered = DoctorServices.check(name,firstName,email,password)
 
@@ -34,7 +38,7 @@ router.post('/registerDoctor', (req, res) => {
         res.redirect('Doctor/registerDoctor')
     }
     if (isAlreadyRegistered){
-        DoctorServices.check(name,firstName,email,password)
+        DoctorServices.check(name,firstName,email,password, cabinetLocation, city, cabinetLocation, zipcode,typeProfesionnal)
         res.redirect('Doctor/registerDoctor')
     } 
 
@@ -46,6 +50,10 @@ router.post('/registerPharmacist', (req, res) => {
     firstName = req.body.firstName
     email = req.body.email
     password = req.body.password
+    city = req.body.city
+    cabinetLocation = req.body.cabinetLocation
+    zipcode = req.body.zipcode
+    typeProfesionnal = req.body.typeProfesionnal
 
     let isAlreadyRegistered = PharmacistServices.check(name,firstName,email,password)
 
@@ -53,7 +61,7 @@ router.post('/registerPharmacist', (req, res) => {
         res.redirect('Pharmacist/registerPharmacist')
     }
     if (isAlreadyRegistered){
-        PharmacistServices.check(name,firstName,email,password)
+        PharmacistServices.check(name,firstName,email,password, city, cabinetLocation, zipcode,typeProfesionnal)
         res.redirect('Pharmacist/registerPharmacist')
     } 
 

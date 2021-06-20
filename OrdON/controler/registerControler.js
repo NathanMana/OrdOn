@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router()
+const PatientServices = require('./../services/PatientServices')
 
 
 router.post('/registerPatient', (req, res) => {
@@ -7,16 +8,29 @@ router.post('/registerPatient', (req, res) => {
     firstName = req.body.firstName
     email = req.body.email
     password = req.body.password
+    password_check = req.body.password_check
 
-    let isAlreadyRegistered = PatientServices.check(name,firstName,email,password)
+    if (password == password_check) {
+        let patientIsAlreadyRegistered = PatientServices.check(name,firstName,email,password)
 
-    if (!isAlreadyRegistered){
-        res.redirect('Patient/registerPatient')
+        if (!patientIsAlreadyRegistered){
+            res.redirect('Patient/registerPatient')
+        }
+        if (patientIsAlreadyRegistered){
+            PatientServices.create(name,firstName,email,password)
+            res.redirect('Patient/loginPatient')
+        } 
     }
-    if (isAlreadyRegistered){
-        PatientServices.create(name,firstName,email,password)
-        res.redirect('Patient/loginPatient')
-    } 
+    else {
+        alert(`password dosen't matched`)
+        res.render('Patient/registerPatient', { Patient : {
+            name: name,
+            firstName: firstName,
+            email: email
+        }})
+    }
+
+    
 
 })
 
@@ -32,12 +46,12 @@ router.post('/registerDoctor', (req, res) => {
     zipcode = req.body.zipcode
     typeProfesionnal = req.body.typeProfesionnal
 
-    let isAlreadyRegistered = DoctorServices.check(name,firstName,email,password)
+    let doctorIsAlreadyRegistered = DoctorServices.check(name,firstName,email,password)
 
-    if (!isAlreadyRegistered){
+    if (!doctorIsAlreadyRegistered){
         res.redirect('Doctor/registerDoctor')
     }
-    if (isAlreadyRegistered){
+    if (doctorIsAlreadyRegistered){
         DoctorServices.check(name,firstName,email,password, cabinetLocation, city, cabinetLocation, zipcode,typeProfesionnal)
         res.redirect('Doctor/registerDoctor')
     } 
@@ -55,12 +69,12 @@ router.post('/registerPharmacist', (req, res) => {
     zipcode = req.body.zipcode
     typeProfesionnal = req.body.typeProfesionnal
 
-    let isAlreadyRegistered = PharmacistServices.check(name,firstName,email,password)
+    let pharmacistIsAlreadyRegistered = PharmacistServices.check(name,firstName,email,password)
 
-    if (!isAlreadyRegistered){
+    if (!pharmacistIsAlreadyRegistered){
         res.redirect('Pharmacist/registerPharmacist')
     }
-    if (isAlreadyRegistered){
+    if (pharmacistIsAlreadyRegistered){
         PharmacistServices.check(name,firstName,email,password, city, cabinetLocation, zipcode,typeProfesionnal)
         res.redirect('Pharmacist/registerPharmacist')
     } 

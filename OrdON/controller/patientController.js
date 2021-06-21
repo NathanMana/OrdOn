@@ -2,9 +2,12 @@
 /* "/patient/"  */
 const express = require('express');
 const router = express.Router()
-const PatientServices = require('../services/PatientServices')
+// const PatientServices = require('../services/PatientServices')
 
-
+/**
+ * Traite l'inscription des patients
+ * @method POST
+ */
 router.post('/inscription', (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstName

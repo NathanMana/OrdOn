@@ -1,0 +1,66 @@
+.etape{
+    width: 120px;
+    display: block;
+    margin: 50px auto;
+}
+
+article{
+    width: 400px;
+    align-items: center;
+    display: block;
+}
+
+.article3{
+    margin: 0 auto;
+}
+
+.articlefoot{
+}
+
+.liste{
+    display: block;
+    margin: 5px 40px;
+    text-align: center;
+}
+
+.sectionblue{
+    width: 100%;
+    height: 300px;
+    background-color: var(--blue);
+    color: var(--white);
+    padding: 0px 30px;
+    display: flex;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.sectionwhite{
+    width: 100%;
+    height: 500px;
+    background-color: var(--white);
+    color: var(--dark);
+    font-size: 1.1rem;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+}
+.sectiongreen{
+    width: 100%;
+    height: 400px;
+    background-color: var(--green);
+    color: var(--white);
+    padding: 0px 30px;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.triple{
+    width: 100%;
+    padding: 15px ;
+    display: flex;
+    font-size: 1.1rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}

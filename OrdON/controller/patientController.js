@@ -36,4 +36,10 @@ router.post('/inscription', (req, res) => {
     }
 })
 
+/**
+ * Gère l'affichage de la page d'accueil
+ */
+ router.get('/', (req, res) => {
+    res.render('Patient/home')
+})
 module.exports = router

@@ -46,8 +46,14 @@ nav {
     display: block;
 }
 
+.deco{
+    width: 20px;
+    display: inline-block;
+}
+
 nav li{
     display: inline-block;
+    margin: 0px 15px;
 }
 
 /* TITRES */
@@ -153,6 +159,17 @@ footer li {
     padding: 15px 35px;
     border-radius: 30px;
     margin: 100px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+}
+
+.btngreensmall {
+    background-color: var(--green);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 5px 20px;
+    border-radius: 30px;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 1px;
 }

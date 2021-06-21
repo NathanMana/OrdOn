@@ -14,9 +14,6 @@ article{
     margin: 0 auto;
 }
 
-.articlefoot{
-}
-
 .liste{
     display: block;
     margin: 5px 40px;
@@ -54,6 +51,19 @@ article{
     font-size: 1.2rem;
     justify-content: space-between;
     flex-wrap: nowrap;
+}
+
+.sectiondark{
+    width: 100%;
+    height: 50px;
+    background-color: var(--darkblue);
+    color: var(--white);
+    padding: 0px 30px;
+    display: flex;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 .triple{

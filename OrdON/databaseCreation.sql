@@ -40,8 +40,7 @@ create table ordon.Professionnal(
         id_professionnal   Int  Auto_increment  NOT NULL ,
         city               Varchar (100) NOT NULL ,
         address            Varchar (150) NOT NULL ,
-        zipcode            Int NOT NULL ,
-        typeProfessionnal  Int NOT NULL ,
+        zipcode            Varchar (6) NOT NULL ,
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,
         email              Varchar (100) NOT NULL ,
@@ -98,7 +97,6 @@ create table ordon.Prescription(
         date_creation    Date NOT NULL ,
         councils         Text NOT NULL ,
         isQRCodeVisible  Bool NOT NULL ,
-        date_archived    Date NOT NULL ,
         id_professionnal Int NOT NULL ,
         id_doctor        Int NOT NULL ,
         id_patient       Int NOT NULL

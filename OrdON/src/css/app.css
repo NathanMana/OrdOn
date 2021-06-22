@@ -22,6 +22,7 @@ html, body {
     padding: 0;
     background: var(--blue_dark);
     height: 100%;
+    overflow-x: hidden;
 }
 
 /* NAVBAR */
@@ -54,6 +55,47 @@ nav {
 nav li{
     display: inline-block;
     margin: 0px 15px;
+}
+
+.open-responsive-menu {
+    cursor: pointer;
+    position: relative;
+    width: 30px;
+    z-index: 100;
+    height: 20px;
+    display: none;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    float: right;
+}
+
+.open-responsive-menu__base {
+    width: 100%;
+    height: 3px;
+    background: red;
+    z-index: 5;
+}
+
+.open-responsive-menu__base::before {
+    content: "";
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    background: red;
+    top: 0;
+}
+
+.open-responsive-menu__base::after {
+    content: "";
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    background: red;
+    bottom: 0;
 }
 
 /* TITRES */
@@ -108,18 +150,16 @@ h6{
 /* FOOTER */
 footer{
     width: 100%;
-    height: 250px;
     background-color: var(--darkblue);
     color: var(--white);
-    justify-content: space-around;
-    flex-wrap: nowrap;
 }
 
 .foot{
     width: 100%;
-    display:flex;
+    display: flex;
     padding: 35px 60px;
     letter-spacing: 1px;
+    flex-wrap: nowrap;
 }
 
 .footm{
@@ -137,10 +177,10 @@ footer{
     font-size: 0.8rem;
  }
 
- .ulfoot{
-     margin-right:150px;
- }
- .footlogo{
+.ulfoot{
+    margin-right: 5rem;
+}
+.footlogo{
     margin-right:15px;
 }
 
@@ -161,10 +201,14 @@ footer li {
     font-weight: bold;
     font-size: 1.2rem;
     padding: 15px 35px;
+    margin: 10px 0;
     border-radius: 30px;
-    margin: 100px;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 1px;
+    transition: 0.3s ease-out;
+}
+.btngreen:hover {
+    background: var(--darkblue);
 }
 
 .btngreensmall {
@@ -187,4 +231,13 @@ button {
     position: relative;
     border: none;
     cursor: pointer;
+}
+
+@media screen and (max-width: 937px) {
+    .foot {
+        flex-direction: column;
+    }
+    .foot ul {
+        margin-bottom: 40px;
+    }
 }

@@ -2,6 +2,7 @@
 /* "/medecin/"  */
 const express = require('express')
 const router = express.Router()
+const Doctor = require('./../models/Doctor')
 // const DoctorServices = require('../services/DoctorServices')
 
 /**
@@ -29,5 +30,37 @@ router.post('/inscription', (req, res) => {
     } 
 
 })
+
+/**
+ * Traite la connexion des médecins
+ * @method GET
+ */
+router.get('/connexion',  (res,req)=>{
+    const email = req.body.email
+    const password = req.body.password
+    
+    req.session.doctor = new Doctor()
+
+    if (req.session.doctor == null){
+        if(DoctorServices.check(email,password)){
+            req.session.doctor =  DoctorServices.get(email, password)
+            res.render('Doctor/home', { Doctor: req.session.doctor })
+        }
+        if(!DoctorServices.checkEmail(email)){
+            alert('email incorrect')
+            res.redirect('Doctor/connectionDoctor')
+        }
+        if (!DoctorServices.checkPassword(password)){
+            alert('mot de passe incorrect')
+            res.redirect('Doctor/connectionDoctor')
+        }
+
+    }
+    else{
+        console.log('un doctor est déjà connecté')
+        res.redirect('Doctor/home', { Doctor : req.session.doctor })
+    }
+})
+
 
 module.exports = router

@@ -2,6 +2,7 @@
 /* "/patient/"  */
 const express = require('express');
 const router = express.Router()
+const Patient = require('./../models/Patient')
 // const PatientServices = require('../services/PatientServices')
 
 /**
@@ -49,4 +50,37 @@ router.post('/inscription', (req, res) => {
  router.get('/profil', (req, res) => {
     res.render('Patient/profil')
 })
+
+/**
+ * Traite la connexion des médecins
+ * @method GET
+ */
+ router.get('/connexion',  (res,req)=>{
+    const email = req.body.email
+    const password = req.body.password
+    
+    req.session.patient = new Patient()
+
+    if (req.session.patient == null){
+        if(PatientServices.check(email,password)){
+            req.session.patient =  PatientServices.get(email, password)
+            res.render('Patient/home', {Patient: req.session.patient })
+        }
+        if(!PatientServices.checkEmail(email)){
+            alert('email incorrect')
+            res.redirect('Patient/connectionPatient')
+        }
+        if (!PatientServices.checkPassword(password)){
+            alert('mot de passe incorrect')
+            res.redirect('Pateint/connectionPatient')
+        }
+
+    }
+    else{
+        console.log('un patient est déjà connecté')
+        res.redirect('Patient/home', { Patient : req.session.patient })
+    }
+})
+
+
 module.exports = router

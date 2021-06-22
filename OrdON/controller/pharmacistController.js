@@ -2,6 +2,7 @@
 /* "/pharmacien/"  */
 const express = require('express');
 const router = express.Router()
+const Pharmacist = require('./../models/Pharmacist')
 // const PharmacistServices = require('../services/PharmacistServices')
 
 /**
@@ -28,6 +29,37 @@ router.post('/inscription', (req, res) => {
         res.redirect('Pharmacist/registerPharmacist')
     } 
 
+})
+
+/**
+ * Traite la connexion des pharmaciens
+ * @method GET
+ */
+router.get('/connexion',  (res,req)=>{
+    const email = req.body.email
+    const password = req.body.password
+    
+    req.session.pharmacist = new Pharmaciist()
+
+    if (req.session.pharmacist == null){
+        if(PharmacistServices.check(email,password)){
+            req.session.pharmacist =  PharmacistServices.get(email, password)
+            res.render('Pharmacist/home', { Pharmacist: req.session.pharmacist })
+        }
+        if(!PharmacistServices.checkEmail(email)){
+            alert('email incorrect')
+            res.redirect('Pharmacist/connectionPharmacist')
+        }
+        if (!PharmacistServices.checkPassword(password)){
+            alert('mot de passe incorrect')
+            res.redirect('Pharmacist/connectionPharmacist')
+        }
+
+    }
+    else{
+        console.log('un pharmacien est déjà connecté')
+        res.redirect('Pharmacist/home', { Pharmaciist : req.session.pharmacist })
+    }
 })
 
 module.exports = router

@@ -18,24 +18,28 @@ article{
     display: block;
     margin: 5px 40px;
     text-align: center;
+    font-size: 1rem;
+    color: var(--white);
+}
+
+.sectionwhite .liste {
+    color: #384B52;
 }
 
 .sectionblue{
     width: 100%;
-    height: 300px;
     background-color: var(--blue);
     color: var(--white);
-    padding: 0px 30px;
+    padding: 80px 30px;
     display: flex;
     font-size: 1.2rem;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
 }
 
 .sectionwhite{
     width: 100%;
-    height: 500px;
     background-color: var(--white);
     color: var(--dark);
     font-size: 1.1rem;
@@ -44,13 +48,12 @@ article{
 }
 .sectiongreen{
     width: 100%;
-    height: 400px;
     background-color: var(--green);
     color: var(--white);
     padding: 0px 30px;
     font-size: 1.2rem;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 
 .sectiondark{
@@ -72,5 +75,32 @@ article{
     display: flex;
     font-size: 1.1rem;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+}
+
+.sectionwhite article {
+    position: relative;
+}
+
+.sectionwhite article h4 {
+    color : #384B52;
+    font-weight: initial;
+}
+
+@media screen and (max-width:1247px) {
+    .sectionwhite .triple {
+        flex-direction: column;
+    }
+    .sectionwhite .triple article {
+        display: flex;
+        flex-wrap: wrap;
+        width: auto;
+        justify-content: center;
+    }
+    .sectionwhite .triple article h4 {
+        width: 100%;
+    }
+    .sectionwhite .triple article img {
+        margin: 0;
+    }
 }

@@ -231,6 +231,17 @@ button {
     border: none;
     cursor: pointer;
 }
+/* FORMULAIRE */
+  form .inputID{
+    border-radius: 60px;
+    font-family: 'Raleway';
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    border: 2px solid var(--blue);
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
 /* Profil */
 
@@ -256,6 +267,15 @@ button {
 }
 .profilform{
     margin:15px auto;
+}
+.profilBox{
+    border-radius: 60px;
+    font-family: 'Raleway';
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    border: 2px solid var(--blue);
+    margin: 20px;
 }
 @media screen and (max-width: 937px) {
     .foot {

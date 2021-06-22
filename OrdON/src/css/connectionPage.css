@@ -19,30 +19,7 @@ body .title {
   .btn:hover {
     cursor: grab;
   }
-  form .inputID{
-    border-radius: 60px;
-    font-family: 'Raleway';
-    font-size: 20px;
-    padding: 10px 20px 10px 20px;
-    text-decoration: none;
-    border: 2px solid var(--darkblue);
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  .container .formulaire{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    margin: 40px;
-  }
-  .container .formulaire .champ1, .container .formulaire .champ2{
-    order: 0;
-    flex: 1 0 auto;
-    align-self: auto;
-  }
+
 .signup{
     display: flex;
     flex-direction:row;

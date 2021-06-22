@@ -176,7 +176,6 @@ aside ul li i {
 /* TITRES */
 h2{
     text-align:center;
-    color:var(--darkblue);
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     width:100%;
@@ -202,20 +201,24 @@ h4{
 }
 
 h5{
-    text-align:left;
+    text-align:center;
     width:100%;
-    padding: 30px 50px;
+    font-size: 1.2rem;
     font-weight: 550;
-    font-size: 1rem;
 }
 
 h6{
     text-align:center;
-    color:var(--white);
+    font-family: 'Raleway', sans-serif;
     width:100%;
     padding: 15px 0px 0px 0px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     letter-spacing: 1px;
+    font-weight:bold;
+}
+
+.darkbluefont{
+    color:var(--darkblue)
 }
 
 /* FOOTER */
@@ -291,6 +294,8 @@ footer li {
     border-radius: 30px;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 1px;
+    display: block;
+    width: fit-content;
 }
 
 button {
@@ -302,6 +307,31 @@ button {
     cursor: pointer;
 }
 
+/* Profil */
+
+.profil{
+    display: flex;
+}
+.darkSide{
+    height: 100%;
+    width: 350px;
+    background-color: var(--darkblue);
+}
+
+.ulprofil{
+     padding: 2rem;
+}
+.liprofil{
+    width: 100%;
+    display:flex;
+    padding-bottom: 25px;
+    font-size: 1rem;
+    color:var(--white);
+ 
+}
+.profilform{
+    margin:15px auto;
+}
 @media screen and (max-width: 937px) {
     .foot {
         flex-direction: column;

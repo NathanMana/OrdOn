@@ -13,6 +13,25 @@ article{
 .article3{
     margin: 0 auto;
 }
+.articleOrd{
+    background-color: var(--white);
+    width: 250px;
+    height:200px;
+    border-radius: 40px;
+    align-items: center;
+    display: block;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+.articleOrdpass{
+    background-color: var(--darkblue);
+    color:var(--white);
+    width: 250px;
+    height:200px;
+    border-radius: 40px;
+    align-items: center;
+    display: block;
+}
 
 .liste{
     display: block;
@@ -21,9 +40,8 @@ article{
     font-size: 1rem;
     color: var(--white);
 }
-
 .sectionwhite .liste {
-    color: #384B52;
+    color: var(--dark);
 }
 
 .sectionblue{
@@ -37,6 +55,18 @@ article{
     flex-wrap: wrap;
     align-items: center;
 }
+.sectionblueConnected{
+    width: 100%;
+    height: 360px;
+    background-color: var(--blue);
+    color: var(--white);
+    padding: 0px 30px;
+    display: inline-block;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
+}
 
 .sectionwhite{
     width: 100%;
@@ -45,6 +75,19 @@ article{
     font-size: 1.1rem;
     justify-content: space-around;
     flex-wrap: nowrap;
+}
+
+.sectionwhiteConnected{
+    width: 100%;
+    height: 360px;
+    background-color: var(--white);
+    color: var(--white);
+    padding: 0px 30px;
+    display: inline-block;
+    font-size: 1.2rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 .sectiongreen{
     width: 100%;
@@ -69,6 +112,19 @@ article{
     align-items: center;
 }
 
+.sectionred{
+    width: 100%;
+    height: 50px;
+    background-color: var(--danger_light);
+    color: var(--white);
+    padding: 0px 30px;
+    display: flex;
+    font-size: 1.2rem;
+    justify-content:space-between;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
 .triple{
     width: 100%;
     padding: 15px ;
@@ -78,6 +134,17 @@ article{
     flex-wrap: wrap;
 }
 
+.parBlue{
+    color:var(--blue);
+    padding: 20px 20px 0px 20px;
+    font-size: 0.9rem;
+}
+
+.parWhite{
+    color:var(--white);
+    padding: 20px 20px 0px 20px;
+    font-size: 0.9rem;
+}
 .sectionwhite article {
     position: relative;
 }

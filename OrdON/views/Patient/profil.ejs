@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body>
+    <%- include('../layouts/navConnected'); -%>
+    <section class="sectionred">
+        <p>Votre adresse mail n'a pas été vérifiée !</p>
+        <p style="font-size: 0.9rem;">Vous ne pouvez pas transmettre vos informations via un QR code sans avoir vérifié votre email</p>
+    </section>
+   <div class="profil">
+       <div class="darkSide">
+            <ul class="ulprofil">
+                <li class="liprofil"><a>Accueil profil</a></li>
+                <li class="liprofil"><a>Modifier email</a></li>
+                <li class="liprofil"><a>Modifier le mot de passe</a></li>
+            </ul>
+       </div>
+       <div class="profilform">
+           <h2 style="color:var(--darkblue)">Mon profil</h2>
+       </div>
+   </div>
+    <%- include('../layouts/footer'); -%>
+</body>
+</html>

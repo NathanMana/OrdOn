@@ -37,9 +37,16 @@ router.post('/inscription', (req, res) => {
 })
 
 /**
- * Gère l'affichage de la page d'accueil
+ * Gère l'affichage de la page d'accueil du patient
  */
  router.get('/', (req, res) => {
     res.render('Patient/home')
+})
+
+/**
+ * Gère l'affichage de la page profile du patient
+ */
+ router.get('/profil', (req, res) => {
+    res.render('Patient/profil')
 })
 module.exports = router

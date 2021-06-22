@@ -1,15 +1,15 @@
 const Person = require('./Person');
 
 class Profesionnal extends Person {
-    constructor(city, address, zipcode, typeProfesionnal) {
-        super(Person)
+    constructor(name, firstname, email, password, city, address, zipcode, typeProfesionnal) {
+        super(name, firstname, email, password)
         this.city = city;
         this.address = address;
         this.zipcode = zipcode;
         this.typeProfesionnal = typeProfesionnal
     }
 
-    getcity() {return this.city}
+    getCity() {return this.city}
 
     getAddress() {return this.address}
 

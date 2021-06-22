@@ -2,14 +2,14 @@
 /* "/"  */
 const express = require('express')
 const router = express.Router()
-const services = require('../services/TestServices.js')
-
+const Patient = require('../models/Patient')
+const PatientServices = require('../services/PatientServices')
 /**
  * Gère l'affichage de la page d'accueil
  */
-router.get('/', (req, res) => {
-    // const testService = new services()
-    // testService.createUser("Maxime")
+router.get('/', async (req, res) => {
+    // const patient = new Patient("zeaezeaz", "Nathan", "nat.manar@gmail.com", "test", new Date())
+    // PatientServices.addPatient(patient)
     res.render('index')
 })
 

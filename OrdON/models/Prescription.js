@@ -67,14 +67,14 @@ class Prescriptions {
     getListCouncils(){return this.#listCouncils}
     /**
      * Ajoute un conseil à la liste des conseils
-     * @param {*} council 
+     * @param {Council} council 
      */
     addCouncil(council){
         this.#listCouncils.push(council)
     }
     /**
      * Retire un conseil de la liste
-     * @param {*} council 
+     * @param {Council} council 
      * @returns 
      */
     removeCouncil(council) {
@@ -82,12 +82,32 @@ class Prescriptions {
         if (index === -1) return
         this.#listCouncils.splice(index, 1)
     }
+    setListCouncils(listCouncils){this.#listCouncils = listCouncils}
 
-
+    isQrCodeVisible(){return this.#isQrCodeVisible}
     setIsQrCodeVisible(isQrCodeVisible){
         this.isQrCodeVisible = isQrCodeVisible
     }
 
+    getListAttributions(){return this.#listAttributions}
+    /**
+     * Ajoute une prescription sur l'ordonnance
+     * @param {*} attribution 
+     */
+    addAttribution(attribution){
+        this.#listAttributions.push(attribution)
+    }
+    /**
+     * Retire une prescription de l'ordonnance
+     * @param {*} attribution 
+     * @returns 
+     */
+    removeAttribution(attribution){
+        const index = this.#listAttributions.find(c => c.getIdAttribution() === attribution.getIdAttribution())
+        if (index === -1) return
+        this.#listAttributions.splice(index, 1)
+    }
+    setListAttributions(listAttributions){this.#listAttributions = listAttributions}
 
 }
 

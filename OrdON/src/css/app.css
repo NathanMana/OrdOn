@@ -298,6 +298,18 @@ footer li {
     display: block;
     width: fit-content;
 }
+.btndark {
+    background-color: var(--darkblue);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 5px 30px;
+    border-radius: 30px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+    width: fit-content;
+    margin-left: 15px;
+}
 
 button {
     font-weight: 500;
@@ -355,6 +367,41 @@ button {
     text-decoration: none;
     border: 2px solid var(--blue);
     margin: 15px 100px;
+}
+/* Ordonnance*/
+.mesordonnances{
+    margin:0 auto;
+}
+.consultation{
+    width: 800px;
+    height: 140px;
+    background: var(--white);
+    box-shadow: 2px 4px 8px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    margin: 20px auto;
+    color:var(--darkblue);
+    display: grid;
+}
+.date{
+    float: left;
+    padding: 5px 15px;
+
+}
+.peremption{
+    float: right;
+    padding: 5px 15px;
+    color:var(--danger_light);
+}
+.doctor{
+    float: left;
+    padding: 5px 15px;
+    font-size: 1rem;
+}
+.voirgenerer{
+    float: left;
+    padding: 10px 15px;
+    font-size: 1rem;
+    display:flex;
 }
 @media screen and (max-width: 937px) {
     .foot {

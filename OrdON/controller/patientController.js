@@ -52,10 +52,10 @@ router.post('/inscription', (req, res) => {
 })
 
 /**
- * Gère l'affichage de la page de connection du patient
+ * Gère l'affichage de la page profile du patient
  */
- router.get('/connection', (req, res) => {
-    res.render('Patient/connectionPatient')
+ router.get('/ordonnance', (req, res) => {
+    res.render('Patient/ordonnance')
 })
 
 /**
@@ -79,7 +79,7 @@ router.post('/inscription', (req, res) => {
         }
         if (!PatientServices.checkPassword(password)){
             alert('mot de passe incorrect')
-            res.redirect('Pateint/connectionPatient')
+            res.redirect('Patient/connectionPatient')
         }
 
     }

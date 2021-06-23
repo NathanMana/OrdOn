@@ -31,12 +31,6 @@ router.post('/inscription', (req, res) => {
 
 })
 
-/**
- * Gère l'affichage de la page de connection du patient
- */
- router.get('/connection', (req, res) => {
-    res.render('Doctor/connectionDoctor')
-})
 
 /**
  * Traite la connexion des médecins

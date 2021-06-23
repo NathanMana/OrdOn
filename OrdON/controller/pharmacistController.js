@@ -6,6 +6,12 @@ const Pharmacist = require('./../models/Pharmacist')
 // const PharmacistServices = require('../services/PharmacistServices')
 
 /**
+ * Gère l'affichage de la page d'accueil du pharmacien
+ */
+ router.get('/', (req, res) => {
+    res.render('Pharmacist/home')
+})
+/**
  * Traite l'inscription des pharmaciens
  * @method POST
  */

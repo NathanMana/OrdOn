@@ -30,7 +30,12 @@ router.post('/inscription', (req, res) => {
     } 
 
 })
-
+/**
+ * Gère l'affichage de la page d'accueil du docteur
+ */
+ router.get('/', (req, res) => {
+    res.render('Doctor/home')
+})
 
 /**
  * Traite la connexion des médecins

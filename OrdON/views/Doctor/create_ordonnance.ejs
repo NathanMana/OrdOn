@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../layouts/header'); -%>
+        <link rel='stylesheet' type='text/css' media='screen' href='../../src/css/createPrescription.css'>
+        <script defer src="../../src/js/all.js"></script> <!--load all styles -->
+        <script src='../../src/js/createPrescription.js'></script>
+    </head>
+    <body>
+        <%- include('../layouts/nav'); -%>
+
+        <div id="doctorInfos">
+            <div id="doctorInfosLeft">
+                <h3 class="doctorText">Docteur</h3>
+                <h3 class="doctorText">Nom du docteur</h3>
+            </div>
+            <div id="doctorInfosRight">
+                <div id="doctorInfosRightTop">
+                    <h3 class="doctorText">Adresse du docteur</h3>
+                    <h3 class="doctorText">CP et ville</h3>
+                    <h3 class="doctorText">Tel cabinet</h3>
+                </div>
+            </div>
+        </div>
+
+        <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le XX/XX/XXXX</h3>
+
+        <div id="infosPatient">
+            <h3>Mmme/M NOM Prenom</h3>
+            <h3>Age, Poids</h3>
+        </div>
+
+        <div id="prescription">
+            <div id="prescriptionTab">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="firtLine" style="width: 25%;">Nom du médicament</th>
+                            <th scope="firtLine" style="width: 35%;">Description du traiement</th>
+                            <th scope="firtLine" style="width: 10%;">Quantité</th>
+                            <th scope="firtLine" style="width: 25%;">Mentions (facultatif)</th>
+                            <th scope="firtLine" style="width: 5%;">
+                                
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="prescriptionBody">
+                    </tbody>
+                </table>   
+            </div>
+            <button class="greenButton" id="addMedic" type="button" onclick="showMedicWindow()">Ajouter une prescription d'un médicament</button>
+        </div>
+
+        <div id="tips">
+            <div id="tipsTab"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="firtLine" style="width: 85%;">Description du conseil</th>
+                            <th scope="firtLine" style="width: 15%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tipsBody">
+                    </tbody>
+                </table>  
+            </div> 
+            <button class="blueButton" id="addTip" type="button" onclick="showTipWindow()">Ajouter une prescription d'un médicament</button>
+        </div>
+
+        <div class="center">
+            <button class="greenButton" id="createOrdonnanceButton" type="button">Valider mon ordonnance</button>
+        </div>
+
+        <div id="coverPage" >
+        </div>
+
+        <!--<%- include('layouts/footer'); -%>-->
+
+        <div id="newMedicWindow" style="display: none;">
+
+            <h5 onclick="closeMedicWindow()">Fermer</h5>
+            <h2>Ajouter un médicament</h2>
+            
+            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
+            <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
+            <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
+            <!--Cette div est cachée et apparati lorsque l'utilisateur clique sur ajouter un médicament-->
+            
+            <h3>Mentions</h3>
+            <div id="inputMentions">
+                <input id="mentionInput" type="text" name="medicMention" placeholder="Mention" required>
+                <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
+                <!-- Afficher la liste des mentions ajoutées-->
+            </div>
+            <div id="mentions">
+                
+            </div>
+            <button id="validMedic" type="button" onclick="validMedic()">Valider cette prescription</button>
+        </div>
+
+        <div id="newTipWindow" style="display: none;">
+            <h5 onclick="closeTipWindow()">Fermer</h5>
+            <h2>Ajouter un conseil</h2>
+
+            <textarea id="tipInput" type="text" name="tipInput" placeholder="Description" required ></textarea>
+
+            <button class="blueButton" id="validTip" type="button" onclick="validTip()">Valider ce conseil</button>
+
+        </div>
+        <%- include('layouts/greenfaq'); -%>
+        <%- include('layouts/footer'); -%>
+        <%- include('layouts/scripts'); -%>
+    </body>
+</html>

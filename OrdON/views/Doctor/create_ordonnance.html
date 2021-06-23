@@ -4,11 +4,14 @@
         <meta charset='utf-8'>
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
         <title>Créer une ordonnance</title>
+      <!--<%- include('layouts/header'); -%>-->  
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link rel='stylesheet' type='text/css' media='screen' href='../../src/css/createPrescription.css'>
         <script src='../../src/js/createPrescription.js'></script>
     </head>
     <body>
+        
+        <!--<%- include('layouts/nav'); -%>-->
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
                 <h3 class="doctorText">Docteur</h3>
@@ -18,10 +21,7 @@
                 <div id="doctorInfosRightTop">
                     <h3 class="doctorText">Adresse du docteur</h3>
                     <h3 class="doctorText">CP et ville</h3>
-                </div>
-                <div id="doctorsInfosRightBottom">
                     <h3 class="doctorText">Tel cabinet</h3>
-                    <h3 class="doctorText">Tel urgence</h3>
                 </div>
             </div>
         </div>
@@ -34,18 +34,69 @@
         </div>
 
         <div id="prescription">
-            <div id="prescriptionLines">
-                <div class="prescriptionLine">
-                    <input id="nameInput" type="text" name="medicName" required>
-                    <input id="descriptionInput" type="text" name="medicDescription" required>
-                    <input id="mentionInput" type="text" name="medicMention" required>
-                </div>
+            <div id="prescriptionTab">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="firtLine" style="width: 20%;">Nom du médicament</th>
+                            <th scope="firtLine" style="width: 30%;">Description du traiement</th>
+                            <th scope="firtLine" style="width: 10%;">Quantité</th>
+                            <th scope="firtLine" style="width: 25%;">Mentions (facultatif)</th>
+                            <th scope="firtLine" style="width: 15%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>   
             </div>
-            <button id="addLine" type="button" onclick="addLine()">Ajouter un médicament</button>
-            <textarea type="text" name="advice" rows="5" cols="35"></textarea>
+            <button class="greenButton" id="addMedic" type="button" onclick="addMedic()">Ajouter une prescription d'un médicament</button>
         </div>
 
-        <button id="createOrdonnanceButton" type="button">Valider mon ordonnance</button>
+        <div id="tips">
+            <div id="tipsTab"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="firtLine" style="width: 85%;">Description du conseil</th>
+                            <th scope="firtLine" style="width: 15%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>  
+            </div> 
+            <button class="blueButton" id="addTip" type="button" onclick="addTip()">Ajouter une prescription d'un médicament</button>
+        </div>
+
+
+        <button id="createOrdonnanceButton" type="button">Valider mon ordonnance</button>   
+
+        <div id="coverPage" >
+        </div>
+
+        <!--<%- include('layouts/footer'); -%>-->
+
+        <div id="newMedicWindow" style="display: none;">
+
+            <h5>Fermer</h5>
+            <h2>Ajouter un médicament</h2>
+
+            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
+            <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
+            <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
+            <!--Cette div est cachée et apparati lorsque l'utilisateur clique sur ajouter un médicament-->
+            
+            <h3>Mentions</h3>
+            <div id="inputMentions">
+                <input id="mentionInput" type="text" name="medicMention" placeholder="Mention" required>
+                <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
+                <!-- Afficher la liste des mentions ajoutées-->
+            </div>
+            <div id="mentions">
+                
+            </div>
+            <button id="validMedic" type="button" onclick="validMedic()">Valider cette prescription</button>
+        </div>
 
     </body>
 </html>

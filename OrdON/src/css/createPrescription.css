@@ -4,7 +4,7 @@
     margin-right: auto;
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 90%;
 }
 
 #doctorInfosLeft{
@@ -17,63 +17,52 @@
     display:block;
 }
 
-#doctorInfosRightTop{
-    border-bottom: 2px solid #4da7fb;
-}
-
-.doctorText{
-    color: #4da7fb;
-}
 
 #madeWhereWhen{
-    margin-right: 10%;
+    margin-right: 5%;
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
 }
 
 #infosPatient{
-    margin-left: 10%;
+    margin-left: 5%;
 }
 
 #prescription{
-    width: 80%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
 
-
-.prescriptionLine{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
+#prescription table{
+    table-layout: fixed;
+    width: 100%;
 }
 
-input{
-    border: 2px solid black;
+#prescription thead th{
+    color: white;
+    background-color: #31E093;
 }
 
-#nameInput{
-    width: 20%;
+
+#prescription tbody th{
+    background-color: lightgray;
 }
 
-#descriptionInput{
-    width: 60%;
+.greenButton{
+    font-weight: bold;
+    padding:10px;
+    color: white;
+    background-color: #31E093;
+    border:none;
+    border-radius: 25px;
 }
 
-#mentionInput{
-    width: 10%;
-}
-
-button{
+#addMedic{
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#addLine{
-    border: 2px solid black;
-    margin-bottom: 5px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 #createOrdonnanceButton{
@@ -81,4 +70,152 @@ button{
     border:4px solid #4da7fb;
     font-size: large;
     bottom: 10px;
+}
+
+#coverPage{
+    position: absolute;
+    left: 0px; top: 0px;
+    background-color: black; 
+    display: none; 
+    opacity: 40%;
+    width: 100%; 
+    height: 100%;
+}
+
+#newMedicWindow{
+    width: 50%;
+    background-color: white;
+    border-radius: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#newMedicWindow h5{
+    margin-top: 5px;
+    text-decoration: underline;
+    text-align: center;
+}
+
+#newMedicWindow h2{
+    color: #31E093;
+    text-align: center;
+}
+
+#newMedicWindow input{
+    border: 2px solid #4da7fb;
+    border-radius: 25px;
+}
+
+input{
+    padding-left:10px;
+    padding-top: 5px;
+    padding-bottom: 5px;   
+}
+
+#nameInput{
+    width: 40%;
+    margin-left: 0px;
+    margin-right: 7%;
+}
+
+#quantityInput{
+    width: 40%;
+    margin-right: 0px;
+}
+
+#descriptionInput{
+    width: 90%;
+    margin-top: 10px;
+}
+
+#newMedicWindow h3{
+    width: 90%;
+    padding-left: 5px;
+    color: white;
+    text-align: left;
+    background-color: #31E093;
+}
+
+#inputMentions{
+    display: flex;
+}
+
+#inputMentions input{
+    width: 40%;
+}
+
+#newMedicWindow button{
+    margin: 5px;
+    font-weight: bold;
+    padding:10px;
+    color: white;
+    background-color: #31E093;
+    border-radius: 25px;
+    border: none;
+}
+
+#mentions, #mentionsRow{
+    display: flex;
+}
+
+#mentionsRow{
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mention, .mentionInRow{
+    background-color: #31E093;
+    border-radius: 5px;
+    margin-right: 4px;
+    color: white;
+    padding: 4px;
+}
+
+#validMedic{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#tips{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#tips table{
+    table-layout: fixed;
+    width: 100%;
+}
+
+#tips thead th{
+    color: white;
+    background-color: #356D80;
+}
+
+#tips tbody th{
+    background-color: lightgray;
+}
+
+
+.blueButton{
+    font-weight: bold;
+    padding:10px;
+    color: white;
+    background-color: #356D80;
+    border:none;
+    border-radius: 25px;
+}
+
+#addTip{
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }

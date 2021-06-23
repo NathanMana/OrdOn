@@ -1,24 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="../../src/images/logo/LogoOrdOn.ico"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../src/css/app.css">
+    <%- include('../layouts/header'); -%>
     <link rel="stylesheet" href="../../src/css/connectionPage.css"/>
     <title>OrdON</title>
   </head>
   <body>
-    <nav>
-        <img class="logo" src="../../src/images/logo/OrdOnpetit.png">
-        <ul>
-            <li><a>s'inscrire</a></li>
-            <li><a> | </a></li>
-            <li><a>se connecter</a></li>
-        </ul>
-    </nav>
+    <%- include('../layouts/nav'); -%>
         <div class="body">
             <h1 class="title">Se connecter en tant que docteur</h1>
             <section>
@@ -44,34 +32,7 @@
                 </div>
             </section>
         </div>
-        <footer>
-            <div class="foot">
-                <ul class="ulfoot">
-                    <li class="footm">Liens</li>
-                    <li class="foots"><a>Se connecter</a></li>
-                    <li class="foots"><a>S'inscrire</a></li>
-                </ul>
-                <ul class="ulfoot">
-                    <li class="footm">Aide</li>
-                    <li class="foots"><a>FAQ</a></li>
-                </ul>
-                <ul class="ulfoot">
-                    <li class="footm">Légal</li>
-                    <li class="foots"><a>Conditions Générales d’Utilisations</a></li>
-                    <li class="foots"><a>Politique de confidentialité</a></li>
-                    <li class="foots"><a>Mentions légales</a></li>
-                </ul>
-                <ul>
-                    <li class="footm">Réseaux sociaux</li>
-                    <li class="footlogo"><a><img class="footimage" src="../../src/images/logo/Twitter_Bird.png"></a></li>
-                    <li class="footlogo"><a><img class="footimage" src="../../src/images/logo/facebook.png"></a></li>
-                    <li class="footlogo"><a><img class="footimage" src="../../src/images/logo/instagram.png"></a></li>
-                </ul>
-            </div>
-            <div>
-                <h6>OrdOn © Tous droits réservés - 2021</h6>
-            </div>
-        </footer>
+        <%- include('../layouts/footer'); -%>
         <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
   </body>
 </html>

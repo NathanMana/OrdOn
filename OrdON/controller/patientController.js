@@ -1,6 +1,7 @@
 /* GERE LES ROUTES DU PATIENT */
 /* "/patient/"  */
 const express = require('express');
+const PatientServices = require('../services/PatientServices');
 const router = express.Router()
 const Patient = require('./../models/Patient')
 // const PatientServices = require('../services/PatientServices')
@@ -17,15 +18,9 @@ router.post('/inscription', (req, res) => {
     const password_check = req.body.password_check
 
     if (password == password_check) {
-        let patientIsAlreadyRegistered = PatientServices.check(name,firstName,email,password)
-
-        if (!patientIsAlreadyRegistered){
-            res.redirect('Patient/registerPatient')
-        }
-        if (patientIsAlreadyRegistered){
-            PatientServices.create(name,firstName,email,password)
-            res.redirect('Patient/loginPatient')
-        } 
+        const patient = new Patient(name, firstName, email, password)
+        PatientServices.addPatient(patient)
+        res.redirect('Patient/connectionPatient')
     }
     else {
         alert(`password dosen't matched`)

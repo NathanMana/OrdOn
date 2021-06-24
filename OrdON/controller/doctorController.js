@@ -75,5 +75,10 @@ router.get('/connexion',  (res,req)=>{
     }
 })
 
+//Donne l'accès à la page de création d'ordonnance
+router.get('/ordonnance/creer', (req,res)=>{
+    res.render('Doctor/create_ordonnance')
+})
+
 
 module.exports = router

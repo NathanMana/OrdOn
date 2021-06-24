@@ -17,9 +17,28 @@
     display:block;
 }
 
+.doctorTextLeft{
+    text-align: left;
+}
+
+.doctorTextRight{
+    text-align: right;
+}
+
+h3{
+    color: var(--dark);
+    padding: 6px;
+}
+
+.fixedLeft{
+    margin-left: 5%;
+}
+
+.fixedRight{
+    margin-right: 5%;
+}
 
 #madeWhereWhen{
-    margin-right: 5%;
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
@@ -48,7 +67,8 @@
 }
 
 
-#prescription tbody th{
+#prescription tbody td{
+    text-align: center;
     background-color: #F4F6F6;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -207,10 +227,15 @@ input, textarea{
 #tips thead th{
     color: white;
     background-color: #356D80;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
-#tips tbody th{
-    background-color: #F4F6F6;;
+#tips tbody td{
+    background-color: #F4F6F6;    
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 
@@ -234,5 +259,5 @@ input, textarea{
     margin-left: auto;
     width: 90%;
     height: 100px;
-    
 }
+

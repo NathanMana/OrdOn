@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body>
+    <%- include('../layouts/navConnectedMed'); -%>
+   <div class="profil">
+       <div class="darkSide">
+            <ul class="ulprofil">
+                <li class="liprofil"><a>Accueil profil</a></li>
+                <li class="liprofil"><a>Modifier email</a></li>
+                <li class="liprofil"><a>Modifier le mot de passe</a></li>
+                <div style="padding-top:70px;padding-bottom: 380px;">
+                </div>
+                <li class="liprofil"><a>Supprimer le compte</a></li>
+            </ul>
+       </div>
+       <div class="profilform">
+           <h2 style="color:var(--darkblue)">Mon profil</h2>
+           <form>
+                <div style="padding:50px;">
+                    <div class="profilBoxGrey">Nom</div>
+                    <div class="profilBoxGrey">Prénom</div>
+                    <div class="profilBoxGrey">email@email.com</div>
+                    <div class="profilBoxGrey">Lieu d'exercice</div>
+                    <div class="profilBoxGrey">Numéro professionnel</div>
+                </div> 
+            </form>
+       </div>
+   </div>
+    <%- include('../layouts/footer'); -%>
+</body>
+</html>

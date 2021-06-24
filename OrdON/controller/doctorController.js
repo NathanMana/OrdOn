@@ -38,6 +38,13 @@ router.post('/inscription', (req, res) => {
 })
 
 /**
+ * Gère l'affichage de la page profile du docteur
+ */
+ router.get('/profil', (req, res) => {
+    res.render('Doctor/profil')
+})
+
+/**
  * Traite la connexion des médecins
  * @method GET
  */

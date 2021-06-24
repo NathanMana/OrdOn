@@ -340,6 +340,7 @@ button {
     height: 100%;
     width: 500px;
     background-color: var(--darkblue);
+    flex: 0 0 300px;
 }
 
 .ulprofil{
@@ -357,6 +358,7 @@ button {
     margin:15px auto;
     align-items: center;
     text-align: center;
+    flex: 1 0 800px;
 }
 .profilBox{
     border-radius: 60px;
@@ -368,6 +370,21 @@ button {
     border: 2px solid var(--blue);
     margin: 15px 100px;
 }
+
+.profilBoxGrey{
+    border-radius: 60px;
+    font-family: 'Raleway';
+    font-style: italic;
+    font-size: 20px;
+    padding: 10px 45px 10px 60px;
+    text-decoration: none;
+    border: 2px solid var(--blue);
+    margin: 15px 100px;
+    background-color: var(--grey);
+    text-align: left;
+}
+
+
 /* Ordonnance*/
 .mesordonnances{
     margin:0 auto;

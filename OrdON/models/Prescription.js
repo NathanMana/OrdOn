@@ -37,6 +37,7 @@ class Prescriptions {
 
     /**
      * L'id du docteur qui a prescrit l'ordonnance
+     * @type {long}
      */
     #id_doctor
 

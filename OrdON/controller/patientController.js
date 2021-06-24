@@ -1,35 +1,48 @@
 /* GERE LES ROUTES DU PATIENT */
 /* "/patient/"  */
 const express = require('express');
+const bcrypt = require('bcrypt')
 const PatientServices = require('../services/PatientServices');
 const router = express.Router()
 const Patient = require('./../models/Patient')
-// const PatientServices = require('../services/PatientServices')
 
 /**
  * Traite l'inscription des patients
  * @method POST
  */
-router.post('/inscription', (req, res) => {
+router.post('/inscription', async (req, res) => {
     const name = req.body.name
-    const firstName = req.body.firstName
+    const firstName = req.body.firstname
     const email = req.body.email
+    const birthdate = req.body.birthdate
     const password = req.body.password
     const password_check = req.body.password_check
 
-    if (password == password_check) {
-        const patient = new Patient(name, firstName, email, password)
-        PatientServices.addPatient(patient)
-        res.redirect('Patient/connectionPatient')
+    if (!name || !firstName || !email || !birthdate || !password || !password_check ) return
+    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+        return
     }
-    else {
-        alert(`password dosen't matched`)
-        res.render('Patient/registerPatient', { Patient : {
+
+    if (password !== password_check) {
+        return res.render('Patient/registerPatient', { Patient : {
             name: name,
             firstName: firstName,
             email: email
         }})
     }
+
+    // On essaie de transformer le string correspondant à la date de naissance en date
+    let birthdateToAdd
+    try {
+        birthdateToAdd = new Date(birthdate)
+    } catch(e){
+        return
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    const patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd)
+    PatientServices.addPatient(patient)
+    return res.redirect('Patient/connectionPatient')
 })
 
 /**

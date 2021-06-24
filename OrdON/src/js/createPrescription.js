@@ -1,5 +1,6 @@
+
 //Show the pop up window 
-function addMedic(){
+function showMedicWindow(){
     var medicWindow = document.getElementById("newMedicWindow");
     medicWindow.style.display = "block";
 
@@ -32,11 +33,7 @@ function getMentions(){
 
 //Validate the medic prescription, dismiss the pop up, and show on table
 function validMedic(){
-    var medicWindow = document.getElementById("newMedicWindow");
-    medicWindow.style.display = "none";
-
-    var basePage = document.getElementById("coverPage");
-    basePage.style.display = "none"
+    closeMedicWindow();
 
     var medicName = document.getElementById("nameInput").value;
     var medicQuantity = document.getElementById("quantityInput").value;
@@ -48,7 +45,7 @@ function validMedic(){
         console.log("Mention : " + entry);
       });
 
-    addRow(medicName, medicQuantity, medicDescription, medicMentions);
+    addMedicRow(medicName, medicQuantity, medicDescription, medicMentions);
     clearAllForm();
 }
 
@@ -61,10 +58,17 @@ function clearAllForm(){
     document.getElementById("mentions").querySelectorAll('*').forEach(n => n.remove());
 }
 
+function closeMedicWindow(){
+    var medicWindow = document.getElementById("newMedicWindow");
+    medicWindow.style.display = "none";
+
+    var basePage = document.getElementById("coverPage");
+    basePage.style.display = "none"
+}
 
 //Add the medic to the table
-function addRow(name, quantity, description, mentions){
-    var tableBody = document.getElementById("tableBody");
+function addMedicRow(name, quantity, description, mentions){
+    var tableBody = document.getElementById("prescriptionBody");
     var row = document.createElement("tr");
 
     var nameColumn = document.createElement("th");
@@ -89,5 +93,91 @@ function addRow(name, quantity, description, mentions){
     mentionsColumn.appendChild(mentionsDiv);
     row.appendChild(mentionsColumn);
 
+    var editColumn = document.createElement("th");
+    var editIcon = document.createElement("i");
+    editIcon.className = "fas fa-pen";
+    editIcon.style.color = "#31E093";
+    editIcon.style.marginRight = "5px"
+    editIcon.onclick = "editMedic()"
+
+
+    editColumn.appendChild(editIcon);
+    row.appendChild(editColumn);
+
+    var deleteIcon = document.createElement("i");
+    deleteIcon.className = "fas fa-trash-alt";
+    deleteIcon.style.color = "red";
+    deleteIcon.style.marginLeft = "5px"
+    deleteIcon.onclick = "deleteMedic(" + name + ")";
+
+    editColumn.appendChild(deleteIcon);
+    
     tableBody.appendChild(row);
+}
+
+//Update the medic choosen
+function updateMedic(){
+    
+}
+
+//Delete the medic choosen
+function deleteMedic(name){
+    const matches = document.querySelectorAll(th);
+    matches.forEach(function(row){
+        if (row.value == name){
+            
+        }
+    })
+}
+
+function showTipWindow(){
+    var tipWindow = document.getElementById("newTipWindow");
+    tipWindow.style.display = "block";
+
+    var basePage = document.getElementById("coverPage");
+    basePage.style.display = "block"
+}
+
+function validTip(){
+    closeTipWindow();
+
+    var tip = document.getElementById("tipInput").value;
+    console.log("Tip : " + tip);
+
+    addTipRow(tip);
+
+    document.getElementById("tipInput").value = "";
+}
+
+function addTipRow(tip){
+    var tableBody = document.getElementById("tipsBody");
+    var row = document.createElement("tr");
+
+    var tipColumn = document.createElement("th");
+    tipColumn.textContent = tip;
+    row.appendChild(tipColumn);
+
+    var editColumn = document.createElement("th");
+    var editIcon = document.createElement("i");
+    editIcon.className = "fas fa-pen";
+    editIcon.style.color = "#31E093";
+    editIcon.style.marginRight = "5px"
+    editColumn.appendChild(editIcon);
+    row.appendChild(editColumn);
+
+    var deleteIcon = document.createElement("i");
+    deleteIcon.className = "fas fa-trash-alt";
+    deleteIcon.style.color = "red";
+    deleteIcon.style.marginLeft = "5px"
+    editColumn.appendChild(deleteIcon);
+
+    tableBody.appendChild(row);
+}
+
+function closeTipWindow(){
+    var tipWindow = document.getElementById("newTipWindow");
+    tipWindow.style.display = "none";
+
+    var basePage = document.getElementById("coverPage");
+    basePage.style.display = "none"
 }

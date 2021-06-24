@@ -43,11 +43,15 @@
 #prescription thead th{
     color: white;
     background-color: #31E093;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 
 #prescription tbody th{
-    background-color: lightgray;
+    background-color: #F4F6F6;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .greenButton{
@@ -65,10 +69,15 @@
     margin-bottom: 8px;
 }
 
+.center{
+    width:max-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #createOrdonnanceButton{
     border-radius: 25px;
-    border:4px solid #4da7fb;
-    font-size: large;
+    border: none;
     bottom: 10px;
 }
 
@@ -82,7 +91,7 @@
     height: 100%;
 }
 
-#newMedicWindow{
+#newMedicWindow, #newTipWindow{
     width: 50%;
     background-color: white;
     border-radius: 25px;
@@ -96,23 +105,23 @@
     transform: translate(-50%, -50%);
 }
 
-#newMedicWindow h5{
+#newMedicWindow h5, #newTipWindow h5{
     margin-top: 5px;
     text-decoration: underline;
     text-align: center;
 }
 
-#newMedicWindow h2{
+#newMedicWindow h2, #newTipWindow h2{
     color: #31E093;
     text-align: center;
 }
 
-#newMedicWindow input{
+#newMedicWindow input, #newTipWindow textarea{
     border: 2px solid #4da7fb;
     border-radius: 25px;
 }
 
-input{
+input, textarea{
     padding-left:10px;
     padding-top: 5px;
     padding-bottom: 5px;   
@@ -201,7 +210,7 @@ input{
 }
 
 #tips tbody th{
-    background-color: lightgray;
+    background-color: #F4F6F6;;
 }
 
 
@@ -218,4 +227,12 @@ input{
     display: block;
     margin-top: 8px;
     margin-bottom: 8px;
+}
+
+#tipInput{
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+    height: 100px;
+    
 }

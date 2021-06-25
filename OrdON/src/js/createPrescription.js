@@ -1,4 +1,7 @@
-
+let medicRowCounter = 0;
+let rowMedicIdEditing = "";
+let tipRowCounter = 0;
+let rowTipIdEditing = "";
 //Show the pop up window 
 function showMedicWindow(){
     var medicWindow = document.getElementById("newMedicWindow");
@@ -11,11 +14,24 @@ function showMedicWindow(){
 //Add a mention to the mentions of the prescription and show it
 function addMention(){
     var input = document.getElementById("mentionInput").value;
+    if (input != ""){
+        var p = document.createElement("p");
+        p.textContent = input;
+        p.className = "mention"
+        document.getElementById("mentions").appendChild(p);
+    }
+    
+    document.getElementById("mentionInput").value =  "";
+    
+}
 
+//Get back the mentions when editing
+function restoreMention(mention){
     var p = document.createElement("p");
-    p.textContent = input;
+    p.textContent = mention;
     p.className = "mention"
     document.getElementById("mentions").appendChild(p);
+    document.getElementById("mentionInput").value =  "";
     
 }
 
@@ -45,8 +61,18 @@ function validMedic(){
         console.log("Mention : " + entry);
       });
 
-    addMedicRow(medicName, medicQuantity, medicDescription, medicMentions);
+
+    if(medicName.trim() != "" && medicQuantity.trim() != "" && medicDescription.trim() != ""){
+        if (rowMedicIdEditing != ""){
+            updateMedicRow(medicName, medicQuantity, medicDescription, medicMentions)
+        }
+        else{
+            addMedicRow(medicName, medicQuantity, medicDescription, medicMentions);
+        }
+    }
+
     clearAllForm();
+
 }
 
 function clearAllForm(){
@@ -68,20 +94,27 @@ function closeMedicWindow(){
 
 //Add the medic to the table
 function addMedicRow(name, quantity, description, mentions){
+    medicRowCounter++;
+
     var tableBody = document.getElementById("prescriptionBody");
     var row = document.createElement("tr");
+    row.id = "medicRow" + medicRowCounter;
 
-    var nameColumn = document.createElement("th");
+    var nameColumn = document.createElement("td");
     nameColumn.textContent = name;
-    var descriptionColumn = document.createElement("th");
+    nameColumn.className = "nameColumn";
+    var descriptionColumn = document.createElement("td");
     descriptionColumn.textContent =description;
-    var quantityColumn = document.createElement("th");
+    descriptionColumn.className = "descriptionColumn";
+    var quantityColumn = document.createElement("td");
     quantityColumn.textContent = quantity;
+    quantityColumn.className = "quantityColumn";
     row.appendChild(nameColumn);
     row.appendChild(descriptionColumn);
     row.appendChild(quantityColumn);
 
-    var mentionsColumn = document.createElement("th");
+    var mentionsColumn = document.createElement("td");
+    mentionsColumn.className = "mentionsColumn";
     var mentionsDiv = document.createElement("div");
     mentionsDiv.id = "mentionsRow";
     mentions.forEach(function(mention){
@@ -93,39 +126,102 @@ function addMedicRow(name, quantity, description, mentions){
     mentionsColumn.appendChild(mentionsDiv);
     row.appendChild(mentionsColumn);
 
-    var editColumn = document.createElement("th");
+    var editColumn = document.createElement("td");
+    editColumn.className = "editColumn"
+
+    var editDiv = document.createElement("div");
     var editIcon = document.createElement("i");
     editIcon.className = "fas fa-pen";
     editIcon.style.color = "#31E093";
     editIcon.style.marginRight = "5px"
-    editIcon.onclick = "editMedic()"
 
+    var mentionsArray = genereateMentionsArray(mentions);
 
-    editColumn.appendChild(editIcon);
-    row.appendChild(editColumn);
+    editDiv.setAttribute("onclick", "updateMedic('"+row.id+"', '" + name + "', '" + quantity + "', '" + description + "', [" + mentionsArray +"])");
+    editDiv.appendChild(editIcon);
 
+    var deleteDiv = document.createElement("div");
     var deleteIcon = document.createElement("i");
     deleteIcon.className = "fas fa-trash-alt";
     deleteIcon.style.color = "red";
     deleteIcon.style.marginLeft = "5px"
-    deleteIcon.onclick = "deleteMedic(" + name + ")";
+    deleteDiv.setAttribute("onclick", "deleteMedic('"+row.id+"')");
+    deleteDiv.appendChild(deleteIcon);
 
-    editColumn.appendChild(deleteIcon);
-    
+    editColumn.appendChild(editDiv);
+    editColumn.appendChild(deleteDiv);
+    editColumn.style.display = "flex";
+    editColumn.style.justifyContent = "center";
+
+    row.appendChild(editColumn);    
     tableBody.appendChild(row);
 }
 
-//Update the medic choosen
-function updateMedic(){
+function updateMedicRow(name, quantity, description, mentions){
+    var row = document.getElementById(rowMedicIdEditing);
+    
+    for(let i = 0; i < row.children.length; i++){
+        if(row.children[i].className == "nameColumn"){
+            row.children[i].textContent = name;
+        }
+        else if(row.children[i].className == "descriptionColumn"){
+            row.children[i].textContent = description;
+        }
+        else if(row.children[i].className == "quantityColumn"){
+            row.children[i].textContent = quantity;
+        }
+        else if(row.children[i].className == "mentionsColumn"){
+            row.children[i].children[0].innerHTML = "";
+            mentions.forEach(function(mention){
+                var p = document.createElement("p");
+                p.textContent = mention;
+                p.className = "mentionInRow";
+                row.children[i].children[0].appendChild(p);
+            });
+        }
+        else if(row.children[i].className == "editColumn"){
+            var mentionsArray = genereateMentionsArray(mentions);
+            row.children[i].children[0].setAttribute("onclick", "updateMedic('"+row.id+"', '" + name + "', '" + quantity + "', '" + description + "', [" + mentionsArray +"])")
+            row.children[i].children[1].setAttribute("onclick", "deleteMedic('"+row.id+"')")
+        }
+    }
     
 }
 
-//Delete the medic choosen
-function deleteMedic(name){
-    const matches = document.querySelectorAll(th);
+function genereateMentionsArray(mentions){
+    var mentionsArray = new Array;
+    for (let i = 0; i < mentions.length; i++) {
+        mentionsArray[i] = "'" + mentions[i] + "'";
+    }
+    return mentionsArray;
+}
+
+//Update the medic choosen
+function updateMedic(id, name, quantity, description, mentions){
+    const matches = document.querySelectorAll('tr');
     matches.forEach(function(row){
-        if (row.value == name){
-            
+        if (row.id == id){
+            //Pré remplir le formulaire
+            document.getElementById("nameInput").value = name;
+            document.getElementById("quantityInput").value = quantity;
+            document.getElementById("descriptionInput").value = description;
+            for (let i = 0; i < mentions.length; i++) {
+                restoreMention(mentions[i])
+            }
+            showMedicWindow(row.id);
+            rowMedicIdEditing = row.id;
+        
+        }
+    })
+}
+
+//Delete the medic choosen
+function deleteMedic(id){
+    const matches = document.querySelectorAll('tr');
+    matches.forEach(function(row){
+        if (row.id == id){
+            //Supprimer cette ligne
+            row.parentNode.removeChild(row);
         }
     })
 }
@@ -144,35 +240,91 @@ function validTip(){
     var tip = document.getElementById("tipInput").value;
     console.log("Tip : " + tip);
 
-    addTipRow(tip);
+    if(tip.trim() != ""){
+        if (rowTipIdEditing != ""){
+            updateTipRow(tip);
+        }
+        else{
+            addTipRow(tip);
+
+        }
+    }
 
     document.getElementById("tipInput").value = "";
 }
 
 function addTipRow(tip){
+    tipRowCounter++;
+
     var tableBody = document.getElementById("tipsBody");
     var row = document.createElement("tr");
+    row.id = "tipRow" + tipRowCounter
 
     var tipColumn = document.createElement("th");
+    tipColumn.className = "tipColumn";
     tipColumn.textContent = tip;
     row.appendChild(tipColumn);
 
     var editColumn = document.createElement("th");
+    editColumn.className = "editColumn";
+
+    var editDiv = document.createElement("div");
     var editIcon = document.createElement("i");
     editIcon.className = "fas fa-pen";
     editIcon.style.color = "#31E093";
     editIcon.style.marginRight = "5px"
-    editColumn.appendChild(editIcon);
-    row.appendChild(editColumn);
+    editDiv.appendChild(editIcon);
+    editDiv.setAttribute("onclick", "updateTip('"+row.id+"', '"+tip+"')");
 
+    var deleteDiv = document.createElement("div");
     var deleteIcon = document.createElement("i");
     deleteIcon.className = "fas fa-trash-alt";
     deleteIcon.style.color = "red";
     deleteIcon.style.marginLeft = "5px"
-    editColumn.appendChild(deleteIcon);
+    deleteDiv.appendChild(deleteIcon);
+    deleteDiv.setAttribute("onclick", "deleteTip('"+row.id+"')");
 
+    editColumn.appendChild(editDiv);
+    editColumn.appendChild(deleteDiv);
+    editColumn.style.display = "flex";
+    editColumn.style.justifyContent = "center";
+
+    row.appendChild(editColumn);
     tableBody.appendChild(row);
 }
+
+function updateTipRow(tip){
+    var row = document.getElementById(rowTipIdEditing);
+
+    row.children[0].textContent = tip;
+    row.children[1].children[0].setAttribute("onclick", "updateTip('"+row.id+"', '"+tip+"')");
+    row.children[1].children[1].setAttribute("onclick", "deleteTip('"+row.id+"')");
+}
+
+function updateTip(id, tip){
+    const matches = document.querySelectorAll('tr');
+    matches.forEach(function(row){
+        if (row.id == id){
+            //Pré remplir le formulaire
+            document.getElementById("tipInput").value = tip;
+            
+            showTipWindow(row.id);
+            rowTipIdEditing = row.id;
+        
+        }
+    })
+}
+
+function deleteTip(id){
+    const matches = document.querySelectorAll('tr');
+    matches.forEach(function(row){
+        if (row.id == id){
+            //Supprimer cette ligne
+            row.parentNode.removeChild(row);
+        }
+    })
+}
+
 
 function closeTipWindow(){
     var tipWindow = document.getElementById("newTipWindow");

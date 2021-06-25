@@ -11,19 +11,21 @@
 
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
-                <h3 class="doctorText">Docteur</h3>
-                <h3 class="doctorText">Nom du docteur</h3>
+                <h3 class="doctorTextLeft">Docteur</h3>
+                <h3 class="doctorTextLeft">Nom du docteur</h3>
             </div>
             <div id="doctorInfosRight">
                 <div id="doctorInfosRightTop">
-                    <h3 class="doctorText">Adresse du docteur</h3>
-                    <h3 class="doctorText">CP et ville</h3>
-                    <h3 class="doctorText">Tel cabinet</h3>
+                    <h3 class="doctorTextRight">Adresse du docteur</h3>
+                    <h3 class="doctorTextRight">CP et ville</h3>
+                    <h3 class="doctorTextRight">Tel cabinet</h3>
                 </div>
             </div>
         </div>
 
-        <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le XX/XX/XXXX</h3>
+        <div class="fixedRight">
+            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le XX/XX/XXXX</h3>
+        </div>
 
         <div id="infosPatient">
             <h3>Mmme/M NOM Prenom</h3>
@@ -56,15 +58,18 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="firtLine" style="width: 85%;">Description du conseil</th>
-                            <th scope="firtLine" style="width: 15%;"></th>
+                            <th scope="firtLine" style="width: 95%;">Description du conseil</th>
+                            <th scope="firtLine" style="width: 5%;"></th>
                         </tr>
                     </thead>
                     <tbody id="tipsBody">
                     </tbody>
                 </table>  
             </div> 
-            <button class="blueButton" id="addTip" type="button" onclick="showTipWindow()">Ajouter une prescription d'un médicament</button>
+            <div class="fixedLeft">
+                <button class="blueButton" id="addTip" type="button" onclick="showTipWindow()">Ajouter une prescription d'un médicament</button>
+
+            </div>
         </div>
 
         <div class="center">
@@ -73,9 +78,6 @@
 
         <div id="coverPage" >
         </div>
-
-        <!--<%- include('layouts/footer'); -%>-->
-
         <div id="newMedicWindow" style="display: none;">
 
             <h5 onclick="closeMedicWindow()">Fermer</h5>
@@ -86,7 +88,7 @@
             <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
             <!--Cette div est cachée et apparati lorsque l'utilisateur clique sur ajouter un médicament-->
             
-            <h3>Mentions</h3>
+            <h3 style="margin-top: 15px; margin-bottom: 8px;">Mentions</h3>
             <div id="inputMentions">
                 <input id="mentionInput" type="text" name="medicMention" placeholder="Mention" required>
                 <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
@@ -107,8 +109,7 @@
             <button class="blueButton" id="validTip" type="button" onclick="validTip()">Valider ce conseil</button>
 
         </div>
-        <%- include('layouts/greenfaq'); -%>
-        <%- include('layouts/footer'); -%>
-        <%- include('layouts/scripts'); -%>
+        <%- include('../layouts/footer'); -%>
+        <%- include('../layouts/scripts'); -%>
     </body>
 </html>

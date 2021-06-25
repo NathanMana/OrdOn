@@ -48,7 +48,7 @@ router.post('/inscription', (req, res) => {
  * Traite la connexion des médecins
  * @method GET
  */
-router.get('/connexion',  (res,req)=>{
+router.get('/connexion',  (req,res)=>{
     const email = req.body.email
     const password = req.body.password
     

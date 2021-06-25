@@ -18,6 +18,20 @@
     font-family: 'Roboto', sans-serif;
 }
 
+a, a:link{
+    text-decoration:none; 
+    cursor: pointer;
+    color:var(--dark);
+}
+
+a:focus, a:hover, a:active{
+    text-decoration:none; 
+    cursor: pointer;
+    color:var(--blue);
+}
+
+
+
 html, body {
     margin:0;
     padding: 0;
@@ -286,6 +300,10 @@ footer li {
     background: var(--darkblue);
 }
 
+.btngreen a{
+    color:var(--white);
+}
+
 .btngreensmall {
     background-color: var(--green);
     color: var(--white);
@@ -354,6 +372,10 @@ button {
     color:var(--white);
  
 }
+
+.liprofil a{
+    color:var(--white);
+}
 .profilform{
     margin:15px auto;
     align-items: center;
@@ -382,6 +404,7 @@ button {
     margin: 15px 100px;
     background-color: var(--grey);
     text-align: left;
+    width: 337px;
 }
 
 

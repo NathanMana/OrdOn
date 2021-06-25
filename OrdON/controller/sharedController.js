@@ -20,10 +20,10 @@ router.get('/pharmacien', (req, res)=>{
 })
 
 router.get('/patient', (req, res)=>{
-    res.render('connectionPath')
+    res.render('../views/Doctor/connectionDoctor')
 })
 
-router.get('/docteur', (req, res)=>{
-    res.render('connectionPath')
+router.get('/doctor', (req, res)=>{
+    res.render('../views/Patient/connectionPatient')
 })
 module.exports = router

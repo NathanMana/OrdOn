@@ -1,4 +1,4 @@
-var bcrypt = require('../bcrypt');
+var bcrypt = require('bcrypt');
 /* GERE LES ROUTES DU PHARMACIEN */
 /* "/pharmacien/"  */
 const express = require('express');
@@ -83,7 +83,7 @@ router.get('/connexion',  (res,req)=>{
     
     req.session.pharmacist = new Pharmacist()
 
-    const result = await Pharmacist.query({
+    const result = Pharmacist.query({
         text: 'SELECT * FROM public."user" WHERE email=$1',
         values: [email]
     })
@@ -95,10 +95,10 @@ router.get('/connexion',  (res,req)=>{
       }
     const user = result.rows[0]
 
-    if (await bcrypt.compare(password, user.password)) {
+    if (bcrypt.compare(password, user.password)) {
         // alors connecter l'utilisateur
         req.session.userId = user.id
-        const jout = await client.query({
+        const jout = client.query({
           values: [user.id],
           rowMode: 'array'
         })

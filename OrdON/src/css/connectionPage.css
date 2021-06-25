@@ -19,7 +19,11 @@ body .title {
   .btn:hover {
     cursor: grab;
   }
-
+  
+form {
+    margin: 0 auto;
+    text-align: center;
+}
 .signup{
     display: flex;
     flex-direction:row;

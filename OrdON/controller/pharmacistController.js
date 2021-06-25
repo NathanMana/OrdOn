@@ -18,6 +18,13 @@ const Pharmacist = require('./../models/Pharmacist')
  router.get('/profil', (req, res) => {
     res.render('Pharmacist/profil')
 })
+
+/**
+ * Gère l'affichage de la page ordonnance archivé du pharmacien
+ */
+ router.get('/ordonnancearchive', (req, res) => {
+    res.render('Pharmacist/ordonnancearchive')
+})
 /**
  * Traite l'inscription des pharmaciens
  * @method POST

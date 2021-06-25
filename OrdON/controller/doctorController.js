@@ -55,7 +55,7 @@ router.post('/inscription', (req, res) => {
  * Traite la connexion des médecins
  * @method GET
  */
-router.get('/connexion',  (res,req)=>{
+router.get('/connexion',  (req,res)=>{
     const email = req.body.email
     const password = req.body.password
     
@@ -80,6 +80,11 @@ router.get('/connexion',  (res,req)=>{
         console.log('un doctor est déjà connecté')
         res.redirect('Doctor/home', { Doctor : req.session.doctor })
     }
+})
+
+//Donne l'accès à la page de création d'ordonnance
+router.get('/ordonnance/creer', (req,res)=>{
+    res.render('Doctor/create_ordonnance')
 })
 
 

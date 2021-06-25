@@ -175,4 +175,6 @@ INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`) VALUES ('Vill
 
 INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Manaranche', 'Nathan', 'nat.manar@gmail.com', 'qsdjlkqjdk', '0', '1');
 INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Benessam', 'Iliana', 'iliana@orange.fr', 'qdqsddsqq', '0', '2');
-
+INSERT INTO `ordon`.`pharmacist` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Yannick', 'keh', 'yannickkeh@ozebi.fr', 'chelfigang', '0', '3');
+use ordon;
+select * from Pharmacist;

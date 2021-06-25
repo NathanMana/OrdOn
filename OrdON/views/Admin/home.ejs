@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <style>
+        h1 {
+            width: 100%;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            flex: 1 0 500px;
+            margin: 30px;
+        }
+        section article {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--dark);
+            border-radius : 10px;
+            margin-top: 2rem;
+        }
+        section article h3 {
+            color: var(--dark);
+            text-align: left;
+            font-weight: bold;
+            padding: 0;
+            margin: 0;
+        }
+        .profession {
+            margin: 1rem 0;
+        }
+        section article span {
+            width: 100%;
+            display: block;
+        }
+        a {
+            text-decoration: none;
+            color: var(--dark);
+        }
+        span {
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <%- include('../layouts/nav'); -%>
+    <h1>Liste des professionnels en attente de validation</h1>
+    <div class="container">
+        <section>
+            <h2>Médecins</h2>
+            <% locals.doctors.forEach(doctor => { %>
+                <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/medecin/<%= doctor.id_doctor %> ">
+                    <article>
+                        <h3><%= doctor.firstname + " " + doctor.name %> </h3>
+                        <span class="profession">Médecin</span>
+                        <span><%= doctor.address + ", " + doctor.city + ", " + doctor.zipcode %> </span>
+                    </article>
+                </a>  
+            <% }); %> 
+        </section>
+        <section>
+            <h2>Pharmaciens</h2>
+            <% locals.pharmacists.forEach(pharmacist => { %>
+                <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/pharmacien/<%= pharmacist.id_pharmacist %> ">
+                    <article>
+                        <h3><%= pharmacist.firstname + " " + pharmacist.name %> </h3>
+                        <span class="profession">Pharmacien</span>
+                        <span><%= pharmacist.address + ", " + pharmacist.city + ", " + pharmacist.zipcode %> </span>
+                    </article>
+                </a>  
+            <% }); %> 
+        </section>
+    </div>
+    <%- include('../layouts/scripts'); -%>
+</body>
+</html>

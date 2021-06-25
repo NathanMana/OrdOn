@@ -17,7 +17,14 @@ router.post('/inscription', (req, res) => {
     const city = req.body.city
     const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+
+    // Vérification de l'existence du médecin
+    
+
+    
+    // Besoin d'une preuve quand même
+
+
 
     let doctorIsAlreadyRegistered = DoctorServices.check(name,firstName,email,password)
 

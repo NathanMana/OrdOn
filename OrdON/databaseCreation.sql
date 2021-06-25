@@ -43,7 +43,8 @@ create table ordon.Professionnal(
         id_professionnal   Int  Auto_increment  NOT NULL ,
         city               Varchar (100) NOT NULL ,
         address            Varchar (150) NOT NULL ,
-        zipcode            Varchar(10) NOT NULL
+        zipcode            Varchar(10) NOT NULL ,
+        proofpath         Varchar(150)
 	,CONSTRAINT Professionnal_PK PRIMARY KEY (id_professionnal)
 )ENGINE=InnoDB;
 
@@ -163,3 +164,15 @@ create table ordon.mention_attribution(
 	,CONSTRAINT mention_attribution_Attribution_FK FOREIGN KEY (id_attribution) REFERENCES Attribution(id_attribution)
 	,CONSTRAINT mention_attribution_Mention0_FK FOREIGN KEY (id_mention) REFERENCES Mention(id_mention)
 )ENGINE=InnoDB;
+
+
+#---------------------------------------------------------
+# JEU DES TEST
+# --------------------------------------------------------
+INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Sainte-Suz', 'Le Moulin des forges', '53270', 'http://placehold.it/20x20');
+INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Evron', 'Rue de la mairie', '53600', 'oui.jpg');
+INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`) VALUES ('Ville', 'Adresse', '45789');
+
+INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Manaranche', 'Nathan', 'nat.manar@gmail.com', 'qsdjlkqjdk', '0', '1');
+INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Benessam', 'Iliana', 'iliana@orange.fr', 'qdqsddsqq', '0', '2');
+

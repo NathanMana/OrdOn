@@ -1,0 +1,3 @@
+# ignore node_modules folder
+/OrdOn/node_modules/*
+/Ordon/.vscode/*

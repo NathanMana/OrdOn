@@ -37,7 +37,7 @@ class Attribution {
         this.#listMentions = listMentions
     }
 
-    getIdAttribution(){return this.#id_attribution}
+    getAttributionId(){return this.#id_attribution}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}
@@ -67,6 +67,19 @@ class Attribution {
         this.#listMentions.splice(index, 1)
     }
     setListMentions(listMentions){this.#listMentions = listMentions}
+
+    /**
+     * Avant d'envoyer à la view, doit être transformé en objet classique
+     */
+    toObject() {
+        return {
+            id_attribution = this.#id_attribution,
+            description = this.#description,
+            quantity = this.#quantity,
+            drug = this.#drug.toObject(),
+            listMentions = this.#listMentions.map(e => e.toObject())
+        }
+    }
 }
 
 module.exports = Attribution

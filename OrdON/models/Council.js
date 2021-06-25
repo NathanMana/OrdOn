@@ -21,10 +21,20 @@ class Council {
         this.#description = description
     }
 
-    getIdCouncil(){return this.#id_council}
+    getCouncilId(){return this.#id_council}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}
+
+    /**
+     * Avant d'envoyer à la view, doit être transformé en objet classique
+     */
+    toObject() {
+        return {
+            id_council = this.#id_council,
+            description = this.#description
+        }
+    }
 }
 
 module.exports = Council

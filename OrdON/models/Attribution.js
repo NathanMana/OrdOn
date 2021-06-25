@@ -37,7 +37,7 @@ class Attribution {
         this.#listMentions = listMentions
     }
 
-    getIdAttribution(){return this.#id_attribution}
+    getAttributionId(){return this.#id_attribution}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}

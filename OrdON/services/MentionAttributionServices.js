@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 /**
  * Gère toutes les opérations sur la table MentionAttribution
  */
-class MentionAttributionService {
+class MentionAttributionServices {
     /**
      * Ajoute une mention à une prescription
      * @param {MentionAttribution} mentionAttribution 
@@ -62,4 +62,4 @@ class MentionAttributionService {
     }
 }
 
-module.exports = MentionService
+module.exports = MentionAttributionServices

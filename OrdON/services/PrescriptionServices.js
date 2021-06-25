@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 const Attribution = require('../models/Attribution');
 const Prescription = require('../models/Prescription');
-const AttributionService = require('./AttributionService');
+const AttributionService = require('./AttributionServices');
 const pool = mysql.createPool({
     host: "localhost",
     user: "root",

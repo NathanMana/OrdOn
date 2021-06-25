@@ -9,12 +9,12 @@ const pool = mysql.createPool({
 });
 
 const Attribution = require('../models/Attribution');
-const MentionService = require('./MentionService')
+const MentionService = require('./MentionServices')
 
 /**
  * Gère toutes les opérations sur la table Attribution
  */
-class AttributionService {
+class AttributionServices {
     /**
      * Ajoute une prescription
      * @param {Attribution} attribution 
@@ -95,4 +95,4 @@ class AttributionService {
     }
 }
 
-module.exports = AttributionService
+module.exports = AttributionServices

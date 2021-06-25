@@ -311,6 +311,19 @@ footer li {
     margin-left: 15px;
 }
 
+.btndanger {
+    background-color: var(--danger_light);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 15px 35px;
+    margin: 10px 0;
+    border-radius: 30px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+    transition: 0.3s ease-out;
+}
+
 button {
     font-weight: 500;
     text-align: center;

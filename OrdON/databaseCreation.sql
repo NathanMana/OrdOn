@@ -43,7 +43,8 @@ create table ordon.Professionnal(
         id_professionnal   Int  Auto_increment  NOT NULL ,
         city               Varchar (100) NOT NULL ,
         address            Varchar (150) NOT NULL ,
-        zipcode            Varchar(10) NOT NULL
+        zipcode            Varchar(10) NOT NULL ,
+        proofpath         Varchar(150) NOT NULL
 	,CONSTRAINT Professionnal_PK PRIMARY KEY (id_professionnal)
 )ENGINE=InnoDB;
 

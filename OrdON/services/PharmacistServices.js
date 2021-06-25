@@ -38,7 +38,7 @@ const pool = mysql.createPool({
      */
       static async updatePharmacist(pharmacist){
         try {
-            if (!pharmacist.getId() || pharmacist.getId() <= 0) throw 'Le pharmacien n\'existe pas' 
+            if (!pharmacist.getIdPharmacist() || pharmacist.getIdPharmacist() <= 0) throw 'Le pharmacien n\'existe pas' 
 
             const connection = await pool.getConnection();
             await connection.query(
@@ -46,7 +46,7 @@ const pool = mysql.createPool({
                 isAccountValidated = ? WHERE id_pharmacist = ?`, 
                 [
                     pharmacist.getBirthdate(), pharmacist.isQRCodeVisible(), pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),
-                    pharmacist.getPassword(), pharmacist.isAccountValidated(), pharmacist.getId()
+                    pharmacist.getPassword(), pharmacist.isAccountValidated(), pharmacist.getIdPharmacist()
                 ]
             )
             connection.release()

@@ -13,7 +13,7 @@ const Council = require('../models/Council');
 /**
  * Gère toutes les opérations sur la table Attribution
  */
-class CouncilService {
+class CouncilServices {
     /**
      * Ajoute un conseil
      * @param {Council} council 
@@ -77,7 +77,7 @@ class CouncilService {
             let listCouncils = []
             result[0].forEach((councilData) => {
                 const council = new Council()
-                Object.assign(council, attributionData)
+                Object.assign(council, councilData)
                 listCouncils.push(council)
             })
 
@@ -89,4 +89,4 @@ class CouncilService {
     }
 }
 
-module.exports = CouncilService
+module.exports = CouncilServices

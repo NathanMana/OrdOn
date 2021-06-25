@@ -101,6 +101,26 @@ class PatientServices {
         }
         catch (e) { console.log(e)}
     }
+
+
+    /**
+     * vérifie si un email est déjà présent en bdd
+     * @param {string} email 
+     */
+    static async isEmailPresent(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM patient WHERE email = ?', 
+                [email]
+            )
+            connection.release()
+            if (result[0][0]) return true
+            return false
+        } catch (e) {
+            console.log(e)
+        }
+    }
 }
 
 module.exports = PatientServices

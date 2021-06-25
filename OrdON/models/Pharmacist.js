@@ -24,8 +24,28 @@ class Pharmacist extends Profesionnal{
         super(name, firstname, email, password, city, address, zipcode)
     }
 
-    getId(){return this.#id_pharmacist}
-    setId(id){this.#id_pharmacist = id}
+    getPharmacistId(){return this.#id_pharmacist}
+    setPharmacistId(id){this.#id_pharmacist = id}
+
+    /**
+     * Permet une insertion plus rapide dans le service
+     * Converti l'instance en object JS classique
+     * @returns {Object}
+     */
+    toObject() {
+        return {
+            name : this.getName(),
+            firstname : this.getFirstname(),
+            email : this.getEmail(), 
+            password : this.getPassword(),
+            id_pharmacist : this.#id_pharmacist,
+            isAccountValidated : this.getIsAccountValidated(),
+            encryptedId : this.getEncryptedId(),
+            city : this.getCity(),
+            zipcode : this.getZipcode(),
+            address : this.getAddress()
+        }
+    }
 }
 
 

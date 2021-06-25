@@ -56,12 +56,12 @@ class Prescriptions {
         this.#listAttributions = listAttributions
     }
 
-    getIdPrescription(){return this.#id_prescription}
-    setIdPrescription(id){this.#id_prescription = id}
+    getPrescriptionId(){return this.#id_prescription}
+    setPrescriptionId(id){this.#id_prescription = id}
 
-    getIdDoctor() {return this.#id_doctor}
+    getDoctorId() {return this.#id_doctor}
 
-    getIdPatient(){return this.#id_patient}
+    getPatientId(){return this.#id_patient}
 
     getDateCreation(){return this.#date_creation}
 

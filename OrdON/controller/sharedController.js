@@ -8,6 +8,9 @@ const PatientServices = require('../services/PatientServices')
  * Gère l'affichage de la page d'accueil
  */
 router.get('/', async (req, res) => {
+    let patient = new Patient()
+    patient.setName("Jean")
+    console.log(patient.getName())
     res.render('index')
 })
 

@@ -110,6 +110,21 @@ class Prescriptions {
     }
     setListAttributions(listAttributions){this.#listAttributions = listAttributions}
 
+    /**
+     * Avant d'envoyer à la view, doit être transformé en objet classique
+     */
+    toObject() {
+        return {
+            id_prescription = this.#id_prescription,
+            date_creation = this.#date_creation,
+            isQrCodeVisible = this.#isQrCodeVisible,
+            listAttributions = this.#listAttributions.map(e => e.toObject()),
+            listCouncils = this.#listCouncils.map(e => e.toObject()),
+            id_patient = this.#id_patient,
+            id_doctor = this.#id_doctor
+        }
+    }
+
 }
 
 module.exports = Prescriptions

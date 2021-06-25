@@ -25,4 +25,15 @@ class Drug {
 
     getName(){return this.#name}
 
+
+    /**
+     * Avant d'envoyer à la view, doit être transformé en objet classique
+     */
+    toObject() {
+        return {
+            id_drug = this.#id_drug,
+            name = this.#name
+        }
+    }
+
 }

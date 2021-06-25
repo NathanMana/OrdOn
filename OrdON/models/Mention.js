@@ -20,6 +20,15 @@ class Mention {
     getName(){return this.#name}
     setName(name){this.#name = name}
 
+    /**
+     * Avant d'envoyer à la view, doit être transformé en objet classique
+     */
+    toObject() {
+        return {
+            name = this.#name,
+        }
+    }
+
 }
 
 module.exports = Mention

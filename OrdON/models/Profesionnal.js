@@ -7,6 +7,11 @@ const Person = require('./Person');
 class Profesionnal extends Person {
 
     /**
+     * Id pro
+     */
+    #id_professionnal
+
+    /**
      * Ville du lieu d'exercice
      */
     #city
@@ -35,6 +40,7 @@ class Profesionnal extends Person {
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
+     * @param {string} proofPath 
      */
     constructor(name, firstname, email, password, city, address, zipcode, proofPath) {
         super(name, firstname, email, password)
@@ -55,6 +61,9 @@ class Profesionnal extends Person {
 
     getProofPath() {return this.#proofPath}
     setProofPath(proofPath) {this.#proofPath = proofPath}
+
+    getProfessionnalId() {return this.#id_professionnal}
+    setProfessionnalId(id) {this.#id_professionnal = id}
 }
 
 

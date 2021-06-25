@@ -8,11 +8,6 @@ class Doctor extends Profesionnal {
     #id_doctor
 
     /**
-     * Id pro
-     */
-    #id_professionnal
-
-    /**
      * Constructeur de la classe Médecin
      * @param {string} name 
      * @param {string} firstname 
@@ -21,16 +16,14 @@ class Doctor extends Profesionnal {
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
+     * @param {string} proofPath 
      */
-    constructor(name, firstname, email, password, city, address, zipcode) {
-        super(name, firstname, email, password, city, address, zipcode);
+    constructor(name, firstname, email, password, city, address, zipcode, proofPath) {
+        super(name, firstname, email, password, city, address, zipcode, proofPath);
     }
 
     getDoctorId() {return this.#id_doctor}
     setDoctorId(id) {this.#id_doctor = id}
-
-    getProfessionnalId() {return this.#id_professionnal}
-    setProfessionnalId(id) {this.#id_professionnal = id}
 
     /**
      * Permet une insertion plus rapide dans le service
@@ -48,7 +41,8 @@ class Doctor extends Profesionnal {
             encryptedId : this.getEncryptedId(),
             city : this.getCity(),
             zipcode : this.getZipcode(),
-            address : this.getAddress()
+            address : this.getAddress(),
+            proofPath : this.getProofPath()
         }
     }
 }

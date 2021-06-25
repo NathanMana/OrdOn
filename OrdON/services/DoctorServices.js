@@ -50,8 +50,8 @@ const pool = mysql.createPool({
                 ]
             )
             await connection.query(
-                `UPDATE professionnal SET city = ?, zipcode = ?, address = ? WHERE id_professionnal = ?`, 
-                [doctor.getCity(), doctor.getZipcode(), doctor.getAddress(), doctor.getProfessionnalId()]
+                `UPDATE professionnal SET city = ?, zipcode = ?, address = ?, proofpath = ? WHERE id_professionnal = ?`, 
+                [doctor.getCity(), doctor.getZipcode(), doctor.getAddress(), doctor.getProofPath(), doctor.getProfessionnalId()]
             )
             connection.release()
             console.log("Docteur modifié")
@@ -144,7 +144,8 @@ const pool = mysql.createPool({
                 doctorData.password, 
                 doctorData.city,
                 doctorData.address,
-                doctorData.zipcode
+                doctorData.zipcode,
+                doctorData.proofpath
             )
             doctor.setDoctorId(doctorData.id_doctor)
             doctor.setEncryptedId(doctorData.encryptedId)
@@ -176,7 +177,8 @@ const pool = mysql.createPool({
                     data.password, 
                     data.city,
                     data.address,
-                    data.zipcode
+                    data.zipcode,
+                    data.proofpath
                 )
                 doctor.setDoctorId(data.id_doctor)
                 doctor.setEncryptedId(data.encryptedId)

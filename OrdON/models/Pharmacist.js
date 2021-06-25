@@ -19,9 +19,10 @@ class Pharmacist extends Profesionnal{
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
+     * @param {string} proofPath 
      */
-    constructor(name, firstname, email, password, city, address, zipcode){
-        super(name, firstname, email, password, city, address, zipcode)
+    constructor(name, firstname, email, password, city, address, zipcode, proofPath){
+        super(name, firstname, email, password, city, address, zipcode, proofPath)
     }
 
     getPharmacistId(){return this.#id_pharmacist}
@@ -43,7 +44,8 @@ class Pharmacist extends Profesionnal{
             encryptedId : this.getEncryptedId(),
             city : this.getCity(),
             zipcode : this.getZipcode(),
-            address : this.getAddress()
+            address : this.getAddress(),
+            proofPath : this.getProofPath()
         }
     }
 }

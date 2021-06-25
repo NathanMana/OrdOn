@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body>
+    <%- include('layouts/nav'); -%>
+    <section class="sectionblue">
+        <p>Avec OrdOn, récuperez et consultez facilement vos ordonnances médicales de manière sécurisé !</p>
+        <a href=""><button class="btngreen">S'inscrire</button></a>
+    </section>
+    <section class="sectionwhite">
+        <h2 class="darkbluefont">Comment ça marche ?</h2>
+        <div class="triple">
+            <article class="article3">
+                <h4>1ère étape</h4>
+                <img class="etape" src="/src/images/logo/LogoOrdOn.png">
+                <p class="liste">Inscrivez-vous sur OrdOn</p>
+            </article>
+            <article class="article3">
+                <h4>2ème étape</h4>
+                <img class="etape" src="/src/images/home/qrcodeprofil.png">
+                <div>
+                    <p class="liste">Présentez votre QR code à votre prochaine visite médical et récuperez votre ordonnance</p>
+                    <p class="liste">Le médecin se chargera de vérifier vos informations</p>
+                </div>
+            </article>
+            <article class="article3">
+                <h4>3ème étape</h4>
+                <img class="etape" src="./src/images/home/prescription.png">
+                <p class="liste">Présentez le QR Code de l’ordonnance à la pharmacie puis récuperez vos médicaments</p>
+            </article>
+        </div>
+    </section>
+    <%- include('layouts/greenfaq'); -%>
+    <%- include('layouts/footer'); -%>
+    <%- include('layouts/scripts'); -%>
+</body>
+</html>

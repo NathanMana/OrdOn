@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body>
+    <%- include('../layouts/navConnected'); -%>
+    <section class="sectiondark">
+        <p>En consultation chez un médecin ?</p>
+        <button class="btngreensmall">Je génère mon QR Code</button>
+    </section>
+    <section class="sectionblueConnected">
+        <h2>Mes ordonnances valides</h2>
+        <div class="triple" style="justify-content: flex-start;">
+            <article class="articleOrd">
+                <h6 style="color:var(--danger_light);">17 juin 2021</h6>
+                <p class="parBlue">Émise par le Dr Pathy</p>
+                <p class="parBlue">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+            <article class="articleOrd">
+                <h6 style="color:var(--danger_light);">17 juin 2021</h6>
+                <p class="parBlue">Émise par le Dr Pathy</p>
+                <p class="parBlue">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+        </div>
+        <a><btn class="btngreensmall" style="margin: 5px auto;padding: 10px 20px;">Tout voir</btn> </a>
+    </section>
+    <section class="sectionwhiteConnected">
+        <h2 class="darkbluefont">Historique de mes ordonnances</h2>
+        <div class="triple" style="justify-content: space-around;">
+            <article class="articleOrdpass">
+                <h6>17 juin 2021</h6>
+                <p class="parWhite">Émise par le Dr Pathy</p>
+                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+            <article class="articleOrdpass">
+                <h6>17 juin 2021</h6>
+                <p class="parWhite">Émise par le Dr Pathy</p>
+                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+            <article class="articleOrdpass">
+                <h6>17 juin 2021</h6>
+                <p class="parWhite">Émise par le Dr Pathy</p>
+                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+            <article class="articleOrdpass">
+                <h6>17 juin 2021</h6>
+                <p class="parWhite">Émise par le Dr Pathy</p>
+                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
+                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+            </article>
+            
+        </div>
+        <a><btn class="btngreensmall" style="margin: 10px auto;padding: 10px 20px;">Tout voir</btn> </a>
+    </section>
+    <%- include('../layouts/greenfaq'); -%>
+    <%- include('../layouts/footer'); -%>
+</body>
+</html>

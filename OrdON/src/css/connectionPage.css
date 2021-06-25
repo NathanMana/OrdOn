@@ -24,11 +24,7 @@ form {
     margin: 0 auto;
     text-align: center;
 }
-<<<<<<< HEAD
 .signup{
-=======
-.signup {
->>>>>>> a5f593e65ab45d1f5e3113cd9b654fbdc5d98526
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

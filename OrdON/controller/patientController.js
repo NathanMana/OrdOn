@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const PatientServices = require('../services/PatientServices');
 const router = express.Router()
 const Patient = require('./../models/Patient')
+const QRcode = require('qrcode')
 
 /**
  * Traite l'inscription des patients
@@ -56,7 +57,16 @@ router.post('/inscription', async (req, res) => {
  * Gère l'affichage de la page profile du patient
  */
  router.get('/profil', (req, res) => {
-    res.render('Patient/profil')
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.encryptedId
+
+    QRcode.toDataURL(url, (err,qr) =>{
+        if (err) res.send("error occurred")
+
+        return res.render("Patient/profil", { ProfilObject: {
+            qrcode : qr,
+            user: req.session.patient
+        } })
+    })
 })
 
 /**
@@ -70,32 +80,33 @@ router.post('/inscription', async (req, res) => {
  * Traite la connexion du patient
  * @method GET
  */
- router.get('/connexion',  (req,res)=>{
+ router.get('/connexion',  (res,req)=>{
     const email = req.body.email
     const password = req.body.password
     
     req.session.patient = new Patient()
 
-    if (req.session.patient == null){
-        if(PatientServices.check(email,password)){
-            req.session.patient =  PatientServices.get(email, password)
-            res.render('Patient/home', {Patient: req.session.patient })
-        }
-        if(!PatientServices.checkEmail(email)){
+    if (req.session.encryptedId == null){
+        
+        if(!PatientServices.isEmailPresent(email)){
             alert('email incorrect')
-            res.redirect('Patient/connectionPatient')
+            return res.redirect('Patient/connectionPatient')
         }
-        if (!PatientServices.checkPassword(password)){
+        if (!PatientServices.isPasswordCorrect(password)){
             alert('mot de passe incorrect')
-            res.redirect('Patient/connectionPatient')
+            return res.redirect('Patient/connectionPatient')
         }
+        req.session.encryptedId =  PatientServices.getPatientByEmail(email)
+        return res.render('Patient/home')
 
     }
     else{
         console.log('un patient est déjà connecté')
-        res.redirect('Patient/home', { Patient : req.session.patient })
+        return res.redirect('Patient/home')
     }
 })
+
+
 
 
 module.exports = router

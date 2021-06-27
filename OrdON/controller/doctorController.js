@@ -3,7 +3,8 @@
 const express = require('express')
 const router = express.Router()
 const Doctor = require('./../models/Doctor')
-// const DoctorServices = require('../services/DoctorServices')
+const bcrypt = require('bcrypt')
+const DoctorServices = require('../services/DoctorServices');
 
 /**
  * Traite l'inscription des médecins
@@ -19,7 +20,6 @@ router.post('/inscription', (req, res) => {
     const zipcode = req.body.zipcode
 
     // Vérification de l'existence du médecin
-    
 
     
     // Besoin d'une preuve quand même

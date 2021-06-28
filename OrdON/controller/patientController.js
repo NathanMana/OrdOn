@@ -7,10 +7,21 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
 
+
+
+router.get('/connexion', (req, res)=>{
+    res.render('Patient/connectionPatient')
+})
+
+router.get('/inscription', (req, res)=>{
+    res.render('Patient/registerPatient')
+})
+
 /**
  * Traite l'inscription des patients
  * @method POST
  */
+
 router.post('/inscription', async (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstname

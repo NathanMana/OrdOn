@@ -15,16 +15,8 @@ router.get('/connexion', (req, res)=>{
     res.render('connectionPath')
 })
 
-router.get('/pharmacien', (req, res)=>{
-    res.render('../views/Pharmacist/connectionPharmacist')
-})
-
-router.get('/patient', (req, res)=>{
-    res.render('connectionPath')
-})
-
-router.get('/docteur', (req, res)=>{
-    res.render('connectionPath')
+router.get('/register', (req, res)=>{
+    res.render('registerPath')
 })
 
 

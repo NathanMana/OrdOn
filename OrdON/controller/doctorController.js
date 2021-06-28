@@ -11,6 +11,13 @@ const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
 // const DoctorServices = require('../services/DoctorServices')
 
+router.get('/connexion', (req, res)=>{
+    res.render('Doctor/connectionDoctor')
+})
+
+router.get('/inscription', (req, res)=>{
+    res.render('Doctor/registerDoctor')
+})
 /**
  * Traite l'inscription des médecins
  * @method POST

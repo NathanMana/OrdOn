@@ -5,6 +5,13 @@ const router = express.Router()
 const Pharmacist = require('./../models/Pharmacist')
 // const PharmacistServices = require('../services/PharmacistServices')
 
+router.get('/connexion', (req, res)=>{
+    res.render('Pharmacist/connectionPharmacist')
+})
+
+router.get('/inscription', (req, res)=>{
+    res.render('Pharmacist/registerPharmacist')
+})
 /**
  * Gère l'affichage de la page d'accueil du pharmacien
  */
@@ -78,7 +85,7 @@ router.get('/connexion',  (res,req)=>{
     }
     else{
         console.log('un pharmacien est déjà connecté')
-        res.redirect('Pharmacist/home', { Pharmaciist : req.session.pharmacist })
+        res.redirect('pharmacist/home', { Pharmaciist : req.session.pharmacist })
     }
 })
 

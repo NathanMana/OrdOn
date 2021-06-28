@@ -9,6 +9,7 @@ const Pharmacist = require('./../models/Pharmacist')
  * Gère l'affichage de la page d'accueil du pharmacien
  */
  router.get('/', (req, res) => {
+     console.log("fff");
     res.render('Pharmacist/home')
 })
 

@@ -22,11 +22,6 @@ class Profesionnal extends Person {
     #zipcode
 
     /**
-     * Lien vers l'image de "preuve"
-     */
-    #proofPath
-
-    /**
      * Constructeur de la classe Professionnal
      * @param {string} name 
      * @param {string} firstname 
@@ -36,12 +31,11 @@ class Profesionnal extends Person {
      * @param {string} address 
      * @param {string} zipcode 
      */
-    constructor(name, firstname, email, password, city, address, zipcode, proofPath) {
+    constructor(name, firstname, email, password, city, address, zipcode) {
         super(name, firstname, email, password)
         this.#city = city;
         this.#address = address;
         this.#zipcode = zipcode;
-        this.#proofPath = proofPath
     }
 
     getCity() {return this.#city}
@@ -52,9 +46,6 @@ class Profesionnal extends Person {
 
     getZipcode() {return this.#zipcode}
     setZipcode(zipcode) {this.#zipcode = zipcode}
-
-    getProofPath() {return this.#proofPath}
-    setProofPath(proofPath) {this.#proofPath = proofPath}
 }
 
 

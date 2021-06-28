@@ -45,6 +45,9 @@
             text-decoration: none;
             color: var(--dark);
         }
+        span {
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
@@ -53,23 +56,27 @@
     <div class="container">
         <section>
             <h2>Médecins</h2>
-            <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/medecin/1">
-                <article>
-                    <h3>Nom prénom</h3>
-                    <span class="profession">Médecin généraliste</span>
-                    <span>Sainte Suzanne</span>
-                </article>
-            </a>
+            <% locals.doctors.forEach(doctor => { %>
+                <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/medecin/<%= doctor.id_doctor %> ">
+                    <article>
+                        <h3><%= doctor.firstname + " " + doctor.name %> </h3>
+                        <span class="profession">Médecin</span>
+                        <span><%= doctor.address + ", " + doctor.city + ", " + doctor.zipcode %> </span>
+                    </article>
+                </a>  
+            <% }); %> 
         </section>
         <section>
             <h2>Pharmaciens</h2>
-            <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/pharmacien/1">
-                <article>
-                    <h3>Nom prénom</h3>
-                    <span class="profession">Médecin généraliste</span>
-                    <span>Sainte Suzanne</span>
-                </article>
-            </a>
+            <% locals.pharmacists.forEach(pharmacist => { %>
+                <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/validation/pharmacien/<%= pharmacist.id_pharmacist %> ">
+                    <article>
+                        <h3><%= pharmacist.firstname + " " + pharmacist.name %> </h3>
+                        <span class="profession">Pharmacien</span>
+                        <span><%= pharmacist.address + ", " + pharmacist.city + ", " + pharmacist.zipcode %> </span>
+                    </article>
+                </a>  
+            <% }); %> 
         </section>
     </div>
     <%- include('../layouts/scripts'); -%>

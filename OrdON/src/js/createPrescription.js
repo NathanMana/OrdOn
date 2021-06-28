@@ -1,3 +1,4 @@
+
 let medicRowCounter = 0;
 let rowMedicIdEditing = "";
 let tipRowCounter = 0;
@@ -43,7 +44,6 @@ function getMentions(){
         var mention = userItem.textContent;
         mentions.push(mention);
     });
-    console.log("Length : "  + mentions.length)
     return mentions;
 }
 
@@ -56,9 +56,7 @@ function validMedic(){
     var medicDescription = document.getElementById("descriptionInput").value;
     var medicMentions = getMentions();
 
-    console.log("Name : " + medicName + " ,Quantité : " + medicQuantity + " ,Description : " + medicDescription);
     medicMentions.forEach(function(entry) {
-        console.log("Mention : " + entry);
       });
 
 
@@ -99,6 +97,7 @@ function addMedicRow(name, quantity, description, mentions){
     var tableBody = document.getElementById("prescriptionBody");
     var row = document.createElement("tr");
     row.id = "medicRow" + medicRowCounter;
+    row.className = "medicRow";
 
     var nameColumn = document.createElement("td");
     nameColumn.textContent = name;
@@ -238,7 +237,6 @@ function validTip(){
     closeTipWindow();
 
     var tip = document.getElementById("tipInput").value;
-    console.log("Tip : " + tip);
 
     if(tip.trim() != ""){
         if (rowTipIdEditing != ""){
@@ -259,6 +257,7 @@ function addTipRow(tip){
     var tableBody = document.getElementById("tipsBody");
     var row = document.createElement("tr");
     row.id = "tipRow" + tipRowCounter
+    row.className = "tipRow";
 
     var tipColumn = document.createElement("th");
     tipColumn.className = "tipColumn";
@@ -332,4 +331,54 @@ function closeTipWindow(){
 
     var basePage = document.getElementById("coverPage");
     basePage.style.display = "none"
+}
+
+function rowToAttributtion(row){
+    const drug_name = row.children[0].textContent;
+    const attribution_desc = row.children[1].textContent;
+    const attribution_quantity = row.children[2].textContent;
+
+    var mentionList = new Array();
+    const mentions = row.children[3].querySelectorAll('p');
+    mentions.forEach(function(mention){
+        mentionList.push(mention.textContent);
+    })
+    const attribution_mentions = mentionList;
+
+    const attribution = [drug_name, attribution_desc, attribution_quantity, attribution_mentions];
+    return attribution;
+}
+
+function getAllAttributionsInArray(){
+    const matches = document.querySelectorAll('tr.medicRow');
+    var attributionList = new Array();
+    var i = 0;
+    matches.forEach(function(row){
+        attributionList[i] = rowToAttributtion(row);
+        i++;
+    })
+    console.log(attributionList);
+    return attributionList;
+}
+
+function getAllTipsInArray(){
+    const matches = document.querySelectorAll('tr.tipRow');
+    var tipList = new Array();
+    var i = 0;
+    matches.forEach(function(row){
+        tipList[i] = row.children[0].textContent;
+        i++;
+    })
+    console.log(tipList);
+    return tipList;
+}
+
+function createOrdonnance(){
+
+    //1 - Get the attributions and the tips in an array of their classes
+    attributionList = getAllAttributionsInArray();
+    tipList = getAllTipsInArray();
+
+    //2 - Call the post route
+    
 }

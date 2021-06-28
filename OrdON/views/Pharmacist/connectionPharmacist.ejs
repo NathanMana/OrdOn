@@ -5,32 +5,32 @@
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/connectionPage.css"/>
 </head>
-  <body>
+<body>
     <%- include('../layouts/nav'); -%>
-        <div class="body">
-            <h1 class="title">Se connecter en tant que pharmacien</h1>
-            <section>
-                <div class="container">
-                    <div class="formulaire">
-                        <form>
-                            <div>
-                                <input class="inputID champ1" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
-                            </div>
-                            <div>
-                                <input class="inputID champ2" name=" password" type="password"  placeholder="Mot de passe">
-                            </div>
-                            <p class="register">mot de passe oublié </p>
-                            <input class="btn" type="submit" value="Se connecter">
-                            <div class="signup">
-                                <p class="descSignup">Pas de compte ?</p>
-                                <a href="#" class="signinbx">s'inscrire</a>
-                            </div>
-                        </form>
-                    </div>
+    <div class="body">
+        <h1 class="title">Se connecter en tant que pharmacien</h1>
+        <section>
+            <div class="container">
+                <div class="formulaire">
+                    <form>
+                        <div>
+                            <input class="inputID champ1" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
+                        </div>
+                        <div>
+                            <input class="inputID champ2" name=" password" type="password"  placeholder="Mot de passe">
+                        </div>
+                        <p class="register">mot de passe oublié </p>
+                        <input class="btn" type="submit" value="Se connecter">
+                        <div class="signup">
+                            <p class="descSignup">Pas de compte ?</p>
+                            <a href="#" class="signinbx">s'inscrire</a>
+                        </div>
+                    </form>
                 </div>
-            </section>
-        </div>
-        <%- include('../layouts/footer'); -%>
-        <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
-  </body>
+            </div>
+        </section>
+    </div>
+    <%- include('../layouts/footer'); -%>
+    <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
+</body>
 </html>

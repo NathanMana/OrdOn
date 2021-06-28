@@ -18,7 +18,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
-a, a:link{
+a {
     text-decoration:none; 
     cursor: pointer;
     color:var(--white);
@@ -158,6 +158,9 @@ aside {
     height: 100vh;
     top: 0;
     transition: 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 aside ul li a {
@@ -168,6 +171,7 @@ aside ul li a {
     display: block;
     position: relative;
     border-bottom: 1px solid var(--green);
+    color: var(--dark);
 }
 
 aside ul li:last-child a {
@@ -351,7 +355,32 @@ button {
     border: none;
     cursor: pointer;
 }
+
+.btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+}
+
 /* FORMULAIRE */
+
+form {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+}
+
+.formleft {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.form input {
+    display: block;
+}
+
   form .inputID{
     border-radius: 60px;
     font-family: 'Raleway';
@@ -362,28 +391,50 @@ button {
     margin-top: 10px;
     margin-bottom: 10px;
   }
-
-  .formleft{
-    padding: 50px;
-    text-align: left;
-    display: block;
-    justify-content: space-around;
-  }
-
-  .formcenter{
-    padding: 50px;
-    text-align: center;
-    display: block;
-    justify-content: space-around;
-  }
 /* Profil */
+.sectionred{
+    width: 100%;
+    background-color: var(--danger_light);
+    color: var(--white);
+    padding: 10px 30px;
+    display: flex;
+    font-size: 1.2rem;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.sectionred h3 {
+    padding: 0;
+    margin: 0;
+    width: auto;
+    font-size: 1.1rem;
+}
+
+.sectionred p {
+    font-size: 0.9rem;
+}
+
+.profil__right__section {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.profile__input__container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
 .profil{
     display: flex;
+    flex-wrap: nowrap;
 }
 .darkSide{
     height: 100%;
-    width: 500px;
     background-color: var(--darkblue);
     flex: 0 0 300px;
 }
@@ -401,20 +452,22 @@ button {
 }
 
 .profilform{
-    margin:15px auto;
+    margin:15px 0;
     align-items: center;
     text-align: center;
     flex: 1 0 800px;
 }
+
 .profilBox{
-    border-radius: 60px;
+    border-radius: 30px;
     font-family: 'Raleway';
     font-style: italic;
     font-size: 20px;
     padding: 10px 45px 10px 60px;
     text-decoration: none;
     border: 2px solid var(--blue);
-    margin: 15px 110px;
+     margin: 1rem 2rem;
+    display: block;
 }
 
 .profilBoxGrey{

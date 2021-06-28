@@ -7,7 +7,39 @@
 </head>
 <body>
     <%- include('../layouts/nav'); -%>
-    <h1 class="title">Se connecter en tant que docteur</h1>
+    <div class="body">
+        <h1 class="title">S'inscrire en tant que Pharmacien</h1>
+        <section>
+            <div class="container">
+                <div class="formulaire">
+                    <form>
+                        <div>
+                            <input class="inputID champ1" name="name" placeholder="Nom" required>
+                            <input class="inputID champ2" name="firstname" placeholder="Prenom" required>
+                        </div>
+                        <div>
+                            <input class="inputID champ3" name="birthday" type="date" placeholder="Date de naissance" require>
+                            <input class="inputID champ2" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
+                        </div>
+                        <div>
+                            <p class="">
+                            </p>
+                            <p class="">
+
+                            </p>
+                        </div>
+                        <div>
+                            <input class="inputID champ2" name=" password" type="password"  placeholder="Mot de passe" require>
+                        </div>
+                        <div>
+                            <input class="inputID champ2" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
+                        </div>
+                        <input class="btn" type="submit" value="Se connecter">
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
     <%- include('../layouts/footer'); -%>
     <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
 </body>

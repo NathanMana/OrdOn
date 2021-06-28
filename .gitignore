@@ -1,3 +1,5 @@
 # ignore node_modules folder
 /OrdOn/node_modules/*
 /Ordon/.vscode/*
+# Every patterns that match
+\.DS_STORE

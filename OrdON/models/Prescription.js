@@ -56,12 +56,12 @@ class Prescriptions {
         this.#listAttributions = listAttributions
     }
 
-    getPrescriptionId(){return this.#id_prescription}
-    setPrescriptionId(id){this.#id_prescription = id}
+    getIdPrescription(){return this.#id_prescription}
+    setIdPrescription(id){this.#id_prescription = id}
 
-    getDoctorId() {return this.#id_doctor}
+    getIdDoctor() {return this.#id_doctor}
 
-    getPatientId(){return this.#id_patient}
+    getIdPatient(){return this.#id_patient}
 
     getDateCreation(){return this.#date_creation}
 
@@ -109,21 +109,6 @@ class Prescriptions {
         this.#listAttributions.splice(index, 1)
     }
     setListAttributions(listAttributions){this.#listAttributions = listAttributions}
-
-    /**
-     * Avant d'envoyer à la view, doit être transformé en objet classique
-     */
-    toObject() {
-        return {
-            id_prescription = this.#id_prescription,
-            date_creation = this.#date_creation,
-            isQrCodeVisible = this.#isQrCodeVisible,
-            listAttributions = this.#listAttributions.map(e => e.toObject()),
-            listCouncils = this.#listCouncils.map(e => e.toObject()),
-            id_patient = this.#id_patient,
-            id_doctor = this.#id_doctor
-        }
-    }
 
 }
 

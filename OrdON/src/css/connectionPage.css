@@ -24,7 +24,7 @@ form {
     margin: 0 auto;
     text-align: center;
 }
-.signup{
+.signup {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

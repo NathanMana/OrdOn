@@ -38,22 +38,15 @@ const pool = mysql.createPool({
      */
       static async updatePharmacist(pharmacist){
         try {
-            if (!pharmacist.getPharmacistId() || pharmacist.getPharmacistId() <= 0) throw 'Le pharmacien n\'existe pas' 
+            if (!pharmacist.getId() || pharmacist.getId() <= 0) throw 'Le pharmacien n\'existe pas' 
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE pharmacist SET name = ?, firstname = ?, email = ?, password = ?, 
+                `UPDATE pharmacist SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
                 isAccountValidated = ? WHERE id_pharmacist = ?`, 
                 [
-                    pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),pharmacist.getPassword(), 
-                    pharmacist.getIsAccountValidated(), pharmacist.getPharmacistId()
-                ]
-            )
-            await connection.query(
-                `UPDATE professionnal SET city = ?, zipcode = ?, address = ?, proofpath = ? WHERE id_professionnal = ?`, 
-                [
-                    pharmacist.getCity(), pharmacist.getZipcode(), pharmacist.getAddress(), pharmacist.getProofPath(), 
-                    pharmacist.getProfessionnalId()
+                    pharmacist.getBirthdate(), pharmacist.isQRCodeVisible(), pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),
+                    pharmacist.getPassword(), pharmacist.isAccountValidated(), pharmacist.getId()
                 ]
             )
             connection.release()
@@ -90,75 +83,23 @@ const pool = mysql.createPool({
      * @param {long} idPharmacist 
      * @returns {Pharmacist} le pharmacien cherché
      */
-     static async getPharmacistById(idPharmacist) {
+     static async getPatientById(idPharmacist) {
         try {
             if (!idPharmacist || idPharmacist <= 0) throw 'L\id indiqué est erroné'
 
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE id_pharmacist = ?', 
+                'SELECT * FROM pharmacist WHERE id_patient = ?', 
                 [idPharmacist]
             )
             connection.release()
             // On convertit le résultat en objet js
             console.log('Pharmacien récupéré')
-            if (!result[0][0]) return
-
-            const dataPharmacist = result[0][0]
-            let pharmacist = new Pharmacist(
-                dataPharmacist.name,
-                dataPharmacist.firstname,
-                dataPharmacist.email,
-                dataPharmacist.password, 
-                dataPharmacist.city,
-                dataPharmacist.address,
-                dataPharmacist.zipcode,
-                dataPharmacist.proofpath
-            )
-            pharmacist.setPharmacistId(dataPharmacist.id_pharmacist)
-            pharmacist.setEncryptedId(dataPharmacist.encryptedId)
-            pharmacist.setProfessionnalId(dataPharmacist.id_professionnal)
-
-            return pharmacist
+            const pharmacist = new Pharmacist()
+            return Object.assign(pharmacist, result[0][0])
         }
         catch (e) { console.log(e)}
-    }
-
-     /**
-     * Récupère une liste de pharmaciens qui n'ont pas été validés
-     * et qui ont fait une demande de validation
-     * @returns {Array(Pharmacist)}
-     */
-      static async getListUnvalidatedPharmacists() {
-        try {
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
-            )
-            connection.release()
-            if (!result[0]) return
-
-            let listPharmacists = []
-            result[0].forEach(data => {
-                let pharmacist = new Pharmacist(
-                    data.name,
-                    data.firstname,
-                    data.email,
-                    data.password, 
-                    data.city,
-                    data.address,
-                    data.zipcode,
-                    data.proofpath
-                )
-                pharmacist.setPharmacistId(data.id_pharmacist)
-                pharmacist.setEncryptedId(data.encryptedId)
-                pharmacist.setProfessionnalId(data.id_professionnal)
-                listPharmacists.push(pharmacist)
-            })
-            return listPharmacists
-        }
-        catch(e) {console.log(e)}
     }
 }
 

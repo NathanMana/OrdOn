@@ -1,4 +1,3 @@
-var bcrypt = require('bcrypt');
 /* GERE LES ROUTES DU PHARMACIEN */
 /* "/pharmacien/"  */
 const express = require('express');
@@ -56,53 +55,12 @@ router.post('/inscription', (req, res) => {
  * Traite la connexion des pharmaciens
  * @method GET
  */
- /*GetPatientByEmail(email) : function(assert) {
- }
- const password = "mypass123"
-const saltRounds = 10
-
-bcrypt.genSalt(saltRounds, function (err, salt) {
-  if (err) {
-    throw err
-  } else {
-    bcrypt.hash(password, salt, function(err, hash) {
-      if (err) {
-        throw err
-      } if (await bcrypt.compare(passwordClair, passwordHashé){
-
-        } else {
-        console.log(hash)
-        
-      }
-    })
-  }
-})*/
 router.get('/connexion',  (res,req)=>{
     const email = req.body.email
     const password = req.body.password
     
-    req.session.pharmacist = new Pharmacist()
+    req.session.pharmacist = new Pharmaciist()
 
-    const result = Pharmacist.query({
-        text: 'SELECT * FROM public."user" WHERE email=$1',
-        values: [email]
-    })
-    if (result.rows.length === 0) {
-        res.status(401).json({
-          message: 'Pharmacist doesnt exist'
-        })
-        return
-      }
-    const user = result.rows[0]
-
-    if (bcrypt.compare(password, user.password)) {
-        // alors connecter l'utilisateur
-        req.session.userId = user.id
-        const jout = client.query({
-          values: [user.id],
-          rowMode: 'array'
-        })
-    }
     if (req.session.pharmacist == null){
         if(PharmacistServices.check(email,password)){
             req.session.pharmacist =  PharmacistServices.get(email, password)
@@ -116,10 +74,11 @@ router.get('/connexion',  (res,req)=>{
             alert('mot de passe incorrect')
             res.redirect('Pharmacist/connectionPharmacist')
         }
+
     }
     else{
         console.log('un pharmacien est déjà connecté')
-        res.redirect('Pharmacist/home', { Pharmacist : req.session.pharmacist })
+        res.redirect('Pharmacist/home', { Pharmaciist : req.session.pharmacist })
     }
 })
 

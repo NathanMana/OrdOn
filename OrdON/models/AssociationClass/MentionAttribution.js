@@ -23,7 +23,7 @@ class MentionAttribution {
         this.#id_mention = idMention
     }
 
-    getAttributionId(){return this.#id_attribution}
-    getMentionId(){return this.#id_mention}
+    getIdAttribution(){return this.#id_attribution}
+    getIdMention(){return this.#id_mention}
 
 }

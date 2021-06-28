@@ -7,36 +7,29 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
 
-
-
-router.get('/connexion', (req, res)=>{
-    res.render('Patient/connectionPatient')
-})
-
-router.get('/inscription', (req, res)=>{
-    res.render('Patient/registerPatient')
-})
-
 /**
  * Traite l'inscription des patients
  * @method POST
  */
-
 router.post('/inscription', async (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstname
     const email = req.body.email
     const birthdate = req.body.birthdate
-    const password = req.body.password
-    const password_check = req.body.password_check
-
-    if (!name || !firstName || !email || !birthdate || !password || !password_check ) return
+    const password = JSON.stringify(req.body.password)
+    const password_check = JSON.stringify(req.body.password_check)
+    
+    if (!name || !firstName || !email || !birthdate || !password || !password_check ) {
+        //alert('champs manquant')
+        return res.redirect('/Patient/registerPatient')
+    }
     if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
-        return
+        //alert('mot de password trop faible')
+        return res.redirect('/Patient/registerPatient')
     }
 
     if (password !== password_check) {
-        return res.render('Patient/registerPatient', { Patient : {
+        return res.render('/Patient/registerPatient', { Patient : {
             name: name,
             firstName: firstName,
             email: email
@@ -54,7 +47,7 @@ router.post('/inscription', async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10)
     const patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd)
     PatientServices.addPatient(patient)
-    return res.redirect('Patient/connectionPatient')
+    return res.redirect('/patient/connectionPatient')
 })
 
 /**
@@ -69,6 +62,7 @@ router.post('/inscription', async (req, res) => {
  */
  router.get('/profil', (req, res) => {
     const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.encryptedId
+
 
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
@@ -94,26 +88,25 @@ router.post('/inscription', async (req, res) => {
  router.get('/connexion',  (res,req)=>{
     const email = req.body.email
     const password = req.body.password
-    
-    req.session.patient = new Patient()
-
+    console.log('je suis la '+ req.body.encryptedId)
     if (req.session.encryptedId == null){
         
         if(!PatientServices.isEmailPresent(email)){
             alert('email incorrect')
-            return res.redirect('Patient/connectionPatient')
+            return res.redirect('/Patient/connectionPatient')
         }
         if (!PatientServices.isPasswordCorrect(password)){
             alert('mot de passe incorrect')
-            return res.redirect('Patient/connectionPatient')
+            return res.redirect('/Patient/connectionPatient')
         }
         req.session.encryptedId =  PatientServices.getPatientByEmail(email)
-        return res.render('Patient/home')
+        console.log(req.session.encryptedId)
+        return res.render('/Patient/home')
 
     }
     else{
         console.log('un patient est déjà connecté')
-        return res.redirect('Patient/home')
+        return res.redirect('/Patient/home')
     }
 })
 

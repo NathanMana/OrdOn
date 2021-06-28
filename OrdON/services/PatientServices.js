@@ -1,5 +1,12 @@
+const mysql = require('mysql2/promise');
 const Patient = require('../models/Patient');
-const pool = require('./DatabaseConnection')
+const pool = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: 'ordon',
+    waitForConnections : true,
+});
 
 /**
  * Gère toutes les opérations sur la table Patient
@@ -15,9 +22,9 @@ class PatientServices {
             const connection = await pool.getConnection();
             const result = await connection.query('INSERT INTO patient SET ? ', object)
             if (!result) throw 'Une erreur est survenue'
-            patient.setId(result[0].insertId)
-            patient.setEncryptedId(patient.encryptId(patient.getId()))
-            await connection.query('UPDATE patient SET encryptedId = ? WHERE id_patient = ? ', [patient.getEncryptedId(), patient.getId()])
+            patient.setPatientId(result[0].insertId)
+            patient.setEncryptedId(patient.encryptId(patient.getPatientId()))
+            await connection.query('UPDATE patient SET encryptedId = ? WHERE id_patient = ? ', [patient.getEncryptedId(), patient.getPatientId()])
             console.log("Patient inséré")
             connection.release()
         } catch(e){
@@ -31,15 +38,15 @@ class PatientServices {
      */
     static async updatePatient(patient){
         try {
-            if (!patient.getId() || patient.getId() <= 0) throw 'La patient n\'existe pas' 
+            if (!patient.getPatientId() || patient.getPatientId() <= 0) throw 'La patient n\'existe pas' 
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE patient SET birthdate = ?, weight = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
+                `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
                 isAccountValidated = ? WHERE id_patient = ?`, 
                 [
-                    patient.getBirthdate(), patient.getWeight(), patient.isQRCodeVisible(), patient.getName(), patient.getFirstname(),
-                    patient.getEmail(), patient.getPassword(), patient.isAccountValidated(), patient.getId()
+                    patient.getBirthdate(), patient.isQRCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
+                    patient.getPassword(), patient.isAccountValidated(), patient.getPatientId()
                 ]
             )
             connection.release()
@@ -56,14 +63,14 @@ class PatientServices {
      */
     static async deletePatientWithId(patient) {
         try {
-            if (!patient || patient.getId() <= 0) throw 'L\id indiqué est erroné'
+            if (!patient || patient.getPatientId() <= 0) throw 'L\id indiqué est erroné'
 
             // Double vérification avec l'id encrypté
-            if (patient.getId() != patient.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (patient.getPatientId() != patient.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
             await connection.query(
                 'DELETE FROM patient WHERE id_patient = ? AND encryptedId = ?', 
-                [patient.getId(), patient.getEncryptedId()]
+                [patient.getPatientId(), patient.getEncryptedId()]
             )
             connection.release()
             console.log('Patient supprimé')
@@ -89,20 +96,71 @@ class PatientServices {
             connection.release()
             // On convertit le résultat en objet js
             console.log('Patient récupéré')
-            const patientData = result[0][0]
-            const patient = new Patient(
-                patientData.name,
-                patientData.firstname,
-                patientData.email,
-                patient.password,
-                patientData.birthdate,
-                patientData.weight
-            )
-            patient.setEncryptedId(patientData.encryptedId)
-            patient.setId(patientData.id_patient)
-            return patient
+            const patient = new Patient()
+            return Object.assign(patient, result[0][0])
         }
         catch (e) { console.log(e)}
+    }
+
+
+    /**
+     * vérifie si un email est déjà présent en bdd
+     * @param {string} email 
+     */
+    static async isEmailPresent(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM patient WHERE email = ?', 
+                [email]
+            )
+            connection.release()
+            if (result[0][0]) return true
+            return false
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    /**
+     * vérifie si le password correspond à celui stocké en base
+     * @param {String} password 
+     * @param {String} email
+     */
+    static async isPasswordCorrect(password, email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT password FROM patient WHERE email = ?', 
+                [email]
+            )
+            connection.release()
+            if (bcrypt.compare(password, result[0][0])){ return true }
+            return false
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère un patient a partir d'un email et d'un mdp
+     * @param {string} email
+     * @returns {long} encryptedId
+     */
+    static async getPatientByEmail(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM patient WHERE email = ?',
+                [email]
+            )
+            connection.release()
+            const p = new Patient()
+            const patient = object.assign(p, result[0][0])
+            return patient.encryptedId
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 }
 

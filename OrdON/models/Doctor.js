@@ -16,35 +16,13 @@ class Doctor extends Profesionnal {
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
-     * @param {string} proofPath 
      */
-    constructor(name, firstname, email, password, city, address, zipcode, proofPath) {
-        super(name, firstname, email, password, city, address, zipcode, proofPath);
+    constructor(name, firstname, email, password, city, address, zipcode) {
+        super(name, firstname, email, password, city, address, zipcode);
     }
 
-    getDoctorId() {return this.#id_doctor}
-    setDoctorId(id) {this.#id_doctor = id}
-
-    /**
-     * Permet une insertion plus rapide dans le service
-     * Converti l'instance en object JS classique
-     * @returns {Object}
-     */
-     toObject() {
-        return {
-            name : this.getName(),
-            firstname : this.getFirstname(),
-            email : this.getEmail(), 
-            password : this.getPassword(),
-            id_doctor : this.#id_doctor,
-            isAccountValidated : this.getIsAccountValidated(),
-            encryptedId : this.getEncryptedId(),
-            city : this.getCity(),
-            zipcode : this.getZipcode(),
-            address : this.getAddress(),
-            proofPath : this.getProofPath()
-        }
-    }
+    getId() {return this.#id_doctor}
+    setId(id) {this.#id_doctor = id}
 }
 
 

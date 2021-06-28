@@ -28,11 +28,6 @@ class Person  {
     #isAccountValidated = false;
 
     /**
-     * Id encrypté de la personne
-     */
-    #encryptedId = null
-
-    /**
      * Constructeur de la classe Personne
      * @param {string} name 
      * @param {string} firstname 
@@ -75,15 +70,10 @@ class Person  {
         this.#password = password
     }
 
-    getIsAccountValidated() { return this.#isAccountValidated}
+    isAccountValidated() { return this.#isAccountValidated}
     setIsAccountValidated(isAccountValidated){
-        this.#isAccountValidated = isAccountValidated;
+        this.#isAccountValidated =isAccountValidated;
     }
-
-    // Permet de récupérer l'id encrypté
-    getEncryptedId() { return this.#encryptedId }
-    // Permet de modifier l'id encrypté (a ne jamais utiliser autrement qu'à l'ajout en BDD)
-    setEncryptedId(encryptedId) { this.#encryptedId = encryptedId}
 
     /**
      * Permet de transformer l'id de la personne en un id plus secret

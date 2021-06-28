@@ -101,67 +101,6 @@ class PatientServices {
         }
         catch (e) { console.log(e)}
     }
-
-
-    /**
-     * vérifie si un email est déjà présent en bdd
-     * @param {string} email 
-     */
-    static async isEmailPresent(email) {
-        try {
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'SELECT email FROM patient WHERE email = ?', 
-                [email]
-            )
-            connection.release()
-            if (result[0][0]) return true
-            return false
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    /**
-     * vérifie si le password correspond à celui stocké en base
-     * @param {String} password 
-     * @param {String} email
-     */
-    static async isPasswordCorrect(password, email) {
-        try {
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'SELECT password FROM patient WHERE email = ?', 
-                [email]
-            )
-            connection.release()
-            if (bcrypt.compare(password, result[0][0])){ return true }
-            return false
-        }
-        catch (e) { console.log(e)}
-    }
-
-    /**
-     * Récupère un patient a partir d'un email et d'un mdp
-     * @param {string} email
-     * @returns {long} encryptedId
-     */
-    static async getPatientByEmail(email) {
-        try {
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'SELECT email FROM patient WHERE email = ?',
-                [email]
-            )
-            connection.release()
-            const p = new Patient()
-            const patient = object.assign(p, result[0][0])
-            return patient.encryptId
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
 }
 
 module.exports = PatientServices

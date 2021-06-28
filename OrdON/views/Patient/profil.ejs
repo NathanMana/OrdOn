@@ -5,10 +5,22 @@
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
 </head>
+<style>
+    @media screen and (max-width:1105px) {
+        .profilBox {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width:720px) {
+        .darkSide {
+            display: none;
+        }
+    }
+</style>
 <body>
     <%- include('../layouts/navConnected'); -%>
     <section class="sectionred">
-        <p>Votre adresse mail n'a pas été vérifiée !</p>
+        <h3>Votre adresse mail n'a pas été vérifiée !</h3>
         <p style="font-size: 0.9rem;">Vous ne pouvez pas transmettre vos informations via un QR code sans avoir vérifié votre email</p>
     </section>
    <div class="profil">
@@ -23,25 +35,20 @@
                 <li class="liprofil"><a>Supprimer le compte</a></li>
             </ul>
        </div>
-       <div class="profilform">
-           <h2 style="color:var(--darkblue)">Mon profil</h2>
-           <form>
-                <div class="formleft">
-                    <input class="profilBox" placeholder="Nom">
-                    <input class="profilBox" placeholder="Prénom">
-                    <input class="profilBox" placeholder="Date de naissance">
-                    <input class="profilBoxGrey" placeholder="mail@mail.com" disabled>
-                </div> 
-                <div>
-                    <p style="color:var(--danger_light)">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
+       <div class="profil__right__section">
+           <h2>Mon profil</h2>
+           <form action="">
+                <div class="profile__input__container">
+                   <input class="profilBox" type="text" name="" id="" placeholder="Nom">
+                   <input class="profilBox" type="text" name="" id="" placeholder="Prénom">
+                   <input class="profilBox" type="text" name="" id="" placeholder="Date de naissance">
                 </div>
-                <div style="padding:50px;">
-                    <btn class="btngreen">Valider</btn>
-                </div>
-                
-            </form>
+                <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
+                <button class="btngreen btn">Valider</button>
+           </form>
        </div>
    </div>
+    <%- include('../layouts/scripts'); -%>
     <%- include('../layouts/footer'); -%>
 </body>
 </html>

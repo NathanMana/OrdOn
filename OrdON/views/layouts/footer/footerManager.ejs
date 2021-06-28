@@ -1,0 +1,41 @@
+<footer>
+    <div class="foot">
+        <ul class="ulfoot">
+            <li class="footm">Liens</li>
+            <% if (locals.user) { %>
+                <% if (locals.user.type === "patient") { %>
+                    <li class="foots"><a>Mon profil</a></li>
+                    <li class="foots"><a>Mes ordonnances</a></li>
+                <% } else if (locals.user.type === "médecin") {%> 
+                    <li class="foots"><a>Mon profil</a></li>
+                <% } else if (locals.user.type === "pharmacien") {%> 
+                    <li class="foots"><a>Mon profil</a></li>
+                    <li class="foots"><a>Ordonnances archivées</a></li>                
+                <% } %>   
+                <li class="foots"><a href="/deconnexion">Se déconnecter</a></li>
+            <% } else { %>
+                <li class="foots"><a>Se connecter</a></li>
+                <li class="foots"><a>S'inscrire</a></li>    
+            <% } %>  
+        </ul>
+        <ul class="ulfoot">
+            <li class="footm">Aide</li>
+            <li class="foots"><a>FAQ</a></li>
+        </ul>
+        <ul class="ulfoot">
+            <li class="footm">Légal</li>
+            <li class="foots"><a>Conditions Générales d’Utilisations</a></li>
+            <li class="foots"><a>Politique de confidentialité</a></li>
+            <li class="foots"><a>Mentions légales</a></li>
+        </ul>
+        <ul>
+            <li class="footm">Réseaux sociaux</li>
+            <li class="footlogo"><a><img class="footimage" src="/src/images/logo/Twitter_Bird.png"></a></li>
+            <li class="footlogo"><a><img class="footimage" src="/src/images/logo/facebook.png"></a></li>
+            <li class="footlogo"><a><img class="footimage" src="/src/images/logo/instagram.png"></a></li>
+        </ul>
+    </div>
+    <div>
+        <h6 style="font-weight: 100;">OrdOn © Tous droits réservés - 2021</h6>
+    </div>
+</footer>

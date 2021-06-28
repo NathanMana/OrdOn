@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/src/css/home.css">
 </head>
 <body>
-    <%- include('layouts/nav'); -%>
+    <%- include('./layouts/nav/connectionManager'); -%>
     <section class="sectionblue">
         <p>Avec OrdOn, récuperez et consultez facilement vos ordonnances médicales de manière sécurisé !</p>
         <a href="/register"><button class="btngreen">S'inscrire</button></a>
@@ -35,7 +35,7 @@
         </div>
     </section>
     <%- include('layouts/greenfaq'); -%>
-    <%- include('layouts/footer'); -%>
-    <%- include('layouts/scripts'); -%>
+    <%- include('./layouts/footer/footerManager'); -%>
+    <%- include('./layouts/scripts'); -%>
 </body>
 </html>

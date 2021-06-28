@@ -11,12 +11,26 @@ const ProfessionnalServices = require('../services/ProfessionnalServices')
 const Doctor = require('../models/Doctor')
 const DoctorServices = require('../services/DoctorServices')
 const PharmacistServices = require('../services/PharmacistServices')
+const { request } = require('express')
+
+/**
+ * Créer un locals utilisable en ejs
+ */
+ router.use((req, res, next) => {
+    res.locals.user = req.session.user
+    next()
+})
+
 
 /**
  * Formulaire de connexion
  * @method GET
  */
 router.get('/connexion', (req, res) => {
+    if (req.session.error) {
+        res.locals.error = req.session.error
+        req.session.error = undefined
+    }
     res.render('Admin/connection')
 })
 
@@ -26,7 +40,10 @@ router.get('/connexion', (req, res) => {
  */
 router.post('/connexion', async (req, res) => {
     const {email, password} = req.body
-    if (!email || !password) return
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
+    }
 
     // Récupérer l'objet
     const admin = await AdminServices.getAdminByEmail(email)
@@ -34,12 +51,23 @@ router.post('/connexion', async (req, res) => {
     // Vérification mdp
     const verifPass = await bcrypt.compare(password, admin.password)
     if (!verifPass) {
-       return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
     }
 
     req.session.user = {email: email}
 
     return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
+})
+
+/**
+ * Vérifie les droits d'accès a chaque requête
+ */
+ router.use((req, res, next) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user) {
+        return res.redirect("/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion")
+    }
+    next()
 })
 
 /**

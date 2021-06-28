@@ -381,6 +381,15 @@ form {
     display: block;
 }
 
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+}
+input:focus {
+    border-color: var(--green);
+}
+
   form .inputID{
     border-radius: 60px;
     font-family: 'Raleway';

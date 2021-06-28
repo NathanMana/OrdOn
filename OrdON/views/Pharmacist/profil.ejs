@@ -5,6 +5,18 @@
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
 </head>
+<style>
+    @media screen and (max-width:1105px) {
+        .profilBox {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width:720px) {
+        .darkSide {
+            display: none;
+        }
+    }
+</style>
 <body>
     <%- include('../layouts/navConnectedPhar'); -%>
    <div class="profil">
@@ -18,10 +30,10 @@
                 <li class="liprofil"><a>Supprimer le compte</a></li>
             </ul>
        </div>
-       <div class="profilform">
+       <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Mon profil</h2>
            <form>
-                <div class="formleft">
+                <div class="profile__input__container">
                     <input class="profilBoxGrey" placeholder="Nom" disabled>
                     <input class="profilBoxGrey" placeholder="Prénom" disabled>
                     <input class="profilBoxGrey" placeholder="mail@mail.com" disabled>
@@ -31,6 +43,7 @@
             </form>
        </div>
    </div>
+   <%- include('../layouts/scripts'); -%>
     <%- include('../layouts/footer'); -%>
 </body>
 </html>

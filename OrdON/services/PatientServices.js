@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
 const Patient = require('../models/Patient');
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 /**
  * Gère toutes les opérations sur la table Patient
@@ -42,11 +35,11 @@ class PatientServices {
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
+                `UPDATE patient SET birthdate = ?, weight = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
                 isAccountValidated = ? WHERE id_patient = ?`, 
                 [
-                    patient.getBirthdate(), patient.isQRCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
-                    patient.getPassword(), patient.isAccountValidated(), patient.getId()
+                    patient.getBirthdate(), patient.getWeight(), patient.isQRCodeVisible(), patient.getName(), patient.getFirstname(),
+                    patient.getEmail(), patient.getPassword(), patient.isAccountValidated(), patient.getId()
                 ]
             )
             connection.release()
@@ -96,8 +89,18 @@ class PatientServices {
             connection.release()
             // On convertit le résultat en objet js
             console.log('Patient récupéré')
-            const patient = new Patient()
-            return Object.assign(patient, result[0][0])
+            const patientData = result[0][0]
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patient.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setId(patientData.id_patient)
+            return patient
         }
         catch (e) { console.log(e)}
     }

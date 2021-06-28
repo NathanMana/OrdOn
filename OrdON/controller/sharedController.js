@@ -26,4 +26,6 @@ router.get('/patient', (req, res)=>{
 router.get('/docteur', (req, res)=>{
     res.render('connectionPath')
 })
+
+
 module.exports = router

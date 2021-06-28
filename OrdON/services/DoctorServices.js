@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
 const Doctor = require('../models/Doctor');
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 /**
  * Gère toutes les opérations sur la table Docteur
@@ -38,15 +31,15 @@ const pool = mysql.createPool({
      */
      static async updateDoctor(doctor){
         try {
-            if (!doctor.getId() || doctor.getId() <= 0) throw 'Le docteur n\'existe pas' 
+            if (!doctor.getDoctorId() || doctor.getDoctorId() <= 0) throw 'Le docteur n\'existe pas' 
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE doctor SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
+                `UPDATE doctor SET name = ?, firstname = ?, email = ?, password = ?, 
                 isAccountValidated = ? WHERE id_doctor = ?`, 
                 [
-                    doctor.getBirthdate(), doctor.isQRCodeVisible(), doctor.getName(), doctor.getFirstname(), doctor.getEmail(),
-                    doctor.getPassword(), doctor.isAccountValidated(), doctor.getId()
+                    doctor.getName(), doctor.getFirstname(), doctor.getEmail(),
+                    doctor.getPassword(), doctor.getIsAccountValidated(), doctor.getDoctorId()
                 ]
             )
             connection.release()
@@ -90,16 +83,62 @@ const pool = mysql.createPool({
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor WHERE id_doctor = ?', 
+                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE id_doctor = ?', 
                 [idDoctor]
             )
             connection.release()
             // On convertit le résultat en objet js
             console.log('doctor récupéré')
-            const doctor = new Doctor()
-            return Object.assign(doctor, result[0][0])
+            const doctorData = result[0][0]
+            let doctor = new Doctor(
+                doctorData.name,
+                doctorData.firstname,
+                doctorData.email,
+                doctorData.password, 
+                doctorData.city,
+                doctorData.address,
+                doctorData.zipcode
+            )
+            doctor.setDoctorId(doctorData.id_doctor)
+            doctor.setEncryptedId(doctorData.encryptedId)
+            doctor.setProfessionnalId(doctorData.id_professionnal)
+            return doctor
         }
         catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère une liste de médecins qui n'ont pas été validés
+     * et qui ont fait une demande de validation
+     */
+     static async getListUnvalidatedDoctors() {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
+            )
+            connection.release()
+            if (!result[0]) return
+
+            let listDoctors = []
+            result[0].forEach(data => {
+                let doctor = new Doctor(
+                    data.name,
+                    data.firstname,
+                    data.email,
+                    data.password, 
+                    data.city,
+                    data.address,
+                    data.zipcode
+                )
+                doctor.setDoctorId(data.id_doctor)
+                doctor.setEncryptedId(data.encryptedId)
+                doctor.setProfessionnalId(data.id_professionnal)
+                listDoctors.push(doctor)
+            })
+            return listDoctors
+        }
+        catch(e) {console.log(e)}
     }
 }
 

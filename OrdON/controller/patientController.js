@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const PatientServices = require('../services/PatientServices');
 const router = express.Router()
 const Patient = require('./../models/Patient')
-/*const QRcode = require('qrcode')*/
+const QRcode = require('qrcode')
 
 /**
  * Traite l'inscription des patients

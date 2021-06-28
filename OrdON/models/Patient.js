@@ -13,14 +13,14 @@ class Patient extends Person {
     #isQrCodeVisible = false
 
     /**
-     * Id secret du patient
-     */
-    #encryptedId = null
-
-    /**
      * Date de naissance
      */
     #birthdate
+
+    /**
+     * Le poids du patient
+     */
+    #weight
 
     /**
      * Constructeur de la classe Patient
@@ -29,15 +29,17 @@ class Patient extends Person {
      * @param {string} email 
      * @param {string} password 
      * @param {Date} birthdate 
+     * @param {double} weight
      * @param {long} id_patient 
      */
-    constructor(name, firstname, email, password, birthdate) {
+    constructor(name, firstname, email, password, birthdate, weight) {
         super(name, firstname, email, password)
         this.#birthdate = birthdate
+        this.#weight = weight
     }
 
-    getId(){return this.#id_patient}
-    setId(idpatient){this.#id_patient = idpatient}
+    getPatientId(){return this.#id_patient}
+    setPatientId(idpatient){this.#id_patient = idpatient}
     
     isQrCodeVisible() {return this.#isQrCodeVisible}
     setIsQrCodeVisible(isQrCodeVisible) {
@@ -47,10 +49,8 @@ class Patient extends Person {
     getBirthdate(){return this.#birthdate}
     setBirthdate(birthdate){this.#birthdate = birthdate}
 
-    // Permet de récupérer l'id encrypté
-    getEncryptedId() { return this.#encryptedId }
-    // Permet de modifier l'id encrypté (a ne jamais utiliser autrement qu'à l'ajout en BDD)
-    setEncryptedId(encryptedId) { this.#encryptedId = encryptedId}
+    getWeight(){return this.#weight}
+    setWeight(weight){this.#weight = weight}
 
     /**
      * Permet une insertion plus rapide dans le service
@@ -67,7 +67,7 @@ class Patient extends Person {
             id_patient : this.#id_patient,
             isQrCodeVisible : this.#isQrCodeVisible,
             isAccountValidated : this.isAccountValidated(),
-            encryptedId : this.#encryptedId
+            encryptedId : this.getEncryptedId()
         }
     }
 }

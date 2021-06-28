@@ -73,7 +73,7 @@
         </div>
 
         <div class="center">
-            <button class="greenButton" id="createOrdonnanceButton" type="button">Valider mon ordonnance</button>
+            <button class="greenButton" id="createOrdonnanceButton" type="button" onclick="createOrdonnance()">Valider mon ordonnance</button>
         </div>
 
         <div id="coverPage" >
@@ -90,6 +90,9 @@
             
             <h3 style="margin-top: 15px; margin-bottom: 8px;">Mentions</h3>
             <div id="inputMentions">
+                <select id="mentionsSelect">
+                    
+                </select>
                 <input id="mentionInput" type="text" name="medicMention" placeholder="Mention" required>
                 <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
                 <!-- Afficher la liste des mentions ajoutées-->

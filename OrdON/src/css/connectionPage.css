@@ -44,6 +44,7 @@ form {
 .register{
     margin-left: 20px;
     text-decoration: underline;
+    color:var(--dark);
 }
 .descSignup{
     margin:10px;

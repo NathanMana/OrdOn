@@ -36,6 +36,14 @@ router.get('/register', (req, res)=>{
  router.get('/profil/modifiermotdepasse', (req, res) => {
     res.render('Profile/modifyPassword')
 })
+
+/**
+ * Gère l'affichage de la page de l'oublie du mot de passe
+ */
+ router.get('/motdepasseoublie', (req, res) => {
+    res.render('forgotPassword')
+})
+
 /**
  * Deconnecte n'importe quel utilisateur
  */

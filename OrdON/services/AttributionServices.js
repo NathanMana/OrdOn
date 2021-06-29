@@ -1,12 +1,4 @@
-const mysql = require('mysql2/promise');
-
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 const Attribution = require('../models/Attribution');
 const MentionService = require('./MentionServices')

@@ -13,6 +13,7 @@ create table ordon.Patient(
         id_patient         Int  Auto_increment  NOT NULL ,
         encryptedId        Varchar (100) ,
         birthdate          Date NOT NULL ,
+        weight             FLOAT, 
         isQRCodeVisible    Bool NOT NULL ,
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,

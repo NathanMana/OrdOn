@@ -7,7 +7,7 @@ const PatientServices = require('../services/PatientServices')
 /**
  * Gère l'affichage de la page d'accueil
  */
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     res.render('index')
 })
 
@@ -19,15 +19,16 @@ router.get('/connexion', (req, res)=>{
     res.render('connectionPath')
 })
 
-router.get('/pharmacien', (req, res)=>{
-    res.render('../views/Pharmacist/connectionPharmacist')
+router.get('/register', (req, res)=>{
+    res.render('registerPath')
 })
 
-router.get('/patient', (req, res)=>{
-    res.render('connectionPath')
+/**
+ * Deconnecte n'importe quel utilisateur
+ */
+router.get('/deconnexion', (req, res) => {
+    req.session.user = undefined
+    res.redirect('/')
 })
 
-router.get('/docteur', (req, res)=>{
-    res.render('connectionPath')
-})
 module.exports = router

@@ -1,0 +1,13 @@
+<% if (locals.user) { %>
+    <% if (locals.user.type === "patient") { %>
+        <%- include('./navConnected'); -%>
+    <% } else if (locals.user.type === "médecin") {%> 
+        <%- include('./navConnectedMed'); -%>
+    <% } else if (locals.user.type === "pharmacien") {%> 
+        <%- include('./navConnectedPhar'); -%>
+    <% } else { %> 
+        <%- include('./navSimple'); -%>
+    <% } %>   
+<% } else { %>
+    <%- include('./nav'); -%>
+<% } %> 

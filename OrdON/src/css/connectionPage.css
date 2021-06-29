@@ -5,7 +5,7 @@ body .title {
     color: var(--darkblue);
     margin: 30px 0px;
 }
-.btn {
+.boutton {
     border-radius: 60px;
     font-family: 'Raleway';
     color: var(--white);

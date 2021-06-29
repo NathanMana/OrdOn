@@ -29,8 +29,7 @@ class Mention {
     setName(name){this.#name = name}
 
     getIdMention(){return this.#id_mention}
-
-
+    setIdMention(id){this.#id_mention = id}
 }
 
 module.exports = Mention

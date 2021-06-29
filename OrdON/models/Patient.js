@@ -36,8 +36,8 @@ class Patient extends Person {
      * @param {Date} birthdate 
      * @param {long} id_patient 
      */
-    constructor(name, firstname, email, password, birthdate, weight = null) {
-        super(name, firstname, email, password)
+    constructor(name, firstname, email, password, birthdate, gender, weight = null) {
+        super(name, firstname, email, password, gender)
         this.#birthdate = birthdate
         this.#weight = weight
     }
@@ -45,7 +45,7 @@ class Patient extends Person {
     getPatientId(){return this.#id_patient}
     setPatientId(idpatient){this.#id_patient = idpatient}
     
-    isQrCodeVisible() {return this.#isQrCodeVisible}
+    getIsQrCodeVisible() {return this.#isQrCodeVisible}
     setIsQrCodeVisible(isQrCodeVisible) {
         this.#isQrCodeVisible = isQrCodeVisible
     }
@@ -77,7 +77,9 @@ class Patient extends Person {
             id_patient : this.#id_patient,
             isQrCodeVisible : this.#isQrCodeVisible,
             isAccountValidated : this.isAccountValidated(),
-            encryptedId : this.getEncryptedId()
+            encryptedId : this.getEncryptedId(),
+            gender : this.getGender(),
+            isEmailVerified : this.getIsEmailVerified()
         }
     }
 }

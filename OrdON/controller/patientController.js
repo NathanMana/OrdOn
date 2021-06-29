@@ -91,7 +91,8 @@ router.post('/inscription', async (req, res) => {
     nodemailer(
         email, 
         "Confirmation d'inscription à OrdON", 
-        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/verification/" + encryptedId  
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/verification/" + encryptedId,
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/verification/" + encryptedId + "'Cliquer sur ce lien</a>" 
     )
 
     return res.redirect('/patient/email/verification/envoyee')
@@ -153,8 +154,39 @@ router.post('/connexion', async (req, res) => {
     return res.redirect('/Patient/registerPatient')
 })
 
+/**
+ * View indiquant de suivre les indications envoyées dans le mail
+ */
 router.get('/email/verification/envoyee', (req, res) => {
     return res.render('layouts/emailVerification.ejs')
+})
+
+/**
+ * Traitement de la vérification d'un patient
+ */
+router.get('/verification/:encryptedId', async (req, res) => {
+    const encryptedId = req.params.encryptedId
+    if (!encryptedId) return res.status(500).send("Une erreur est survenue")
+
+    // Essayer de récupérer le patient correspondant
+    const patient = await PatientServices.getPatientByEncryptedId(encryptedId)
+    if (!patient) return res.status(500).send("Une erreur est survenue")
+
+    // on vérifie de ne pas avoir déjà vérifié
+    if (patient.getIsEmailVerified()) return res.redirect('/')
+
+    // On peut certifier que l'email est vérifié
+    patient.setIsEmailVerified(true)
+    PatientServices.updatePatient(patient)
+    
+    // On considère que ca le connecte directement
+    req.session.user = {
+        type : "patient",
+        email: patient.getEmail(),
+        name : patient.getName(),
+        firstname : patient.getFirstname()
+    }
+    return res.redirect('/patient/')
 })
 
 

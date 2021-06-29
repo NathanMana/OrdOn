@@ -33,17 +33,28 @@
     #encryptedId = null
 
     /**
+     * Sexe de la personne
+     */
+    #gender
+
+    /**
+     * Indique si l'email a bien été vérifié
+     */
+    #isEmailVerified = false
+
+    /**
      * Constructeur de la classe Personne
      * @param {string} name 
      * @param {string} firstname 
      * @param {string} email 
      * @param {string} password 
      */
-    constructor(name, firstname, email, password){
+    constructor(name, firstname, email, password, gender){
         this.#name = name;
         this.#firstname = firstname;
         this.#email = email;
         this.#password = password;
+        this.#gender = gender;
     }
 
     getName(){
@@ -84,6 +95,12 @@
     getEncryptedId() { return this.#encryptedId }
     // Permet de modifier l'id encrypté (a ne jamais utiliser autrement qu'à l'ajout en BDD)
     setEncryptedId(encryptedId) { this.#encryptedId = encryptedId}
+
+    getGender(){return this.#gender}
+    setGender(gender){this.#gender = gender}
+
+    getIsEmailVerified(){return this.#isEmailVerified}
+    setIsEmailVerified(isEmailVerified){this.#isEmailVerified = isEmailVerified}
 
     /**
      * Permet de transformer l'id de la personne en un id plus secret

@@ -20,7 +20,8 @@ create table ordon.Patient(
         email              Varchar (100) NOT NULL ,
         password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL,
-        tokenEmail         Varchar(200)
+        tokenEmail         Varchar(200),
+        gender             Varchar (30) NOT NULL, 
 	,CONSTRAINT Patient_PK PRIMARY KEY (id_patient)
 )ENGINE=InnoDB;
 

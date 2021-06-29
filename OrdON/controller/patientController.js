@@ -7,13 +7,14 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
 
+const nodemailer = require('../externalsAPI/NodeMailer')
+
 /**
  * Affichage de la page de connexion d'un patient
  */
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
-
 
 /**
  * Affichage de la page inscription d'un patient
@@ -84,8 +85,16 @@ router.post('/inscription', async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10)
     const patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, weightDouble)
-    PatientServices.addPatient(patient)
-    return res.redirect('/patient/connexion')
+    const encryptedId = await PatientServices.addPatient(patient)
+
+    // Envoyer l'email de confirmation
+    nodemailer(
+        email, 
+        "Confirmation d'inscription à OrdON", 
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/verification/" + encryptedId  
+    )
+
+    return res.redirect('/patient/email/verification/envoyee')
 })
 
 /**
@@ -148,6 +157,10 @@ router.post('/inscription', async (req, res) => {
     }
 })
 
+
+router.get('/email/verification/envoyee', (req, res) => {
+    return res.render('Patient/emailVerification.ejs')
+})
 
 
 

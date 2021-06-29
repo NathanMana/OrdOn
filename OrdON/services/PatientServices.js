@@ -20,6 +20,7 @@ class PatientServices {
             await connection.query('UPDATE patient SET encryptedId = ? WHERE id_patient = ? ', [patient.getEncryptedId(), patient.getPatientId()])
             console.log("Patient inséré")
             connection.release()
+            return patient.getEncryptedId()
         } catch(e){
             console.log(e)
         }
@@ -89,8 +90,18 @@ class PatientServices {
             connection.release()
             // On convertit le résultat en objet js
             console.log('Patient récupéré')
-            const patient = new Patient()
-            return Object.assign(patient, result[0][0])
+            const patientData = result[0][0]
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patient.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            return patient
         }
         catch (e) { console.log(e)}
     }

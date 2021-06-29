@@ -11,6 +11,10 @@ router.get('/', (req, res) => {
     res.render('index')
 })
 
+router.get('/faq', (req, res) => {
+    res.render('faq')
+})
+
 router.get('/connexion', (req, res)=>{
     res.render('connectionPath')
 })

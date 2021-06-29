@@ -24,6 +24,27 @@ router.get('/register', (req, res)=>{
 })
 
 /**
+ * Gère l'affichage de la page de modification d'email
+ */
+ router.get('/profil/modifieremail', (req, res) => {
+    res.render('Profile/modifyMail')
+})
+
+/**
+ * Gère l'affichage de la page de modification du mot de passe
+ */
+ router.get('/profil/modifiermotdepasse', (req, res) => {
+    res.render('Profile/modifyPassword')
+})
+
+/**
+ * Gère l'affichage de la page de l'oublie du mot de passe
+ */
+ router.get('/motdepasseoublie', (req, res) => {
+    res.render('forgotPassword')
+})
+
+/**
  * Deconnecte n'importe quel utilisateur
  */
 router.get('/deconnexion', (req, res) => {

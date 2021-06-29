@@ -16,6 +16,11 @@
             display: none;
         }
     }
+    @media screen and (max-width:1105px) {
+        .profilBoxGrey {
+            width: 100%;
+        }
+    }
 </style>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
@@ -24,17 +29,7 @@
         <p style="font-size: 0.9rem;">Vous ne pouvez pas transmettre vos informations via un QR code sans avoir vérifié votre email</p>
     </section>
    <div class="profil">
-       <div class="darkSide">
-            <ul class="ulprofil">
-                <li class="liprofil"><a>Accueil profil</a></li>
-                <li class="liprofil"><a>Modifier email</a></li>
-                <li class="liprofil"><a>Modifier le mot de passe</a></li>
-                <div style="padding-top:70px;padding-bottom: 350px;">
-                    <btn class="btngreen" style="font-size: 1rem; font-weight: normal;" onclick="showQR()"><a>Générer QR code</a></btn>
-                </div>
-                <li class="liprofil"><a>Supprimer le compte</a></li>
-            </ul>
-       </div>
+        <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Mon profil</h2>
            <form class="form" action="">

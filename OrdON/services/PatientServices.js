@@ -41,10 +41,10 @@ class PatientServices {
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_patient = ?`, 
+                isAccountValidated = ?, weight = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_patient = ?`, 
                 [
                     patient.getBirthdate(), patient.getIsQrCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
-                    patient.getPassword(), patient.isAccountValidated(), patient.getGender(), patient.getIsEmailVerified(), 
+                    patient.getPassword(), patient.isAccountValidated(), patient.getWeight(), patient.getGender(), patient.getIsEmailVerified(), 
                     patient.getTokenEmail(), patient.getTokenResetPassword(), patient.getPatientId()
                 ]
             )

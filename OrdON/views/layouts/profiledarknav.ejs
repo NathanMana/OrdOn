@@ -1,0 +1,18 @@
+<div class="darkSide">
+    <ul class="ulprofil">
+        <% if (locals.user) { %>
+            <% if (locals.user.type === "patient") { %>
+                <li class="liprofil"><a href="/patient/profil">Accueil profil</a></li>
+            <% } else if (locals.user.type === "médecin") {%> 
+                <li class="liprofil"><a href="/docteur/profil">Accueil profil</a></li>
+            <% } else if (locals.user.type === "pharmacien") {%> 
+                <li class="liprofil"><a href="/pharmacien/profil">Accueil profil</a></li>               
+            <% } %>  
+        <% } %>   
+        <li class="liprofil"><a href="/profil/modifieremail">Modifier email</a></li>
+        <li class="liprofil"><a href="/profil/modifiermotdepasse">Modifier le mot de passe</a></li>
+        <div style="padding-top:70px;padding-bottom: 380px;">
+        </div>
+        <li class="liprofil"><a>Supprimer le compte</a></li>
+    </ul>
+</div>

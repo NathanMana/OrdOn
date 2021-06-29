@@ -48,8 +48,14 @@ router.post('/inscription', async (req, res) => {
     const password = JSON.stringify(req.body.password)
     const password_check = JSON.stringify(req.body.password_check)
     const weight = req.body.weight
-    if (!name || !firstName || !email || !birthdate || !password || !password_check ) {
+    const gender = req.body.gender
+    if (!name || !firstName || !email || !birthdate || !password || !password_check || !gender) {
         req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/patient/inscription')
+    }
+    const genderList = ['femme', 'homme', 'neutre']
+    if (!genderList.find(c => c === gender)) {
+        req.session.error = "Ce genre n'est pas accepté"
         return res.redirect('/patient/inscription')
     }
     if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
@@ -92,7 +98,7 @@ router.post('/inscription', async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, weightDouble)
+    let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble)
     patient = await PatientServices.addPatient(patient)
 
     // Envoyer l'email de confirmation

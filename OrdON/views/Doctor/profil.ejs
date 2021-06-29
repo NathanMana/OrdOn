@@ -16,20 +16,16 @@
             display: none;
         }
     }
+    @media screen and (max-width:1105px) {
+        .profilBoxGrey {
+            width: 100%;
+        }
+    }
 </style>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
    <div class="profil">
-       <div class="darkSide">
-            <ul class="ulprofil">
-                <li class="liprofil"><a>Accueil profil</a></li>
-                <li class="liprofil"><a>Modifier email</a></li>
-                <li class="liprofil"><a>Modifier le mot de passe</a></li>
-                <div style="padding-top:70px;padding-bottom: 380px;">
-                </div>
-                <li class="liprofil"><a>Supprimer le compte</a></li>
-            </ul>
-       </div>
+        <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Mon profil</h2>
            <form>

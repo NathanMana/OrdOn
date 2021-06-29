@@ -202,7 +202,7 @@ h2{
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
     width:100%;
-    padding: 15px 0px;
+    padding: 20px 0px;
     font-size: 1.5rem;
 }
 h3{
@@ -431,13 +431,33 @@ input:focus {
 
 .profile__input__container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 20px auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
 }
 
+.modifier__input__container {
+    max-width: 500px;
+    min-width: 300px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.modifier__input__container .profilBox{
+    width: 100%;
+    display: block;
+    flex: none;
+}
+.modifier__input__container .profilBoxGrey{
+    width: 100%;
+    display: block;
+    flex: none;
+}
 .profil{
     display: flex;
     flex-wrap: nowrap;
@@ -476,7 +496,8 @@ input:focus {
     text-decoration: none;
     border: 2px solid var(--blue);
     margin: 1rem;
-    display: block;
+    text-align: left;
+    flex:1 0 200px;
 }
 
 .profilBoxGrey{
@@ -490,8 +511,10 @@ input:focus {
     margin: 1rem;
     background-color: var(--grey);
     text-align: left;
-    width: 337px;
+    flex:1 0 200px;
 }
+
+
 
 
 /* Ordonnance*/

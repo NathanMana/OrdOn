@@ -1,7 +1,7 @@
 .container-faq {
     width: 70%;
     max-width: 900px;
-    min-width: 700px;
+    min-width: 300px;
     height: auto;
     margin: 10px auto;
     display: flex;
@@ -10,9 +10,8 @@
     align-items: flex-start;
 }
 .questions {
-    width: 100%;
     height: auto;
-    margin: 5px;
+    margin: 10px;
 }
 .visible-pannel {
     display: flex;
@@ -21,7 +20,7 @@
     background: var(--grey);
     border-radius: 10px;
     position: relative;
-    z-index: 100;
+
 }
 .visible-pannel h4 {
     margin:15px;

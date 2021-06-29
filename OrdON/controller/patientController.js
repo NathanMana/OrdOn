@@ -32,6 +32,7 @@ router.get('/inscription', (req, res)=>{
  * @method POST
  */
 router.post('/inscription', async (req, res) => {
+    console.log('hello world')
     const name = req.body.name
     const firstName = req.body.firstname
     const email = req.body.email
@@ -39,7 +40,6 @@ router.post('/inscription', async (req, res) => {
     const password = JSON.stringify(req.body.password)
     const password_check = JSON.stringify(req.body.password_check)
     const weight = req.body.weight
-    
     if (!name || !firstName || !email || !birthdate || !password || !password_check ) {
         req.session.error = "Tous les champs n'ont pas été remplis"
         return res.redirect('/patient/inscription')
@@ -51,7 +51,7 @@ router.post('/inscription', async (req, res) => {
 
     if (password !== password_check) {
         req.session.error = "Les mots de passe ne correspondent pas"
-        return res.render('/patient/inscription', { Patient : {
+        return res.redirect('/patient/inscription', { Patient : {
             name: name,
             firstName: firstName,
             email: email
@@ -130,33 +130,29 @@ router.post('/inscription', async (req, res) => {
 
 /**
  * Traite la connexion du patient
- * @method GET
+ * @method POST
  */
- router.get('/connexion',  (res,req)=>{
-    const email = req.body.email
-    const password = req.body.password
-    console.log('je suis la '+ req.body.encryptedId)
-    if (req.session.encryptedId == null){
-        
-        if(!PatientServices.isEmailPresent(email)){
-            alert('email incorrect')
-            return res.redirect('/Patient/connectionPatient')
-        }
-        if (!PatientServices.isPasswordCorrect(password)){
-            alert('mot de passe incorrect')
-            return res.redirect('/Patient/connectionPatient')
-        }
-        req.session.encryptedId =  PatientServices.getPatientByEmail(email)
-        console.log(req.session.encryptedId)
-        return res.render('/Patient/home')
 
+router.post('/connexion', async (req, res) => {
+    const {email, password} = req.body
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/Patient/registerPatient')
     }
-    else{
-        console.log('un patient est déjà connecté')
-        return res.redirect('/Patient/home')
+
+    // Récupérer l'objet
+    const patient = await PatientServices.getPatientByEmail(email)
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(password, patient.password)
+    if (!verifPass) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/Patient/registerPatient')
     }
+
+    req.session.user = {email: email}
+    return res.redirect('/Patient/registerPatient')
 })
-
 
 router.get('/email/verification/envoyee', (req, res) => {
     return res.render('Patient/emailVerification.ejs')

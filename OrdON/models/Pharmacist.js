@@ -51,7 +51,9 @@ class Pharmacist extends Profesionnal{
             zipcode : this.getZipcode(),
             address : this.getAddress(),
             gender : this.getGender(),
-            isEmailVerified : this.getIsEmailVerified()
+            isEmailVerified : this.getIsEmailVerified(),
+            tokenEmail : this.getTokenEmail(),
+            tokenResetPassword : this.getTokenResetPassword()
         }
     }
 }

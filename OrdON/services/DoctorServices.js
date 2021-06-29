@@ -36,10 +36,11 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE doctor SET name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ?, gender = ?, isEmailVerified = ? WHERE id_doctor = ?`, 
+                isAccountValidated = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_doctor = ?`, 
                 [
                     doctor.getName(), doctor.getFirstname(), doctor.getEmail(), doctor.getPassword(), doctor.getIsAccountValidated(), 
-                    doctor.getGender(), doctor.getIsEmailVerified(), doctor.getDoctorId()
+                    doctor.getGender(), doctor.getIsEmailVerified(), doctor.getTokenEmail(), doctor.getTokenresetPassword(),
+                    doctor.getDoctorId()
                 ]
             )
             connection.release()
@@ -104,6 +105,8 @@ const pool = require('./DatabaseConnection')
             doctor.setProfessionnalId(doctorData.id_professionnal)
             doctor.setGender(doctorData.gender)
             doctor.setIsEmailVerified(doctorData.setIsEmailVerified)
+            doctor.setTokenEmail(doctorData.tokenEmail)
+            doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             return doctor
         }
         catch (e) { console.log(e)}
@@ -136,6 +139,8 @@ const pool = require('./DatabaseConnection')
                 doctor.setDoctorId(data.id_doctor)
                 doctor.setGender(data.gender)
                 doctor.setIsEmailVerified(data.setIsEmailVerified)
+                doctor.setTokenEmail(data.tokenEmail)
+                doctor.setTokenResetPassword(data.tokenResetPassword)
                 listDoctors.push(doctor)
             })
             return listDoctors

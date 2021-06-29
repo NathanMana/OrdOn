@@ -21,7 +21,8 @@ create table ordon.Patient(
         password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL,
         isEmailVerified    Bool NOT NULL,
-        tokenEmail         Varchar(200),
+        tokenResetPassword              Varchar(200),  
+        tokenEmail         Varchar(200),        
         gender             Varchar (30) NOT NULL 
 	,CONSTRAINT Patient_PK PRIMARY KEY (id_patient)
 )ENGINE=InnoDB;
@@ -66,6 +67,7 @@ create table ordon.Pharmacist(
         isAccountValidated Bool NOT NULL ,
         isEmailVerified    Bool NOT NULL,
         tokenEmail         Varchar(200) ,
+        tokenResetPassword              Varchar(200),  
         gender             Varchar (30) NOT NULL,
         id_professionnal   Int NOT NULL
 	,CONSTRAINT Pharmacist_PK PRIMARY KEY (id_pharmacist)
@@ -88,6 +90,7 @@ create table ordon.Doctor(
         isAccountValidated Bool NOT NULL,
         isEmailVerified    Bool NOT NULL,
         tokenEmail         Varchar(200),
+        tokenResetPassword              Varchar(200),  
         gender             Varchar (30) NOT NULL ,
         id_professionnal   Int NOT NULL 
 	,CONSTRAINT Doctor_PK PRIMARY KEY (id_doctor)

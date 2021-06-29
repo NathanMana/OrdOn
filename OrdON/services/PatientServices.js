@@ -17,10 +17,14 @@ class PatientServices {
             if (!result) throw 'Une erreur est survenue'
             patient.setPatientId(result[0].insertId)
             patient.setEncryptedId(patient.encryptId(patient.getPatientId()))
-            await connection.query('UPDATE patient SET encryptedId = ? WHERE id_patient = ? ', [patient.getEncryptedId(), patient.getPatientId()])
+            patient.setTokenEmail(patient.getEncryptedId() + patient.encryptId(patient.getPatientId()))
+            await connection.query(
+                'UPDATE patient SET encryptedId = ?, tokenEmail = ? WHERE id_patient = ? ', 
+                [patient.getEncryptedId(), patient.getTokenEmail(), patient.getPatientId()]
+            )
             console.log("Patient inséré")
             connection.release()
-            return patient.getEncryptedId()
+            return patient
         } catch(e){
             console.log(e)
         }
@@ -37,10 +41,11 @@ class PatientServices {
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ?, gender = ?, isEmailVerified = ? WHERE id_patient = ?`, 
+                isAccountValidated = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_patient = ?`, 
                 [
                     patient.getBirthdate(), patient.getIsQrCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
-                    patient.getPassword(), patient.isAccountValidated(), patient.getGender(), patient.getIsEmailVerified(), patient.getPatientId()
+                    patient.getPassword(), patient.isAccountValidated(), patient.getGender(), patient.getIsEmailVerified(), 
+                    patient.getTokenEmail(), patient.getTokenResetPassword(), patient.getPatientId()
                 ]
             )
             connection.release()
@@ -103,6 +108,8 @@ class PatientServices {
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
         }
         catch (e) { console.log(e)}
@@ -140,10 +147,52 @@ class PatientServices {
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
         }
         catch (e) { console.log(e)}
     }
+
+    /**
+     * Récupère un patient spécifique via le token de l'email
+     * @param {string} tokenEmail 
+     * @returns {Patient} le patient cherché
+     */
+     static async getPatientByTokenEmail(tokenEmail) {
+        try {
+            if (!tokenEmail) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM patient WHERE tokenEmail = ?', 
+                [tokenEmail]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('Patient récupéré')
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setGender(patientData.gender)
+            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
+            return patient
+        }
+        catch (e) { console.log(e)}
+    }
+
 
     /**
      * vérifie si un email est déjà présent en bdd
@@ -210,6 +259,8 @@ class PatientServices {
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
         }
         catch (e) {

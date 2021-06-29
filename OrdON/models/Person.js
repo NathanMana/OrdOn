@@ -43,6 +43,16 @@
     #isEmailVerified = false
 
     /**
+     * Token pour le reset de mdp
+     */
+    #tokenResetPassword
+
+    /**
+     * Token pour le reset d'email (vérification)
+     */
+    #tokenEmail
+
+    /**
      * Constructeur de la classe Personne
      * @param {string} name 
      * @param {string} firstname 
@@ -101,6 +111,12 @@
 
     getIsEmailVerified(){return this.#isEmailVerified}
     setIsEmailVerified(isEmailVerified){this.#isEmailVerified = isEmailVerified}
+
+    getTokenEmail(){return this.#tokenEmail}
+    setTokenEmail(tokenEmail){this.#tokenEmail = tokenEmail}
+
+    getTokenResetPassword(){return this.#tokenResetPassword}
+    setTokenResetPassword(tokenResetPassword){this.#tokenResetPassword = tokenResetPassword}
 
     /**
      * Permet de transformer l'id de la personne en un id plus secret

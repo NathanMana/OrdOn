@@ -10,6 +10,14 @@ const QRcode = require('qrcode')
 const nodemailer = require('../externalsAPI/NodeMailer')
 
 /**
+ * Créer un locals utilisable en ejs
+ */
+ router.use((req, res, next) => {
+    res.locals.user = req.session.user
+    next()
+})
+
+/**
  * Affichage de la page de connexion d'un patient
  */
 router.get('/connexion', (req, res)=>{
@@ -84,15 +92,15 @@ router.post('/inscription', async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, weightDouble)
-    const encryptedId = await PatientServices.addPatient(patient)
+    let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, weightDouble)
+    patient = await PatientServices.addPatient(patient)
 
     // Envoyer l'email de confirmation
     nodemailer(
         email, 
         "Confirmation d'inscription à OrdON", 
-        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/verification/" + encryptedId,
-        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/verification/" + encryptedId + "'Cliquer sur ce lien</a>" 
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/email/verification/" + patient.getTokenEmail(),
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail() + "'>Cliquer sur ce lien</a>" 
     )
 
     return res.redirect('/patient/email/verification/envoyee')
@@ -164,19 +172,17 @@ router.get('/email/verification/envoyee', (req, res) => {
 /**
  * Traitement de la vérification d'un patient
  */
-router.get('/verification/:encryptedId', async (req, res) => {
-    const encryptedId = req.params.encryptedId
-    if (!encryptedId) return res.status(500).send("Une erreur est survenue")
+router.get('/email/verification/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) return res.status(500).send("Une erreur est survenue")
 
     // Essayer de récupérer le patient correspondant
-    const patient = await PatientServices.getPatientByEncryptedId(encryptedId)
+    const patient = await PatientServices.getPatientByTokenEmail(token)
     if (!patient) return res.status(500).send("Une erreur est survenue")
-
-    // on vérifie de ne pas avoir déjà vérifié
-    if (patient.getIsEmailVerified()) return res.redirect('/')
 
     // On peut certifier que l'email est vérifié
     patient.setIsEmailVerified(true)
+    patient.setTokenEmail(null)
     PatientServices.updatePatient(patient)
     
     // On considère que ca le connecte directement

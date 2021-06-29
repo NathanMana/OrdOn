@@ -79,7 +79,9 @@ class Patient extends Person {
             isAccountValidated : this.isAccountValidated(),
             encryptedId : this.getEncryptedId(),
             gender : this.getGender(),
-            isEmailVerified : this.getIsEmailVerified()
+            isEmailVerified : this.getIsEmailVerified(),
+            tokenEmail : this.getTokenEmail(),
+            tokenResetPassword : this.getTokenResetPassword()
         }
     }
 }

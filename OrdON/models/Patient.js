@@ -13,12 +13,17 @@ class Patient extends Person {
     #isQrCodeVisible = false
 
     /**
+     * Indique si le compte du patient est validée
+     */
+    #isAccountValidated = false
+
+    /**
      * Date de naissance
      */
     #birthdate
 
     /**
-     * Le poids du patient
+     * poids
      */
     #weight
 
@@ -29,10 +34,9 @@ class Patient extends Person {
      * @param {string} email 
      * @param {string} password 
      * @param {Date} birthdate 
-     * @param {double} weight
      * @param {long} id_patient 
      */
-    constructor(name, firstname, email, password, birthdate, weight) {
+    constructor(name, firstname, email, password, birthdate, weight = null) {
         super(name, firstname, email, password)
         this.#birthdate = birthdate
         this.#weight = weight
@@ -44,6 +48,11 @@ class Patient extends Person {
     isQrCodeVisible() {return this.#isQrCodeVisible}
     setIsQrCodeVisible(isQrCodeVisible) {
         this.#isQrCodeVisible = isQrCodeVisible
+    }
+
+    isAccountValidated(){return this.#isAccountValidated}
+    setIsAccountValidated(isAccountValidated){
+        this.#isAccountValidated  = isAccountValidated
     }
 
     getBirthdate(){return this.#birthdate}
@@ -64,6 +73,7 @@ class Patient extends Person {
             email : this.getEmail(), 
             password : this.getPassword(),
             birthdate : this.#birthdate,
+            weight: this.#weight,
             id_patient : this.#id_patient,
             isQrCodeVisible : this.#isQrCodeVisible,
             isAccountValidated : this.isAccountValidated(),

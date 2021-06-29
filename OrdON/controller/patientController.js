@@ -7,12 +7,17 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
 
-
-
+/**
+ * Affichage de la page de connexion d'un patient
+ */
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
 
+
+/**
+ * Affichage de la page inscription d'un patient
+ */
 router.get('/inscription', (req, res)=>{
     res.render('Patient/registerPatient')
 })
@@ -21,7 +26,6 @@ router.get('/inscription', (req, res)=>{
  * Traite l'inscription des patients
  * @method POST
  */
-
 router.post('/inscription', async (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstname

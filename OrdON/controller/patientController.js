@@ -132,7 +132,6 @@ router.post('/inscription', async (req, res) => {
  * Traite la connexion du patient
  * @method POST
  */
-
 router.post('/connexion', async (req, res) => {
     const {email, password} = req.body
     if (!email || !password) {
@@ -155,7 +154,7 @@ router.post('/connexion', async (req, res) => {
 })
 
 router.get('/email/verification/envoyee', (req, res) => {
-    return res.render('Patient/emailVerification.ejs')
+    return res.render('layouts/emailVerification.ejs')
 })
 
 

@@ -91,10 +91,11 @@ class PatientServices {
             // On convertit le résultat en objet js
             console.log('Patient récupéré')
             const patientData = result[0][0]
+            if (!patientData) return null
             const patient = new Patient(
                 patientData.name,
                 patientData.firstname,
-                patient.email,
+                patientData.email,
                 patientData.password,
                 patientData.birthdate,
                 patientData.weight
@@ -148,7 +149,7 @@ class PatientServices {
     /**
      * Récupère un patient a partir d'un email et d'un mdp
      * @param {string} email
-     * @returns {long} encryptedId
+     * @returns {Patient} le patient
      */
     static async getPatientByEmail(email) {
         try {
@@ -158,9 +159,19 @@ class PatientServices {
                 [email]
             )
             connection.release()
-            const p = new Patient()
-            const patient = object.assign(p, result[0][0])
-            return patient.encryptedId
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            return patient
         }
         catch (e) {
             console.log(e)

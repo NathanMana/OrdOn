@@ -12,12 +12,12 @@
             <section>
                 <div class="container">
                     <div class="formulaire">
-                        <form action="/patient/connexion" method="GET">
+                        <form action="/patient/connexion" method="POST">
                             <div>
-                                <input class="inputID champ1" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
-                                </div>
-                                <div>
-                                <input class="inputID champ2" name=" password" type="password"  placeholder="Mot de passe">
+                                <input class="inputID champ1" name="email" type="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
+                            </div>
+                            <div>
+                                <input class="inputID champ2" name="password" type="password" placeholder="Mot de passe">
                             </div>
                             <p class="register">mot de passe oublié </p>
                             <input class="boutton" type="submit" value="Se connecter">

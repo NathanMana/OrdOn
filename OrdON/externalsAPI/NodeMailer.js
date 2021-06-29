@@ -17,8 +17,8 @@ const sendEmail = async function(email, subject, text, html = null) {
         host: 'smtp.ethereal.email',
         port: 587,
         auth: {
-            user: 'graciela.homenick94@ethereal.email',
-            pass: 'VuHddh2dEubS8tkAPj'
+            user: 'sincere.pollich@ethereal.email',
+            pass: 'bxrBTrQcJd2Zd3SA3F'
         }
     });
 

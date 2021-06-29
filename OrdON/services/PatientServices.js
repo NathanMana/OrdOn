@@ -20,6 +20,7 @@ class PatientServices {
             await connection.query('UPDATE patient SET encryptedId = ? WHERE id_patient = ? ', [patient.getEncryptedId(), patient.getPatientId()])
             console.log("Patient inséré")
             connection.release()
+            return patient.getEncryptedId()
         } catch(e){
             console.log(e)
         }
@@ -36,10 +37,10 @@ class PatientServices {
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ? WHERE id_patient = ?`, 
+                isAccountValidated = ?, gender = ?, isEmailVerified = ? WHERE id_patient = ?`, 
                 [
-                    patient.getBirthdate(), patient.isQRCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
-                    patient.getPassword(), patient.isAccountValidated(), patient.getPatientId()
+                    patient.getBirthdate(), patient.getIsQrCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
+                    patient.getPassword(), patient.isAccountValidated(), patient.getGender(), patient.getIsEmailVerified(), patient.getPatientId()
                 ]
             )
             connection.release()
@@ -89,12 +90,60 @@ class PatientServices {
             connection.release()
             // On convertit le résultat en objet js
             console.log('Patient récupéré')
-            const patient = new Patient()
-            return Object.assign(patient, result[0][0])
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setGender(patientData.gender)
+            return patient
         }
         catch (e) { console.log(e)}
     }
 
+    /**
+     * Récupère un patient spécifique via son id clair
+     * @param {long} encryptedId 
+     * @returns {Patient} le patient cherché
+     */
+     static async getPatientByEncryptedId(encryptedId) {
+        try {
+            if (!encryptedId) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM patient WHERE encryptedId = ?', 
+                [encryptedId]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('Patient récupéré')
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setGender(patientData.gender)
+            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            return patient
+        }
+        catch (e) { console.log(e)}
+    }
 
     /**
      * vérifie si un email est déjà présent en bdd
@@ -137,7 +186,7 @@ class PatientServices {
     /**
      * Récupère un patient a partir d'un email et d'un mdp
      * @param {string} email
-     * @returns {long} encryptedId
+     * @returns {Patient} le patient
      */
     static async getPatientByEmail(email) {
         try {
@@ -147,9 +196,21 @@ class PatientServices {
                 [email]
             )
             connection.release()
-            const p = new Patient()
-            const patient = object.assign(p, result[0][0])
-            return patient.encryptedId
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setGender(patientData.gender)
+            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            return patient
         }
         catch (e) {
             console.log(e)

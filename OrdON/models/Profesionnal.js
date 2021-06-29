@@ -35,9 +35,10 @@ class Profesionnal extends Person {
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
+     * @param {string} gender
      */
-    constructor(name, firstname, email, password, city, address, zipcode, proofPath) {
-        super(name, firstname, email, password)
+    constructor(name, firstname, email, password, city, address, zipcode, proofPath, gender) {
+        super(name, firstname, email, password, gender)
         this.#city = city;
         this.#address = address;
         this.#zipcode = zipcode;

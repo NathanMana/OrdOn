@@ -7,13 +7,14 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
 
+const nodemailer = require('../externalsAPI/NodeMailer')
+
 /**
  * Affichage de la page de connexion d'un patient
  */
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
-
 
 /**
  * Affichage de la page inscription d'un patient
@@ -84,8 +85,17 @@ router.post('/inscription', async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10)
     const patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, weightDouble)
-    PatientServices.addPatient(patient)
-    return res.redirect('/patient/connexion')
+    const encryptedId = await PatientServices.addPatient(patient)
+
+    // Envoyer l'email de confirmation
+    nodemailer(
+        email, 
+        "Confirmation d'inscription à OrdON", 
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/verification/" + encryptedId,
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/verification/" + encryptedId + "'Cliquer sur ce lien</a>" 
+    )
+
+    return res.redirect('/patient/email/verification/envoyee')
 })
 
 /**
@@ -123,7 +133,6 @@ router.post('/inscription', async (req, res) => {
  * Traite la connexion du patient
  * @method POST
  */
-
 router.post('/connexion', async (req, res) => {
     const {email, password} = req.body
     if (!email || !password) {
@@ -142,9 +151,44 @@ router.post('/connexion', async (req, res) => {
     }
 
     req.session.user = {email: email}
-
     return res.redirect('/Patient/registerPatient')
 })
+
+/**
+ * View indiquant de suivre les indications envoyées dans le mail
+ */
+router.get('/email/verification/envoyee', (req, res) => {
+    return res.render('layouts/emailVerification.ejs')
+})
+
+/**
+ * Traitement de la vérification d'un patient
+ */
+router.get('/verification/:encryptedId', async (req, res) => {
+    const encryptedId = req.params.encryptedId
+    if (!encryptedId) return res.status(500).send("Une erreur est survenue")
+
+    // Essayer de récupérer le patient correspondant
+    const patient = await PatientServices.getPatientByEncryptedId(encryptedId)
+    if (!patient) return res.status(500).send("Une erreur est survenue")
+
+    // on vérifie de ne pas avoir déjà vérifié
+    if (patient.getIsEmailVerified()) return res.redirect('/')
+
+    // On peut certifier que l'email est vérifié
+    patient.setIsEmailVerified(true)
+    PatientServices.updatePatient(patient)
+    
+    // On considère que ca le connecte directement
+    req.session.user = {
+        type : "patient",
+        email: patient.getEmail(),
+        name : patient.getName(),
+        firstname : patient.getFirstname()
+    }
+    return res.redirect('/patient/')
+})
+
 
 
 module.exports = router

@@ -37,10 +37,10 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE pharmacist SET name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ? WHERE id_pharmacist = ?`, 
+                isAccountValidated = ?, gender = ?, isEmailVerified = ? WHERE id_pharmacist = ?`, 
                 [
-                   pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),
-                    pharmacist.getPassword(), pharmacist.getIsAccountValidated(), pharmacist.getPharmacistId()
+                    pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(), pharmacist.getPassword(), 
+                    pharmacist.getIsAccountValidated(), pharmacist.getGender(), pharmacist.getIsEmailVerified(), pharmacist.getPharmacistId()
                 ]
             )
             connection.release()
@@ -103,6 +103,8 @@ const pool = require('./DatabaseConnection')
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setEncryptedId(pharmacistData.encryptedId)
             pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setGender(pharmacistData.gender)
+            pharmacist.setIsEmailVerified(pharmacistData.setIsEmailVerified)
             return pharmacist
         }
         catch (e) { console.log(e)}
@@ -135,6 +137,8 @@ const pool = require('./DatabaseConnection')
                 pharmacist.setPharmacistId(data.id_pharmacist)
                 pharmacist.setEncryptedId(data.encryptedId)
                 pharmacist.setProfessionnalId(data.id_professionnal)
+                pharmacist.setGender(data.gender)
+                pharmacist.setIsEmailVerified(data.setIsEmailVerified)
                 listPharmacists.push(pharmacist)
             })
             return listPharmacists

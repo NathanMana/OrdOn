@@ -123,16 +123,33 @@ router.post('/inscription', async (req, res) => {
  * Gère l'affichage de la page profile du patient
  */
  router.get('/profil', (req, res) => {
-    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.encryptedId
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
 
+    const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
 
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
 
         return res.render("Patient/profil", { ProfilObject: {
             qrcode : qr,
-            user: req.session.patient
+            user: patient
         } })
+    })
+})
+
+
+/**
+ * Génère le qr code d'un ordonnance
+ */
+ router.get('/getordonnance', (req, res)=>{
+    const ordo_id = req.body.id_prescription
+
+    const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
+    
+    QRcode.toDataURL(url, (err, qr) => {
+        if (err) res.send('error occurred')
+
+        return qr 
     })
 })
 
@@ -164,7 +181,7 @@ router.post('/connexion', async (req, res) => {
         return res.redirect('/Patient/registerPatient')
     }
 
-    req.session.user = {email: email}
+    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
     return res.redirect('/Patient/registerPatient')
 })
 

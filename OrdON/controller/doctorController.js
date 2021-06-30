@@ -7,9 +7,10 @@ const AttributionService = require('../services/AttributionService')
 const PrescriptionServices = require('../services/PrescriptionServices')
 const MentionServices = require('../services/MentionServices')
 const router = express.Router()
+const bcrypt = require('bcrypt')
 const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
-// const DoctorServices = require('../services/DoctorServices')
+const DoctorServices = require('../services/DoctorServices')
 
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
@@ -22,25 +23,33 @@ router.get('/inscription', (req, res)=>{
  * Traite l'inscription des médecins
  * @method POST
  */
-router.post('/inscription', (req, res) => {
+router.post('/inscription', async(req, res) => {
     const name = req.body.name
     const firstName = req.body.firstName
     const email = req.body.email
-    const password = req.body.password
+    const password = JSON.stringify(req.body.password)
     const city = req.body.city
+    const address = req.body.address
     const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
     const typeProfesionnal = req.body.typeProfesionnal
 
-    let doctorIsAlreadyRegistered = DoctorServices.check(name,firstName,email,password)
-
-    if (!doctorIsAlreadyRegistered){
-        res.redirect('Doctor/registerDoctor')
+    if (!name || !firstName || !email || !password || !city || !cabinetLocation
+        || !zipcode || !typeProfesionnal) {
+            req.session.error = "Tous les champs n'ont pas été remplis"
+            return res.redirect('/docteur/inscription')
     }
-    if (doctorIsAlreadyRegistered){
-        DoctorServices.check(name,firstName,email,password, cabinetLocation, city, cabinetLocation, zipcode,typeProfesionnal)
-        res.redirect('Doctor/registerDoctor')
-    } 
+    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+        req.session.error = "Le mot de passe ne respecte pas tous les critères"
+        return res.redirect('/docteur/inscription')
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode)
+    doctor.setProfessionnalId(typeProfesionnal)
+    DoctorServices.addDoctor(doctor)
+
+    
 
 })
 /**
@@ -59,37 +68,32 @@ router.post('/inscription', (req, res) => {
 
 /**
  * Traite la connexion des médecins
- * @method GET
+ * @method POST
  */
-router.get('/connexion',  (res,req)=>{
-    const email = req.body.email
-    const password = req.body.password
-    
-    req.session.doctor = new Doctor()
-
-    if (req.session.doctor == null){
-        if(DoctorServices.check(email,password)){
-            req.session.doctor =  DoctorServices.get(email, password)
-            res.render('Doctor/home', { Doctor: req.session.doctor })
-        }
-        if(!DoctorServices.checkEmail(email)){
-            alert('email incorrect')
-            res.redirect('Doctor/connectionDoctor')
-        }
-        if (!DoctorServices.checkPassword(password)){
-            alert('mot de passe incorrect')
-            res.redirect('Doctor/connectionDoctor')
-        }
-
+router.post('/connexion',  (res,req)=>{
+    const {email, password} = req.body
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/Doctor/registerDoctor')
     }
-    else{
-        console.log('un doctor est déjà connecté')
-        res.redirect('Doctor/home', { Doctor : req.session.doctor })
+
+    // Récupérer l'objet
+    const doctor = await DoctorServices.getDoctorByEmail(email)
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(password, doctor.password)
+    if (!verifPass) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/Doctor/registerDoctor')
     }
+
+    req.session.user = {email: email}
+    return res.redirect('/Doctor/home')
 })
 
 //Donne l'accès à la page de création d'ordonnance
-router.get('/ordonnance/creer', (req,res)=>{
+router.get('/ordonnance/creer/:encyptedId_patient', (req,res)=>{
+    
     res.render('Doctor/create_ordonnance')
 })
 

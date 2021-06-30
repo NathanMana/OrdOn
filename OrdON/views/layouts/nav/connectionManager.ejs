@@ -12,9 +12,9 @@
     <%- include('./nav'); -%>
 <% } %> 
 <% if (locals.flash) { %> 
-    <% if (locals.flash.success) { %> 
+    <% if (typeof locals.flash.success != undefined) { %> 
         <div class="sectiongreen flash">Compte validé avec succès</div>
-    <% } else if(locals.flash.error) { %> 
+    <% } else if(typeof locals.flash.error != undefined) { %> 
         <div class="sectionred flash">Compte non valide</div>
     <% } %> 
 <% } %> 

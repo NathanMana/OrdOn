@@ -36,13 +36,19 @@ class Attribution {
      */
     #id_prescription
 
+    /**
+     * Id du medoc
+     * @type {long}
+     */
+    #id_drug
 
     //Manque l'id de la prescription
-    constructor(description, quantity, drug, listMentions){
+    constructor(description, quantity, id_drug, idPrescription, listMentions){
         this.#description = description
         this.#quantity = quantity
-        this.#drug = drug
+        this.#id_drug = id_drug
         this.#listMentions = listMentions
+        this.#id_prescription = idPrescription
     }
 
     getAttributionId(){return this.#id_attribution}
@@ -78,6 +84,9 @@ class Attribution {
 
     getPrescriptionId(){return this.#id_prescription}
     setPrescriptionId(id){this.#id_prescription = id}
+
+    getDrugId(){return this.#id_drug}
+    setDrugId(id){this.#id_drug = id}
 }
 
 module.exports = Attribution

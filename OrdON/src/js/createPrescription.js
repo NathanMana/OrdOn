@@ -1,4 +1,6 @@
 
+
+
 let medicRowCounter = 0;
 let rowMedicIdEditing = "";
 let tipRowCounter = 0;
@@ -374,11 +376,24 @@ function getAllTipsInArray(){
 }
 
 function createOrdonnance(){
-
-    //1 - Get the attributions and the tips in an array of their classes
+    //1 - Get the attributions and the tips in an array of their classes*
+    console.log("calling this")
     attributionList = getAllAttributionsInArray();
     tipList = getAllTipsInArray();
+    callPostRoute(attributionList, tipList);
+}
 
+function callPostRoute(attributionList, tipList){
     //2 - Call the post route
-    
+    console.log("calling post route")
+    $.ajax({
+        url : '/docteur/ordonnance/creer/:encryptedIdPatient',
+        type : 'POST',
+        data: { tipList : tipList, attributionList : attributionList},
+        success : function(res){
+
+            console.log("bien joué mon frère")
+
+        }
+    });
 }

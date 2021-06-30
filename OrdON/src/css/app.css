@@ -290,6 +290,11 @@ footer li {
     display: inline-block;
     list-style: none;
 }
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+ }
 
 /* BOUTONS */
 .btngreen {
@@ -469,7 +474,6 @@ input:focus {
     flex-wrap: nowrap;
 }
 .darkSide{
-    height: 100%;
     background-color: var(--darkblue);
     flex: 0 0 300px;
 }

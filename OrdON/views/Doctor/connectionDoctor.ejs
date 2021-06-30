@@ -11,18 +11,20 @@
             <h2 class="title">Se connecter en tant que docteur</h1>
             <section>
                 <div class="container">
-                    <form>
+                    <form action="/docteur/connexion" method="post">
                         <div class="modifier__input__container">
                             <input class="modifBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
                             <input class="modifBox" name=" password" type="password"  placeholder="Mot de passe">
                         <div style="width: 100%;">
                             <a href="/motdepasseoublie"><p class="register">mot de passe oublié ?</p></a>
                         </div>
-                        <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;">Connexion échoué</p>
-                        <input class="btngreen" type="submit" value="Se connecter">
+                        <% if (locals.error){ %> 
+                            <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"><%= locals.error %> </p>
+                        <% } %> 
+                        <button class="btngreen" type="submit">Se connecter</button>
                         <div class="signup">
                             <p class="descSignup">Pas de compte ?</p>
-                            <a href="/pharmacien/inscription" class="signinbx">S'inscrire</a>
+                            <a href="/docteur/inscription" class="signinbx">S'inscrire</a>
                         </div>
                     </form>
                 </div>

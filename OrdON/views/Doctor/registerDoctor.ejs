@@ -12,12 +12,11 @@
         <section>
             <div class="container">
                 <div class="formulaire">
-                    <form class="form">
+                    <form action="/docteur/inscription" method="post" class="form">
                         <div class="profile__input__container" style="margin-bottom: 0px;">
                             <input class="profilBox" name="name" placeholder="Nom" required>
                             <input class="profilBox" name="firstname" placeholder="Prenom" required>
                             <input class="profilBox" name="firstname" placeholder="Lieu de travail" required>
-                            <input class="profilBox" name="firstname" placeholder="Secteur" required>
                             <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
                         </div>
                         <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
@@ -32,7 +31,6 @@
                                 Au moins 1 majuscule<br>
                                 Au moins 1 chifre<br>
                                 Au moins 1 caractère spécial<br>
-                                Ne contient pas votre nom/pénom
                             </p>
                         </div>
                         <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
@@ -41,8 +39,15 @@
                         <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
                             <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
                         </div>
-                        <input class="btngreen" style="margin:0 auto;margin-bottom: 20px;" type="submit" value="S'inscrire">
+                        <% if (locals.error){ %> 
+                            <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"><%= locals.error %> </p>
+                        <% } %> 
+                        <button class="btngreen" style="margin:20px auto;" type="submit">S'inscrire</button>
                     </form>
+                    <div class="signup">
+                        <p class="descSignup">Déjà un compte ?</p>
+                        <a href="/docteur/connexion" class="signinbx">Se connecter</a>
+                    </div>
                 </div>
             </div>
         </section>

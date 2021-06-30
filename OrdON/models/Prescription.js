@@ -9,6 +9,11 @@
     #id_prescription
 
     /**
+     * id de l'ordonnance hashée
+     */
+     #encryptedId
+
+    /**
      * Date a laquelle l'ordonnance a été prescrite
      */
     #date_creation
@@ -65,6 +70,11 @@
 
     getDateCreation(){return this.#date_creation}
 
+    // Permet de récupérer l'id encrypté
+    getEncryptedId() { return this.#encryptedId }
+    // Permet de modifier l'id encrypté (a ne jamais utiliser autrement qu'à l'ajout en BDD)
+    setEncryptedId(encryptedId) { this.#encryptedId = encryptedId}
+
     getListCouncils(){return this.#listCouncils}
     /**
      * Ajoute un conseil à la liste des conseils
@@ -109,6 +119,32 @@
         this.#listAttributions.splice(index, 1)
     }
     setListAttributions(listAttributions){this.#listAttributions = listAttributions}
+
+    /**
+     * Permet de transformer l'id de l'ordonnance en un id plus secret
+     * Algorithme inspiré par https://www.codegrepper.com/code-examples/javascript/javascript+generate+unique+key
+     * @param {long} id 
+     * @returns {string} l'id encrypté
+     */
+    encryptId(id) {
+        return ('xxxx-xxxx-9xxx-yxxx-xxxxxxxxxxxxxxxx'+id+'xxxxxxx').replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    toObject() {
+        return {
+            id_prescription: this.#id_prescription,
+            encryptedId: this.#encryptedId,
+            date_creation: this.#date_creation,
+            isQrCodeVisible: this.#isQrCodeVisible,
+            listAttributions: this.#listAttributions,
+            listCouncils: this.#listCouncils,
+            id_patient: this.#id_patient,
+            id_doctor: this.#id_doctor
+        }
+    }
 
 }
 

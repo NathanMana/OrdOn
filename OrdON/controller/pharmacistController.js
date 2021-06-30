@@ -84,7 +84,7 @@ router.post('/connexion',  async (res,req)=>{
     const pharmacist = await PharmacistServices.getPharmacistByEmail(email)
 
     // Vérification mdp
-    const verifPass = await bcrypt.compare(password, pharmacist.password)
+    const verifPass = await bcrypt.compare(JSON.stringify(password), pharmacist.getPassword())
     if (!verifPass) {
         req.session.error = "L'identifiant ou le mot de passe est incorrect"
         return res.redirect('/Pharmacist/registerPharmacist')

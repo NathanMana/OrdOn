@@ -1,5 +1,5 @@
-const pool = require('./DatabaseConnection')
-const Patient = require('../models/Patient');
+const pool = require('./DatabaseConnection');
+const Patient = require('../models/Patient')
 
 /**
  * Gère toutes les opérations sur la table Patient
@@ -273,6 +273,18 @@ class PatientServices {
             console.log(e)
         }
     }
+
+    changeEmailPatient(id_patient){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE patient SET email = ? WHERE id_patient= ?'
+                [res.body.email, id_patient]
+            )
+            connection.release()
+        }catch(e) {console.log(e)}
+    }
+
 }
 
 module.exports = PatientServices

@@ -4,7 +4,7 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
-    <script src="./../../src/js/recupQrcodeOrdonnance.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
@@ -13,25 +13,6 @@
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
         <h2 style="color: var(--darkblue);">Mes ordonnances valides</h2>
-<<<<<<< HEAD
-        <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
-            <div class="mesordonnances">
-                <article class="consultation">
-                    <div>
-                        <p class="date">Ma consultation du <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %></p>
-                        <p class="peremption">Date de péremption : <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %> (ajouter 12 mois)</p>
-                    </div>
-                    <div>
-                        <p class="doctor"><%= locals.OrdonnancesObjects[i].doctor.name %></p>
-                    </div>
-                    <div class="voirgenerer">
-                        <a href=""><button class="btngreensmall">Voir</button></a>
-                        <a href=""><button class="btndark">Générer QR CODE</button></a>
-                    </div>
-                </article>
-            </div>
-        <%}%>
-=======
         <div class="mesordonnances">
             <article class="consultation">
                 <div>
@@ -43,13 +24,20 @@
                 </div>
                 <div class="voirgenerer">
                     <a href=""><button class="btngreensmall">Voir</button></a>
-                    <a href=""><button class="btndark" onclick="getQRcode()">Générer QR CODE</button></a>
+                    <button class="btndark" onclick="showQR()">Générer QR CODE</button> 
                 </div>
             </article>
->>>>>>> 62d124bf9fa2719124eea5bf0fffda642615a749
         </div>
     </section>
+
+    <div id="QRCodeDiv" style="display:none">
+
+
+    </div>
+
     <%- include('../layouts/footer/footerManager'); -%>
     <%- include('../layouts/scripts'); -%>
+    <script src="/src/js/recupQrcodeOrdonnance.js"></script>
+
 </body>
 </html>

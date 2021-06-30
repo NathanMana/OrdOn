@@ -18,7 +18,7 @@ class PatientServices {
      */
     static async addPatient(patient) {
         try {
-            const object = patient.toObject()
+            const object = patient.toObject();
             const connection = await pool.getConnection();
             const result = await connection.query('INSERT INTO patient SET ? ', object)
             if (!result) throw 'Une erreur est survenue'

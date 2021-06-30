@@ -1,6 +1,7 @@
 const mysql = require('mysql2/promise');
 const Attribution = require('../models/Attribution');
 const Prescription = require('../models/Prescription');
+const { addAttribution } = require('./AttributionService');
 const AttributionService = require('./AttributionService');
 const pool = mysql.createPool({
     host: "localhost",
@@ -28,6 +29,8 @@ class PrescriptionServices {
             if (!result) throw 'Une erreur est survenue'
             console.log("Prescription insérée")
             connection.release()
+            addAttribution(attribution)
+
         } catch(e){
             console.log(e)
         }
@@ -62,6 +65,29 @@ class PrescriptionServices {
         }
         catch (e) { console.log(e)}
     }
+
+
+    static async displayPrescriptionPatient(){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM prescription WHERE id_patient= ? ORDER BY date_archive',
+                [req.session.id], function(err,rows){
+                    rows.forEach(element => {
+                        // On convertit le résultat en objet js
+                        const prescription = new Prescription()
+                        Object.assign(prescription, element[0][0])
+                        //On complete l'objet prescription avec les Attributions et les conseils
+                        prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
+                        prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
+                        
+                    });    
+                })
+            if (!result) throw 'Une erreur est survenue'
+            connection.release()
+        }catch(e){ console.log(e)}     
+    }
+    
 }
 
 module.exports = PrescriptionServices

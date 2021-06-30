@@ -67,4 +67,28 @@ router.get('/deconnexion', (req, res) => {
     res.redirect('/')
 })
 
+
+
+router.post('/doubleauthentification', async (req, res) => {
+    const password= req.body
+    if (!req.session.user.type){
+        res.render('index')
+    }
+    if (!password) {
+        req.session.error = "Remplis bien le champ"
+        return res.redirect('/'+req.session.user.type+'/doubleauthentification')
+    }
+ 
+    // Récupérer l'objet
+    const patient = await PatientServices.getPatientByEmail(email)
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
+    if (!verifPass) {
+        req.session.error = "le code est incorect"
+        return res.redirect('/'+req.session.user.type+'/doubleauthentification')
+    }
+
+    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
+    return res.redirect('/patient/')
+})
 module.exports = router

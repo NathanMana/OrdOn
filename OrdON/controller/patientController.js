@@ -44,7 +44,7 @@ router.get('/connexion', (req, res)=>{
     }
 
     req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
-    return res.redirect('/patient/')
+    return res.redirect('/doubleauthentification')
 })
  
 /**
@@ -115,15 +115,22 @@ router.post('/inscription', async (req, res) => {
     }
  
     const hashPassword = await bcrypt.hash(password, 10)
-    let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble)
-    patient = await PatientServices.addPatient(patient)
+    let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble, entier)
+    patient = await PatientServices.addPatient(patient,entier)
  
+    function entierAleatoire(min, max)
+    {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    //Utilisation
+    //La variable contient un nombre aléatoire compris entre 1 et 10
+    var entier = entierAleatoire(100000,199999);
     // Envoyer l'email de confirmation
     nodemailer(
         email, 
         "Confirmation d'inscription à OrdON", 
-        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/email/verification/" + patient.getTokenEmail(),
-        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail() + "'>Cliquer sur ce lien</a>" 
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/email/verification/" + patient.getTokenEmail() + ">Cliquer sur ce lien</a> le code pour se connecter est:" +entier,
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail()
     )
  
     return res.redirect('/patient/email/verification/envoyee')

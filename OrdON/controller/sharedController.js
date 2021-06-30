@@ -60,6 +60,9 @@ router.get('/inscription', (req, res)=>{
  * Deconnecte n'importe quel utilisateur
  */
 router.get('/deconnexion', (req, res) => {
+    req.session.flash = {
+        success : "Merci et à la prochaine !"
+    }
     req.session.user = undefined
     res.redirect('/')
 })

@@ -13,8 +13,8 @@
 <% } %> 
 <% if (locals.flash) { %> 
     <% if (typeof locals.flash.success != undefined) { %> 
-        <div class="sectiongreen flash">Compte validé avec succès</div>
+        <div class="sectiongreen flash"><%= locals.flash.success %> </div>
     <% } else if(typeof locals.flash.error != undefined) { %> 
-        <div class="sectionred flash">Compte non valide</div>
+        <div class="sectionred flash"><%= locals.flash.error %> </div>
     <% } %> 
 <% } %> 

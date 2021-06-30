@@ -22,6 +22,25 @@ app.use(session({
     cookie: {secure: false} // Doit être à true si on est en https
 }))
 
+
+/**
+ * Créer un locals utilisable en ejs
+ */
+app.use((req, res, next) => {
+    if (req.session.user) res.locals.user = req.session.user
+    
+    if (req.session.flash) {
+        res.locals.flash = req.session.flash
+        req.session.flash = undefined
+    }
+
+    if (req.session.error) {
+        res.locals.error = req.session.error
+        req.session.error = undefined
+    }
+    next()
+})
+
 // Rediriger vers les controlleurs appropriés
 app.use('/', sharedRoutes)
 app.use('/docteur/', doctorRoutes)

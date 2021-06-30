@@ -10,18 +10,6 @@ const QRcode = require('qrcode')
 const nodemailer = require('../externalsAPI/NodeMailer')
  
 /**
- * Créer un locals utilisable en ejs
- */
- router.use((req, res, next) => {
-    res.locals.user = req.session.user
-    if (req.session.flash) {
-        res.locals.flash = req.session.flash
-        req.session.flash = undefined
-    }
-    next()
-})
- 
-/**
  * Affichage de la page de connexion d'un patient
  */
 router.get('/connexion', (req, res)=>{
@@ -42,6 +30,11 @@ router.get('/connexion', (req, res)=>{
  
     // Récupérer l'objet
     const patient = await PatientServices.getPatientByEmail(email)
+    if (!patient) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/patient/connexion')
+    }
+
     // Vérification mdp
     const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
     if (!verifPass) {
@@ -53,15 +46,10 @@ router.get('/connexion', (req, res)=>{
     return res.redirect('/patient/')
 })
  
- 
 /**
  * Affichage de la page inscription d'un patient
  */
 router.get('/inscription', (req, res)=>{
-    if (req.session.error) {
-        res.locals.error = req.session.error
-        req.session.error = undefined
-    }
     res.render('Patient/registerPatient')
 })
  
@@ -70,7 +58,6 @@ router.get('/inscription', (req, res)=>{
  * @method POST
  */
 router.post('/inscription', async (req, res) => {
-    console.log('hello world')
     const name = req.body.name
     const firstName = req.body.firstname
     const email = req.body.email
@@ -141,16 +128,15 @@ router.post('/inscription', async (req, res) => {
     return res.redirect('/patient/email/verification/envoyee')
 })
  
-
-// /**
-//  * Vérifie les droits d'accès a chaque requête
-//  */
-//  router.use((req, res, next) => {
-//     if (typeof req.session.user === 'undefined' || !req.session.user) {
-//         return res.redirect("/patient/connexion")
-//     }
-//     next()
-// })
+/**
+ * Vérifie les droits d'accès a chaque requête
+ */
+ router.use((req, res, next) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user) {
+        return res.redirect("/patient/connexion")
+    }
+    next()
+})
  
 /**
  * Gère l'affichage de la page d'accueil du patient
@@ -164,7 +150,6 @@ router.get('/', (req, res) => {
  */
  router.get('/profil', (req, res) => {
     const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
- 
     const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
  
     QRcode.toDataURL(url, (err,qr) =>{

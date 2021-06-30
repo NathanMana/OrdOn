@@ -162,6 +162,7 @@ router.post('/ordonnance/creer', (req, res)=>{
     for (let i = 0; i<listAttributions.length; i++){
         AttributionService.addAttribution(listAttributions[i])
     }
+    
     //Rajouter les mentions attributions
     //1 - Modifier le constructeur de mention pour pouvoir récupérer l'id via le nom
     //2 - Grâce à MentionAttributionService ajouter les mentionsAttribution

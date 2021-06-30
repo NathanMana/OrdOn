@@ -13,6 +13,25 @@
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
         <h2 style="color: var(--darkblue);">Mes ordonnances valides</h2>
+<<<<<<< HEAD
+        <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
+            <div class="mesordonnances">
+                <article class="consultation">
+                    <div>
+                        <p class="date">Ma consultation du <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %></p>
+                        <p class="peremption">Date de péremption : <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %> (ajouter 12 mois)</p>
+                    </div>
+                    <div>
+                        <p class="doctor"><%= locals.OrdonnancesObjects[i].doctor.name %></p>
+                    </div>
+                    <div class="voirgenerer">
+                        <a href=""><button class="btngreensmall">Voir</button></a>
+                        <a href=""><button class="btndark">Générer QR CODE</button></a>
+                    </div>
+                </article>
+            </div>
+        <%}%>
+=======
         <div class="mesordonnances">
             <article class="consultation">
                 <div>
@@ -27,6 +46,7 @@
                     <a href=""><button class="btndark" onclick="getQRcode()">Générer QR CODE</button></a>
                 </div>
             </article>
+>>>>>>> 62d124bf9fa2719124eea5bf0fffda642615a749
         </div>
     </section>
     <%- include('../layouts/footer/footerManager'); -%>

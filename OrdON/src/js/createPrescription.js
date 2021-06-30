@@ -14,7 +14,7 @@ function showMedicWindow(){
 
 //Add a mention to the mentions of the prescription and show it
 function addMention(){
-    var input = document.getElementById("mentionInput").value;
+    var input = document.getElementById("selectMention").value;
     if (input != ""){
         var p = document.createElement("p");
         p.textContent = input;
@@ -22,7 +22,7 @@ function addMention(){
         document.getElementById("mentions").appendChild(p);
     }
     
-    document.getElementById("mentionInput").value =  "";
+    document.getElementById("selectMention").value =  "";
     
 }
 
@@ -32,7 +32,7 @@ function restoreMention(mention){
     p.textContent = mention;
     p.className = "mention"
     document.getElementById("mentions").appendChild(p);
-    document.getElementById("mentionInput").value =  "";
+    document.getElementById("selectMention").value =  "";
     
 }
 
@@ -77,7 +77,7 @@ function clearAllForm(){
     document.getElementById("nameInput").value = "";
     document.getElementById("quantityInput").value = "";
     document.getElementById("descriptionInput").value = "";
-    document.getElementById("mentionInput").value = "";
+    document.getElementById("selectMention").value = "";
 
     document.getElementById("mentions").querySelectorAll('*').forEach(n => n.remove());
 }

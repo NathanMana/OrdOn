@@ -4,7 +4,7 @@
         <%- include('../layouts/header'); -%>
         <link rel='stylesheet' type='text/css' media='screen' href='/src/css/createPrescription.css'>
         <script defer src="/src/js/all.js"></script> <!--load all styles -->
-        <script src='/src/js/createPrescription.js'></script>
+    
     </head>
     <body>
         <%- include('../layouts/nav/connectionManager'); -%>
@@ -24,12 +24,12 @@
         </div>
 
         <div class="fixedRight">
-            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le XX/XX/XXXX</h3>
+            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le <%= locals.PrescriptionObjects.madeDate %></h3>
         </div>
 
         <div id="infosPatient">
-            <h3>Mmme/M <%= locals.patient.name + " " + locals.patient.firstname %> </h3>
-            <h3><%= locals.patient.birthdate + " " + locals.patient.weight %></h3>
+            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
+            <h3><%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " " + locals.PrescriptionObjects.patient.weight %></h3>
         </div>
 
         <div id="prescription">
@@ -90,8 +90,16 @@
             
             <h3 style="margin-top: 15px; margin-bottom: 8px;">Mentions</h3>
             <div id="inputMentions">
-                                <input id="mentionInput" type="text" name="medicMention" placeholder="Mention" required>
+                <select id="selectMention">
+                    <option value="">--Choisir une mention--</option>
+                    <% for(var i=0; i < locals.PrescriptionObjects.mentions.length; i++){ %>
+                        <option value="<%=locals.PrescriptionObjects.mentions[i]%>"><%=locals.PrescriptionObjects.mentions[i]%></option>
+                    
+                    <%}%>
+                </select>
                 <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
+
+
                 <!-- Afficher la liste des mentions ajoutées-->
             </div>
             <div id="mentions">
@@ -111,5 +119,7 @@
         </div>
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>
+
+        <script src='/src/js/createPrescription.js'></script>
     </body>
 </html>

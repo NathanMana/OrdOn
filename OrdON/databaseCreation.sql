@@ -140,7 +140,7 @@ create table ordon.Attribution(
 
 create table ordon.Mention(
         id_mention Int  Auto_increment  NOT NULL ,
-        name       Varchar (20) NOT NULL
+        name       VARCHAR(40) NOT NULL
 	,CONSTRAINT Mention_PK PRIMARY KEY (id_mention)
 )ENGINE=InnoDB;
 
@@ -175,16 +175,19 @@ create table ordon.mention_attribution(
 	,CONSTRAINT mention_attribution_Mention0_FK FOREIGN KEY (id_mention) REFERENCES Mention(id_mention)
 )ENGINE=InnoDB;
 
-
-#---------------------------------------------------------
-# JEU DE TEST
-# --------------------------------------------------------
-INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Sainte-Suz', 'Le Moulin des forges', '53270', 'http://placehold.it/20x20');
-INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Evron', 'Rue de la mairie', '53600', 'oui.jpg');
-INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`) VALUES ('Ville', 'Adresse', '45789');
-
-INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Manaranche', 'Nathan', 'nat.manar@gmail.com', 'qsdjlkqjdk', '0', '1', false, 'homme');
-INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Benessam', 'Iliana', 'iliana@orange.fr', 'qdqsddsqq', '0', '2', false, 'femme');
-INSERT INTO `ordon`.`pharmacist` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Yannick', 'keh', 'yannickkeh@ozebi.fr', 'chelfigang', '0', '3', false, 'homme');
-use ordon;
-select * from Pharmacist;
+INSERT INTO`ordon`.`Mention` (`name`) VALUES ('Non substituable (MTE)');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('Non substituable (EFG)');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('Non substituable (CIF)');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 1 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 2 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 3 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 4 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 5 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 6 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 7 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 8 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 9 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 10 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 111 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('SP');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('NR');

@@ -204,9 +204,7 @@ router.get('/email/verification/:token', async (req, res) => {
     // On considère que ca le connecte directement
     req.session.user = {
         type : "patient",
-        email: patient.getEmail(),
-        name : patient.getName(),
-        firstname : patient.getFirstname()
+        encryptedId: patient.getEncryptedId()
     }
     return res.redirect('/patient/')
 })

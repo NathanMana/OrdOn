@@ -29,6 +29,7 @@
                 <li class="liprofil"><a>Accueil profil</a></li>
                 <li class="liprofil"><a>Modifier email</a></li>
                 <li class="liprofil"><a>Modifier le mot de passe</a></li>
+                
                 <div style="padding-top:70px;padding-bottom: 350px;">
                     <btn class="btngreen" style="font-size: 1rem; font-weight: normal;" onclick="showQR()"><a>Générer QR code</a></btn>
                 </div>
@@ -47,8 +48,15 @@
                 <button class="btngreen btn">Valider</button>
            </form>
        </div>
+
+       
    </div>
+   <div id="QRCodeDiv" style="display: block;">
+        <h3>Votre QR Code patient</h3>
+        <img id="qrcode" src=<%= ProfilObject.qrcode %> >  
+    </div>
     <%- include('../layouts/scripts'); -%>
     <%- include('../layouts/footer'); -%>
+
 </body>
 </html>

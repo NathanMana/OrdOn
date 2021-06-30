@@ -3,7 +3,7 @@ const Patient = require('../models/Patient');
 const pool = mysql.createPool({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "R1610q1207$",
     database: 'ordon',
     waitForConnections : true,
 });

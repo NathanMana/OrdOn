@@ -4,6 +4,7 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
+    <script src="./../../src/js/recupQrcodeOrdonnance.js"></script>
 </head>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
@@ -23,7 +24,7 @@
                 </div>
                 <div class="voirgenerer">
                     <a href=""><button class="btngreensmall">Voir</button></a>
-                    <a href=""><button class="btndark">Générer QR CODE</button></a>
+                    <a href=""><button class="btndark" onclick="getQRcode()">Générer QR CODE</button></a>
                 </div>
             </article>
         </div>

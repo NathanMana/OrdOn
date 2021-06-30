@@ -18,8 +18,10 @@
                         <div style="width: 100%;">
                             <a href="/motdepasseoublie"><p class="register">mot de passe oublié ?</p></a>
                         </div>
-                        <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;">Connexion échoué</p>
-                        <input class="btngreen" type="submit" value="Se connecter">
+                        <% if (locals.error){ %> 
+                            <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"><%= locals.error %> </p>
+                        <% } %> 
+                        <button class="btngreen" type="submit">Se connecter</button>
                         <div class="signup">
                             <p class="descSignup">Pas de compte ?</p>
                             <a href="/patient/inscription" class="signinbx">S'inscrire</a>

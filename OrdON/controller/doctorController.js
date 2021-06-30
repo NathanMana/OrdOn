@@ -83,13 +83,13 @@ router.post('/connexion',  async (res,req)=>{
     const doctor = await DoctorServices.getDoctorByEmail(email)
     req.session.doctor = doctor;
     // Vérification mdp
-    const verifPass = await bcrypt.compare(password, doctor.password)
+    const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
     if (!verifPass) {
         req.session.error = "L'identifiant ou le mot de passe est incorrect"
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {email: email}
+    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'doctor'}
     return res.redirect('/Doctor/home')
 })
 
@@ -162,6 +162,7 @@ router.post('/ordonnance/creer', (req, res)=>{
     for (let i = 0; i<listAttributions.length; i++){
         AttributionService.addAttribution(listAttributions[i])
     }
+    
     //Rajouter les mentions attributions
     //1 - Modifier le constructeur de mention pour pouvoir récupérer l'id via le nom
     //2 - Grâce à MentionAttributionService ajouter les mentionsAttribution

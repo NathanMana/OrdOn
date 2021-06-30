@@ -70,7 +70,7 @@ router.post('/inscription', async(req, res) => {
  * Traite la connexion des médecins
  * @method POST
  */
-router.post('/connexion',  (res,req)=>{
+router.post('/connexion',  async (res,req)=>{
     const {email, password} = req.body
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"

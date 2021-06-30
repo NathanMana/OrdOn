@@ -19,7 +19,7 @@ router.get('/connexion', (req, res)=>{
     res.render('connectionPath')
 })
 
-router.get('/register', (req, res)=>{
+router.get('/inscription', (req, res)=>{
     res.render('registerPath')
 })
 

@@ -1,7 +1,6 @@
 body .title {
     text-align: center;
     font-size: 35px;
-    font-style: italic;
     color: var(--darkblue);
     margin: 30px 0px;
 }
@@ -31,9 +30,11 @@ form {
     justify-content: center;
     align-content: center;
     align-items: center;
-    margin:40px 500px;
+    margin:40px auto;
     background-color: var(--darkblue);
     color: var(--white);
+    width: 600px;
+    justify-content: space-around;
 }
 .signup a{
    
@@ -41,8 +42,14 @@ form {
     margin: 10px;
     
 }
+
+.signinbx{
+  text-decoration: underline;
+  letter-spacing: 0.8px;
+}
 .register{
-    margin-left: 20px;
+  margin: 0 0 2rem 3rem;
+    text-align: left;
     text-decoration: underline;
     color:var(--dark);
 }
@@ -50,8 +57,7 @@ form {
     margin:10px;
     margin-right: 100px;
 }
-.confidential{
-}
+
 .titlteConsigne{
     font-size:25px;
 }
@@ -60,26 +66,5 @@ form {
     padding-left:10px;
     text-align: justify;
     padding-left:40px;
-    margin-left:600px;
 
 }
-@media (max-width: 1024px) {
-    .textConsigne {
-      margin-left:400px;
-    }
-  }
-  @media (max-width: 768px) {
-    .textConsigne {
-      margin-left:270px;
-    }
-  }
-  @media (max-width: 425px) {
-    .textConsigne {
-      margin-left:100px;
-    }
-  }
-  @media (max-width: 320px) {
-    .textConsigne {
-      margin-left:50px;
-    }
-  }

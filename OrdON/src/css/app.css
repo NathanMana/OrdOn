@@ -303,6 +303,7 @@ footer li {
     font-family: 'Raleway', sans-serif;
     letter-spacing: 1px;
     transition: 0.3s ease-out;
+    border: none;
 }
 .btngreen:hover {
     background: var(--darkblue);
@@ -320,6 +321,11 @@ footer li {
     letter-spacing: 1px;
     display: block;
     width: fit-content;
+    transition: 0.3s ease-out;
+}
+
+.btngreensmall:hover {
+    background: var(--darkblue);
 }
 .btndark {
     background-color: var(--darkblue);
@@ -515,6 +521,33 @@ input:focus {
     max-width: calc(50% - 2rem);
 }
 
+.modifBox{
+    border-radius: 30px;
+    font-family: 'Raleway';
+    font-style: italic;
+    font-size: 20px;
+    padding: 10px 45px 10px 60px;
+    text-decoration: none;
+    border: 2px solid var(--blue);
+    margin: 1rem;
+    text-align: left;
+    flex:1 0 200px;
+
+}
+
+.modifBoxGrey{
+    border-radius: 60px;
+    font-family: 'Raleway';
+    font-style: italic;
+    font-size: 20px;
+    padding: 10px 45px 10px 60px;
+    text-decoration: none;
+    border: 2px solid var(--blue);
+    margin: 1rem;
+    background-color: var(--grey);
+    text-align: left;
+    flex:1 0 200px;
+}
 
 
 

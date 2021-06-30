@@ -83,7 +83,7 @@ router.post('/connexion',  async (res,req)=>{
     const doctor = await DoctorServices.getDoctorByEmail(email)
     req.session.doctor = doctor;
     // Vérification mdp
-    const verifPass = await bcrypt.compare(password, doctor.password)
+    const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
     if (!verifPass) {
         req.session.error = "L'identifiant ou le mot de passe est incorrect"
         return res.redirect('/Doctor/registerDoctor')

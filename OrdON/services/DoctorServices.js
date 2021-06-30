@@ -116,7 +116,7 @@ const pool = require('./DatabaseConnection')
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT email FROM doctor WHERE email = ?',
+                'SELECT * FROM doctor WHERE email = ?',
                 [email]
             )
             connection.release()

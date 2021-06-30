@@ -98,10 +98,9 @@ article{
 
 .sectiondark{
     width: 100%;
-    height: 50px;
     background-color: var(--darkblue);
     color: var(--white);
-    padding: 0px 30px;
+    padding: 10px 30px;
     display: flex;
     font-size: 1.2rem;
     justify-content: space-between;
@@ -139,15 +138,39 @@ article{
 }
 
 #QRCodeDiv{ 
+    background-color: white;
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#coverPage{
+    position: absolute;
+    left: 0px; top: 0px;
+    background-color: black; 
+    display: none; 
+    opacity: 40%;
+    width: 100%; 
+    height: 100%;
 }
 
 #qrcode{
     height: 500px;
     width: 500px;
+}
+
+#qrPatientText{
+    color: #356D80;
+}
+
+.textCenter{
+    text-align: center;
 }
 
 @media screen and (max-width:1247px) {

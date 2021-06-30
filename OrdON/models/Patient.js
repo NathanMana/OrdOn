@@ -35,6 +35,7 @@ class Patient extends Person {
      * @param {string} password 
      * @param {Date} birthdate 
      * @param {long} id_patient 
+     * @param {float} weight
      */
     constructor(name, firstname, email, password, birthdate, gender, weight = null) {
         super(name, firstname, email, password, gender)

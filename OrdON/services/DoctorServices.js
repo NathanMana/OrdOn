@@ -15,9 +15,9 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             const result = await connection.query('INSERT INTO doctor SET ? ', object)
             if (!result) throw 'Une erreur est survenue'
-            doctor.setId(result[0].insertId)
-            doctor.setEncryptedId(doctor.encryptId(doctor.getId()))
-            await connection.query('UPDATE doctor SET encryptedId = ? WHERE id_doctor = ? ', [doctor.getEncryptedId(), doctor.getId()])
+            doctor.setDoctorId(result[0].insertId)
+            doctor.setEncryptedId(doctor.encryptId(doctor.getDoctorId()))
+            await connection.query('UPDATE doctor SET encryptedId = ? WHERE id_doctor = ? ', [doctor.getEncryptedId(), doctor.getDoctorId()])
             console.log("Docteur inséré")
             connection.release()
         } catch(e){
@@ -36,11 +36,10 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE doctor SET name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_doctor = ?`, 
+                isAccountValidated = ? WHERE id_doctor = ?`, 
                 [
-                    doctor.getName(), doctor.getFirstname(), doctor.getEmail(), doctor.getPassword(), doctor.getIsAccountValidated(), 
-                    doctor.getGender(), doctor.getIsEmailVerified(), doctor.getTokenEmail(), doctor.getTokenresetPassword(),
-                    doctor.getDoctorId()
+                    doctor.getName(), doctor.getFirstname(), doctor.getEmail(),
+                    doctor.getPassword(), doctor.getIsAccountValidated(), doctor.getDoctorId()
                 ]
             )
             connection.release()
@@ -57,14 +56,14 @@ const pool = require('./DatabaseConnection')
      */
      static async deleteDoctorWithId(doctor) {
         try {
-            if (!doctor || doctor.getId() <= 0) throw 'L\id indiqué est erroné'
+            if (!doctor || doctor.getDoctorId() <= 0) throw 'L\id indiqué est erroné'
 
             // Double vérification avec l'id encrypté
-            if (doctor.getId() != doctor.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (doctor.getDoctorId() != doctor.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
             await connection.query(
                 'DELETE FROM doctor WHERE id_doctor = ? AND encryptedId = ?', 
-                [doctor.getId(), doctor.getEncryptedId()]
+                [doctor.getDoctorId(), doctor.getEncryptedId()]
             )
             connection.release()
             console.log('Doctor supprimé')
@@ -103,13 +102,39 @@ const pool = require('./DatabaseConnection')
             doctor.setDoctorId(doctorData.id_doctor)
             doctor.setEncryptedId(doctorData.encryptedId)
             doctor.setProfessionnalId(doctorData.id_professionnal)
-            doctor.setGender(doctorData.gender)
-            doctor.setIsEmailVerified(doctorData.setIsEmailVerified)
-            doctor.setTokenEmail(doctorData.tokenEmail)
-            doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             return doctor
         }
         catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère un docteur a partir d'un email et d'un mdp
+     * @param {string} email
+     * @returns {Doctor} le docteur
+     */
+     static async getDoctorByEmail(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM doctor WHERE email = ?',
+                [email]
+            )
+            connection.release()
+            const doctortData = result[0][0]
+            if (!doctortData) return null
+            const doctor = new Doctor(
+                doctortData.name,
+                doctortData.firstname,
+                doctortData.email,
+                doctortData.password,
+            )
+            doctor.setDoctorId(doctorData.id_doctor)
+            doctor.setProfessionnalId(doctorData.id_professionnal)
+            return doctor
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     /**
@@ -137,10 +162,8 @@ const pool = require('./DatabaseConnection')
                     data.zipcode
                 )
                 doctor.setDoctorId(data.id_doctor)
-                doctor.setGender(data.gender)
-                doctor.setIsEmailVerified(data.setIsEmailVerified)
-                doctor.setTokenEmail(data.tokenEmail)
-                doctor.setTokenResetPassword(data.tokenResetPassword)
+                doctor.setEncryptedId(data.encryptedId)
+                doctor.setProfessionnalId(data.id_professionnal)
                 listDoctors.push(doctor)
             })
             return listDoctors

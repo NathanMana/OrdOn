@@ -16,7 +16,7 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             const result = await connection.query('INSERT INTO pharmacist SET ? ', object)
             if (!result) throw 'Une erreur est survenue'
-            pharmacist.setId(result[0].insertId)
+            pharmacist.setPharmacistId(result[0].insertId)
             pharmacist.setEncryptedId(pharmacist.encryptId(pharmacist.getPharmacistId()))
             await connection.query('UPDATE pharmacist SET encryptedId = ? WHERE id_pharmacist = ? ', [pharmacist.getEncryptedId(), pharmacist.getPharmacistId()])
             console.log("Pharmacien inséré")
@@ -37,11 +37,10 @@ const pool = require('./DatabaseConnection')
             const connection = await pool.getConnection();
             await connection.query(
                 `UPDATE pharmacist SET name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_pharmacist = ?`, 
+                isAccountValidated = ? WHERE id_pharmacist = ?`, 
                 [
-                    pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(), pharmacist.getPassword(), 
-                    pharmacist.getIsAccountValidated(), pharmacist.getGender(), pharmacist.getIsEmailVerified(), 
-                    pharmacist.getTokenEmail(), pharmacist.getTokenresetPassword(), pharmacist.getPharmacistId()
+                   pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),
+                    pharmacist.getPassword(), pharmacist.getIsAccountValidated(), pharmacist.getPharmacistId()
                 ]
             )
             connection.release()
@@ -104,13 +103,40 @@ const pool = require('./DatabaseConnection')
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setEncryptedId(pharmacistData.encryptedId)
             pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
-            pharmacist.setGender(pharmacistData.gender)
-            pharmacist.setIsEmailVerified(pharmacistData.setIsEmailVerified)
-            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
-            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
             return pharmacist
         }
         catch (e) { console.log(e)}
+    }
+
+
+    /**
+     * Récupère un pharmacien a partir d'un email et d'un mdp
+     * @param {string} email
+     * @returns {Pharmacist} le pharmacien
+     */
+     static async getPharmacistByEmail(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM pharmacist WHERE email = ?',
+                [email]
+            )
+            connection.release()
+            const pharmacistData = result[0][0]
+            if (!pharmacistData) return null
+            const pharmacist = new Pharmacist(
+                pharmacistData.name,
+                pharmacistData.firstname,
+                pharmacistData.email,
+                pharmacistData.password,
+            )
+            pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
+            pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            return pharmacist
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     /**
@@ -140,10 +166,6 @@ const pool = require('./DatabaseConnection')
                 pharmacist.setPharmacistId(data.id_pharmacist)
                 pharmacist.setEncryptedId(data.encryptedId)
                 pharmacist.setProfessionnalId(data.id_professionnal)
-                pharmacist.setGender(data.gender)
-                pharmacist.setIsEmailVerified(data.setIsEmailVerified)
-                pharmacist.setTokenEmail(data.tokenEmail)
-                pharmacist.setTokenResetPassword(data.tokenResetPassword)
                 listPharmacists.push(pharmacist)
             })
             return listPharmacists

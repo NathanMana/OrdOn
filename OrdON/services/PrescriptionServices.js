@@ -22,7 +22,7 @@ class PrescriptionServices {
             prescription.setPrescriptionId(result[0].insertId)
             prescription.setEncryptedId(prescription.encryptId(prescription.getPatientId()))
             await connection.query(
-                'UPDATE prescription SET enncryptedId = ? WHERE id_prescription = ? ', 
+                'UPDATE prescription SET encryptedId = ? WHERE id_prescription = ? ', 
                 [prescription.getEncryptedId(), prescription.getPrescriptionId()]
             )
             console.log("Prescription insérée")
@@ -70,7 +70,7 @@ class PrescriptionServices {
         catch (e) { console.log(e)}
     }
 
-    
+
 
 
      /**

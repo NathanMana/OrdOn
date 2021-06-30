@@ -22,6 +22,7 @@ class Drug {
     }
 
     getDrugId(){return this.#id_drug}
+    setDrugId(id){this.#id_drug = id}
 
     getName(){return this.#name}
 

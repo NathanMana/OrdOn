@@ -28,11 +28,6 @@ router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
  
-
-/**
- * Traite la connexion du patient
- * @method POST
- */
 /**
  * Traite la connexion du patient
  * @method POST
@@ -47,8 +42,6 @@ router.get('/connexion', (req, res)=>{
  
     // Récupérer l'objet
     const patient = await PatientServices.getPatientByEmail(email)
-    console.log(password)
-    console.log(patient.getPassword())
     // Vérification mdp
     const verifPass = await bcrypt.compare(password, patient.getPassword())
     if (!verifPass) {

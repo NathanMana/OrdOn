@@ -18,7 +18,7 @@ create table ordon.Patient(
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,
         email              Varchar (100) NOT NULL ,
-        password           Varchar (200) NOT NULL ,
+        password           Varchar (300) NOT NULL ,
         isAccountValidated Bool NOT NULL,
         isEmailVerified    Bool NOT NULL,
         tokenResetPassword              Varchar(200),  

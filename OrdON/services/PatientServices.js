@@ -245,9 +245,8 @@ class PatientServices {
                 'SELECT * FROM patient WHERE email = ?',
                 [email]
             )
-            console.log('world '+ result[1])
             connection.release()
-            const patientData = result[0]
+            const patientData = result[0][0]
             console.log('on est la  '+patientData)
             if (!patientData) return null
             const patient = new Patient(

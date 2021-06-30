@@ -210,13 +210,11 @@ router.get('/accepter/medecin/:id', async (req, res) => {
     res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
 })
 
-
-
-router.get('/t', async (req, res) => {
-    const password = ""
-    const hashPassword = await bcrypt.hash(password, 10)
-    AdminServices.addAdmin("nat.manar@gmail.com", hashPassword)
-})
+// router.get('/t', async (req, res) => {
+//     const password = ""
+//     const hashPassword = await bcrypt.hash(password, 10)
+//     AdminServices.addAdmin("nat.manar@gmail.com", hashPassword)
+// })
 
 
 module.exports = router

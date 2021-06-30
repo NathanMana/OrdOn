@@ -9,6 +9,7 @@ const MentionServices = require('../services/MentionServices')
 const router = express.Router()
 const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
+const Patient = require('../models/Patient')
 // const DoctorServices = require('../services/DoctorServices')
 
 router.get('/connexion', (req, res)=>{
@@ -89,8 +90,13 @@ router.get('/connexion',  (res,req)=>{
 })
 
 //Donne l'accès à la page de création d'ordonnance
-router.get('/ordonnance/creer', (req,res)=>{
-    res.render('Doctor/create_ordonnance')
+router.get('/ordonnance/creer/:encryptedID_patient', async (req,res)=>{
+    const id_patient = req.params.encryptedID_patient;
+
+    const patient = await PatientServices.getPatientByEncryptedId(id_patient);
+
+
+    res.render('Doctor/create_ordonnance', {patient : patient.toObject()}, {doctor: req.session.doctor});
 })
 
 function formatTipList(tipList){
@@ -128,7 +134,7 @@ function generateMentionList(mentions){
 //Créer l'ordonnance
 router.post('/ordonnance/creer', (req, res)=>{
     const id_doctor = req.session.id_doctor;
-    const id_patient = req.session.id_client;
+    const id_patient = req.session.id_patient;
     const today = new Date(Date.now());
     today.toLocaleString();
     const date_creation = today;

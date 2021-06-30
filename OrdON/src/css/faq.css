@@ -12,6 +12,7 @@
 .questions {
     height: auto;
     margin: 10px;
+    width: 100%;
 }
 .visible-pannel {
     display: flex;

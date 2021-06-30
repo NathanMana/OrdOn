@@ -8,25 +8,33 @@
   <body>
     <%- include('../layouts/nav/connectionManager'); -%>
         <div class="body">
-            <h1 class="title">Se connecter en tant que patient</h1>
+            <h2 class="title">Se connecter en tant que patient</h1>
             <section>
                 <div class="container">
+<<<<<<< Updated upstream
+                    <form>
+                        <div class="modifier__input__container">
+                            <input class="modifBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
+                            <input class="modifBox" name=" password" type="password"  placeholder="Mot de passe">
+                        <div style="width: 100%;">
+=======
                     <div class="formulaire">
                         <form action="/patient/connexion" method="POST">
                             <div>
-                                <input class="inputID champ1" name="email" type="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
+                                <input class="inputID champ1" name="email" id="email" type="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$">
                             </div>
                             <div>
-                                <input class="inputID champ2" name="password" type="password" placeholder="Mot de passe">
+                                <input class="inputID champ2" name="password" id="password" type="password" placeholder="Mot de passe">
                             </div>
+>>>>>>> Stashed changes
                             <a href="/motdepasseoublie"><p class="register">mot de passe oublié ?</p></a>
-                            <input class="boutton" type="submit" value="Se connecter">
-                            <div class="signup">
-                                <p class="descSignup">Pas de compte ?</p>
-                                <a href="/patient/inscription" class="signinbx">s'inscrire</a>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <input class="btngreen" type="submit" value="Se connecter">
+                        <div class="signup">
+                            <p class="descSignup">Pas de compte ?</p>
+                            <a href="/pharmacien/inscription" class="signinbx">S'inscrire</a>
+                        </div>
+                    </form>
                 </div>
             </section>
         </div>

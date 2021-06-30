@@ -21,8 +21,7 @@ body .title{
     justify-content: space-evenly;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: 160px;
-    margin-bottom: 175px;
+    margin:120px auto;
     
 }
 

@@ -12,12 +12,18 @@
         <section>
             <div class="container">
                 <div class="formulaire">
-                    <form class="form">
+                    <form action="/patient/inscription" method="post" class="form">
                         <div class="profile__input__container" style="margin-bottom: 0px;">
                             <input class="profilBox" name="name" placeholder="Nom" required>
                             <input class="profilBox" name="firstname" placeholder="Prenom" required>
-                            <input class="profilBox" name="firstname" type="date" Date de naissance" required>
+                            <input class="profilBox" name="birthdate" type="date" placeholder="Date de naissance" required>
                             <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
+                            <select class="profilBox" name="gender" id="">
+                                <option value="homme">Homme</option>
+                                <option value="femme">Femme</option>
+                                <option value="neutre">Ne se prononce pas</option>
+                            </select>
+                            <input class="profilBox" name="weight" placeholder="Poids">
                         </div>
                         <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
                             <p class="titleConsigne" margin-bottom: 0px;>
@@ -35,10 +41,10 @@
                             </p>
                         </div>
                         <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Mot de passe" require>
+                            <input class="profilBox" name="password" type="password"  placeholder="Mot de passe" require>
                         </div>
                         <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
+                            <input class="profilBox" name="password_check" type="password"  placeholder="Répéter le mot de passe" require>
                         </div>
                         <input class="btngreen" style="margin:0 auto;margin-bottom: 20px;" type="submit" value="S'inscrire">
                     </form>

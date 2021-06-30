@@ -25,6 +25,31 @@ router.get('/connexion', (req, res)=>{
 })
 
 /**
+ * Traite la connexion du patient
+ * @method POST
+ */
+ router.post('/connexion', async (req, res) => {
+    const {email, password} = req.body
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/Patient/registerPatient')
+    }
+
+    // Récupérer l'objet
+    const patient = await PatientServices.getPatientByEmail(email)
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(password, patient.password)
+    if (!verifPass) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/Patient/registerPatient')
+    }
+
+    req.session.user = {email: email}
+    return res.redirect('/Patient/registerPatient')
+})
+
+/**
  * Affichage de la page inscription d'un patient
  */
 router.get('/inscription', (req, res)=>{
@@ -62,7 +87,6 @@ router.post('/inscription', async (req, res) => {
         req.session.error = "Le mot de passe ne respecte pas tous les critères"
         return res.redirect('/patient/inscription')
     }
-
     if (password !== password_check) {
         req.session.error = "Les mots de passe ne correspondent pas"
         return res.redirect('/patient/inscription', { Patient : {
@@ -112,6 +136,17 @@ router.post('/inscription', async (req, res) => {
     return res.redirect('/patient/email/verification/envoyee')
 })
 
+
+// /**
+//  * Vérifie les droits d'accès a chaque requête
+//  */
+//  router.use((req, res, next) => {
+//     if (typeof req.session.user === 'undefined' || !req.session.user) {
+//         return res.redirect("/patient/connexion")
+//     }
+//     next()
+// })
+
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
@@ -156,8 +191,8 @@ router.post('/inscription', async (req, res) => {
 /**
  * Gère l'affichage de la page profile du patient
  */
- router.get('/ordonnance', (req, res) => {
-    res.render('Patient/ordonnance')
+ router.get('/ordonnances', (req, res) => {
+    res.render('Patient/ordonnances')
 })
 
 /**

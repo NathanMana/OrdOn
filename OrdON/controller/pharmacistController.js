@@ -32,8 +32,8 @@ router.get('/inscription', (req, res)=>{
 /**
  * Gère l'affichage de la page ordonnance archivé du pharmacien
  */
- router.get('/ordonnancearchive', (req, res) => {
-    res.render('Pharmacist/ordonnancearchive')
+ router.get('/ordonnancesarchivees', (req, res) => {
+    res.render('Pharmacist/ordonnanceArchive')
 })
 /**
  * Traite l'inscription des pharmaciens

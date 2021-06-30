@@ -332,6 +332,7 @@ footer li {
     letter-spacing: 1px;
     width: fit-content;
     margin-left: 15px;
+    display: block;
 }
 
 .btndanger {
@@ -523,8 +524,8 @@ input:focus {
     margin:15px auto;
 }
 .consultation{
-    width: 800px;
-    height: 140px;
+    max-width: 800px;
+    width: auto;
     background: var(--white);
     box-shadow: 2px 4px 8px 1px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
@@ -554,10 +555,18 @@ input:focus {
     font-size: 1rem;
 }
 .voirgenerer{
-    float: left;
     padding: 10px 15px;
     font-size: 1rem;
     display:flex;
+    flex-wrap: wrap;
+}
+
+.voirgenerer a {
+    margin: .5rem 1rem .5rem 0;
+}
+
+.voirgenerer a button {
+    margin: 0;
 }
 @media screen and (max-width: 937px) {
     .foot {

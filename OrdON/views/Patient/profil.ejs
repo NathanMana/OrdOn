@@ -4,6 +4,7 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
+    <script src="../../src/js/patientProfile.js"></script>
 </head>
 <style>
     @media screen and (max-width:1105px) {
@@ -49,9 +50,12 @@
 
        
    </div>
-   <div id="QRCodeDiv" style="display: block;">
-        <h3>Votre QR Code patient</h3>
+   <div id="coverPage" >
+    </div>
+   <div id="QRCodeDiv" style="display: none;">
+        <h3 id="qrPatientText">Votre QR Code patient</h3>
         <img id="qrcode" src=<%= ProfilObject.qrcode %> >  
+        <p class="textCenter" onclick="closeQR()">Fermer</p>
     </div>
    <%- include('../layouts/footer/footerManager'); -%>
    <%- include('../layouts/scripts'); -%>

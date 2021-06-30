@@ -158,16 +158,33 @@ router.post('/inscription', async (req, res) => {
  * Gère l'affichage de la page profile du patient
  */
  router.get('/profil', (req, res) => {
-    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.encryptedId
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
 
+    const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
 
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
 
         return res.render("Patient/profil", { ProfilObject: {
             qrcode : qr,
-            user: req.session.patient
+            user: patient
         } })
+    })
+})
+
+
+/**
+ * Génère le qr code d'un ordonnance
+ */
+ router.get('/getordonnance', (req, res)=>{
+    const ordo_id = req.body.id_prescription
+
+    const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
+    
+    QRcode.toDataURL(url, (err, qr) => {
+        if (err) res.send('error occurred')
+
+        return qr 
     })
 })
 
@@ -176,6 +193,31 @@ router.post('/inscription', async (req, res) => {
  */
  router.get('/ordonnances', (req, res) => {
     res.render('Patient/ordonnances')
+})
+
+/**
+ * Traite la connexion du patient
+ * @method POST
+ */
+router.post('/connexion', async (req, res) => {
+    const {email, password} = req.body
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/Patient/registerPatient')
+    }
+
+    // Récupérer l'objet
+    const patient = await PatientServices.getPatientByEmail(email)
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(password, patient.password)
+    if (!verifPass) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/Patient/registerPatient')
+    }
+
+    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
+    return res.redirect('/Patient/registerPatient')
 })
 
 /**

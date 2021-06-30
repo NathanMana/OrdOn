@@ -14,6 +14,10 @@ const nodemailer = require('../externalsAPI/NodeMailer')
  */
  router.use((req, res, next) => {
     res.locals.user = req.session.user
+    if (req.session.flash) {
+        res.locals.flash = req.session.flash
+        req.session.flash = undefined
+    }
     next()
 })
  
@@ -24,11 +28,6 @@ router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
  
-
-/**
- * Traite la connexion du patient
- * @method POST
- */
 /**
  * Traite la connexion du patient
  * @method POST
@@ -43,8 +42,6 @@ router.get('/connexion', (req, res)=>{
  
     // Récupérer l'objet
     const patient = await PatientServices.getPatientByEmail(email)
-    console.log(password)
-    console.log(patient.getPassword())
     // Vérification mdp
     const verifPass = await bcrypt.compare(password, patient.getPassword())
     if (!verifPass) {
@@ -158,7 +155,7 @@ router.post('/inscription', async (req, res) => {
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
- router.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.render('Patient/home')
 })
  
@@ -230,9 +227,11 @@ router.get('/email/verification/:token', async (req, res) => {
     // On considère que ca le connecte directement
     req.session.user = {
         type : "patient",
-        email: patient.getEmail(),
-        name : patient.getName(),
-        firstname : patient.getFirstname()
+        encryptedId: patient.getEncryptedId()
+    }
+
+    req.session.flash = {
+        sucess : "Compte bien validé :)"
     }
     return res.redirect('/patient/')
 })

@@ -81,7 +81,7 @@ router.post('/connexion',  async (res,req)=>{
 
     // Récupérer l'objet
     const doctor = await DoctorServices.getDoctorByEmail(email)
-
+    req.session.doctor = doctor;
     // Vérification mdp
     const verifPass = await bcrypt.compare(password, doctor.password)
     if (!verifPass) {
@@ -99,7 +99,19 @@ router.get('/ordonnance/creer/:encryptedID_patient', async (req,res)=>{
 
     const patient = await PatientServices.getPatientByEncryptedId(id_patient);
 
-    res.render('Doctor/create_ordonnance', {patient : patient.toObject()}, {doctor: req.session.doctor});
+    const today = new Date(Date.now());
+    const date_creation = today.toLocaleString().substring(0,10);
+
+    const mentions = await MentionServices.getAllMentions();
+    console.log("mentions : " + mentions)
+
+    res.render('Doctor/create_ordonnance', {PrescriptionObjects: {
+        patient: patient.toObject(),
+        doctor: req.session.doctor,
+        madeDate: date_creation,
+        mentions: mentions
+        }
+    });
 })
 
 function formatTipList(tipList){
@@ -139,7 +151,7 @@ router.post('/ordonnance/creer', (req, res)=>{
     const id_doctor = req.session.id_doctor;
     const id_patient = req.session.id_patient;
     const today = new Date(Date.now());
-    today.toLocaleString();
+    today.toLocaleString().substring(0,10);
     const date_creation = today;
 
     const listCouncils = formatTipList(req.body.tipList);
@@ -150,7 +162,6 @@ router.post('/ordonnance/creer', (req, res)=>{
     for (let i = 0; i<listAttributions.length; i++){
         AttributionService.addAttribution(listAttributions[i])
     }
-
     //Rajouter les mentions attributions
     //1 - Modifier le constructeur de mention pour pouvoir récupérer l'id via le nom
     //2 - Grâce à MentionAttributionService ajouter les mentionsAttribution

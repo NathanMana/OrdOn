@@ -105,6 +105,7 @@ create table ordon.Doctor(
 
 create table ordon.Prescription(
         id_prescription  Int  Auto_increment  NOT NULL ,
+        encryptedId        Varchar (100) ,
         date_creation    Date NOT NULL ,
         isQRCodeVisible  Bool NOT NULL ,
         date_archived    Date NOT NULL ,

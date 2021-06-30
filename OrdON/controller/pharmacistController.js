@@ -73,7 +73,8 @@ router.post('/inscription', async (req, res) => {
  * @method POST
  */
 router.post('/connexion',  async (res,req)=>{
-    const {email, password} = req.body
+    const password = req.body.password
+    const email = requ.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Pharmacist/registerPharmacist')

@@ -239,13 +239,16 @@ class PatientServices {
      */
     static async getPatientByEmail(email) {
         try {
+            console.log('hello')
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT email FROM patient WHERE email = ?',
+                'SELECT * FROM patient WHERE email = ?',
                 [email]
             )
+            console.log('world '+ result[1])
             connection.release()
-            const patientData = result[0][0]
+            const patientData = result[0]
+            console.log('on est la  '+patientData)
             if (!patientData) return null
             const patient = new Patient(
                 patientData.name,
@@ -255,12 +258,15 @@ class PatientServices {
                 patientData.birthdate,
                 patientData.weight
             )
+            console.log('helloworld')
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.setIsEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
+            console.log(patient)
+            console.log('heyhey')
             return patient
         }
         catch (e) {

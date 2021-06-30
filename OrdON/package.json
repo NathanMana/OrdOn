@@ -17,6 +17,7 @@
     "express-session": "^1.17.2",
     "formidable": "^1.2.2",
     "gsap": "^3.7.0",
+    "install": "^0.13.0",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.6.2",
     "qrcode": "^1.4.4"

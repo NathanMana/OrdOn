@@ -11,39 +11,41 @@
         <h2 class="title">S'inscrire en tant que Pharmacien</h1>
         <section>
             <div class="container">
-                <div class="formulaire">
-                    <form class="form">
-                        <div class="profile__input__container" style="margin-bottom: 0px;">
-                            <input class="profilBox" name="name" placeholder="Nom" required>
-                            <input class="profilBox" name="firstname" placeholder="Prenom" required>
-                            <input class="profilBox" name="birthday" type="date" placeholder="Date de naissance" require>
-                            <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
-                        </div>
-                        <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
-                            <p class="titleConsigne" margin-bottom: 0px;>
-                                Consigne du mot de passe
-                            </p>
-                        </div>
-                        <div class="profile__input__container" style="margin-bottom: 0px;margin-top:0px;">
-                            <p class="textConsigne">
-                                Au moins 8 caractères<br>
-                                Au moins 1 minuscule<br>
-                                Au moins 1 majuscule<br>
-                                Au moins 1 chifre<br>
-                                Au moins 1 caractère spécial<br>
-                                Ne contient pas votre nom/pénom
-                            </p>
-                        </div>
-                        <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Mot de passe" require>
-                        </div>
-                        <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
-                        </div>
-                        <input class="btngreen" style="margin:0 auto;margin-bottom: 20px;" type="submit" value="S'inscrire">
-                    </form>
+                <div class="container">
+                    <div class="formulaire">
+                        <form class="form">
+                            <div class="profile__input__container" style="margin-bottom: 0px;">
+                                <input class="profilBox" name="name" placeholder="Nom" required>
+                                <input class="profilBox" name="firstname" placeholder="Prenom" required>
+                                <input class="profilBox" name="firstname" placeholder="Lieu de travail" required>
+                                <input class="profilBox" name="firstname" placeholder="Secteur" required>
+                                <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
+                            </div>
+                            <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
+                                <p class="titleConsigne" margin-bottom: 0px;>
+                                    Consigne du mot de passe
+                                </p>
+                            </div>
+                            <div class="profile__input__container" style="margin-bottom: 0px;margin-top:0px;">
+                                <p class="textConsigne">
+                                    Au moins 8 caractères<br>
+                                    Au moins 1 minuscule<br>
+                                    Au moins 1 majuscule<br>
+                                    Au moins 1 chifre<br>
+                                    Au moins 1 caractère spécial<br>
+                                    Ne contient pas votre nom/pénom
+                                </p>
+                            </div>
+                            <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
+                                <input class="profilBox" name=" password" type="password"  placeholder="Mot de passe" require>
+                            </div>
+                            <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
+                                <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
+                            </div>
+                            <input class="btngreen" style="margin:0 auto;margin-bottom: 20px;" type="submit" value="S'inscrire">
+                        </form>
+                    </div>
                 </div>
-            </div>
         </section>
     </div>
     <%- include('../layouts/footer/footerManager'); -%>

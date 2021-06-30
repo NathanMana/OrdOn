@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('layouts/header'); -%>
+    <link rel="stylesheet" href="../../src/css/connectionPage.css"/>
+    <title>OrdON</title>
+  </head>
+  <body>
+    <%- include('layouts/nav/connectionManager'); -%>
+        <div class="body" style="margin: 7%;">
+            <h2 class="title">Veuillez entrer le code à 6 chiffres envoyer par mail</h1>
+            <section>
+                <div class="container">
+                    <form>
+                        <div class="modifier__input__container">
+                            <input class="modifBox" name=" password" type="password"  placeholder="123456">
+                        <div style="width: 100%;">
+                            <p class="register" style="font-style: italic;margin-left: 4rem;">Renvoyer le code</p>
+                        </div>
+                        <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Code erroné, authentification échoué</p>
+                        <input class="btngreen" type="submit" value="Se connecter">
+                    </form>
+                </div>
+            </section>
+        </div>
+        <%- include('layouts/footer/footerManager'); -%>
+        <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
+  </body>
+</html>

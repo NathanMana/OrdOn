@@ -49,7 +49,12 @@ router.get('/inscription', (req, res)=>{
  router.get('/motdepasseoublie', (req, res) => {
     res.render('forgotPassword')
 })
-
+/**
+ * Gère l'affichage de la page de double authentification
+ */
+ router.get('/doubleauthentification', (req, res) => {
+    res.render('doubleAuth')
+})
 
 /**
  * Deconnecte n'importe quel utilisateur

@@ -44,7 +44,7 @@ router.get('/connexion', (req, res)=>{
     // Récupérer l'objet
     const patient = await PatientServices.getPatientByEmail(email)
     // Vérification mdp
-    const verifPass = await bcrypt.compare(password, patient.getPassword())
+    const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
     if (!verifPass) {
         req.session.error = "L'identifiant ou le mot de passe est incorrect"
         return res.redirect('/patient/connexion')

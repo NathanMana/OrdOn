@@ -55,6 +55,33 @@ class PrescriptionServices {
         }
         catch (e) { console.log(e)}
     }
+
+     /**
+     * @returns {listPrescription} la liste d'ordonnance
+     */
+      static async displayPrescriptionPatient(){
+        try {
+            listPrescription = []
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM prescription WHERE id_patient= ? ORDER BY date_archive',
+                [req.session.id], function(err,rows){
+                    rows.forEach(element => {
+                        // On convertit le résultat en objet js
+                        const prescription = new Prescription()
+                        Object.assign(prescription, element[0][0])
+                        //On complete l'objet prescription avec les Attributions et les conseils
+                        prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
+                        prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
+                        listPrescription.add(prescription)
+                    });    
+                })
+            if (!result) throw 'Une erreur est survenue'
+            connection.release()
+            return listPrescription
+        }catch(e){ console.log(e)}     
+    }
+
 }
 
 module.exports = PrescriptionServices

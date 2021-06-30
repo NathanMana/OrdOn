@@ -6,9 +6,9 @@ const PatientServices = require('../services/PatientServices');
 const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
-
+ 
 const nodemailer = require('../externalsAPI/NodeMailer')
-
+ 
 /**
  * Créer un locals utilisable en ejs
  */
@@ -16,39 +16,47 @@ const nodemailer = require('../externalsAPI/NodeMailer')
     res.locals.user = req.session.user
     next()
 })
-
+ 
 /**
  * Affichage de la page de connexion d'un patient
  */
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
+ 
 
 /**
  * Traite la connexion du patient
  * @method POST
  */
+/**
+ * Traite la connexion du patient
+ * @method POST
+ */
  router.post('/connexion', async (req, res) => {
-    const {email, password} = req.body
+    const password= req.body.password
+    const email = req.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
-        return res.redirect('/Patient/registerPatient')
+        return res.redirect('/patient/connexion')
     }
-
+ 
     // Récupérer l'objet
     const patient = await PatientServices.getPatientByEmail(email)
-
+    console.log(password)
+    console.log(patient.getPassword())
     // Vérification mdp
-    const verifPass = await bcrypt.compare(password, patient.password)
+    const verifPass = await bcrypt.compare(password, patient.getPassword())
     if (!verifPass) {
         req.session.error = "L'identifiant ou le mot de passe est incorrect"
-        return res.redirect('/Patient/registerPatient')
+        return res.redirect('/patient/connexion')
     }
 
-    req.session.user = {email: email}
-    return res.redirect('/Patient/registerPatient')
+    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
+    return res.redirect('/patient/')
 })
-
+ 
+ 
 /**
  * Affichage de la page inscription d'un patient
  */
@@ -59,7 +67,7 @@ router.get('/inscription', (req, res)=>{
     }
     res.render('Patient/registerPatient')
 })
-
+ 
 /**
  * Traite l'inscription des patients
  * @method POST
@@ -95,13 +103,13 @@ router.post('/inscription', async (req, res) => {
             email: email
         }})
     }
-
+ 
     // Vérifier si l'email est déjà utilisé
     if(await PatientServices.isEmailPresent(email)) {
         req.session.error = "Cet email est déjà utilisé"
         return res.redirect('/patient/inscription')
     }
-
+ 
     // On essaie de transformer le string correspondant à la date de naissance en date
     let birthdateToAdd
     try {
@@ -110,7 +118,7 @@ router.post('/inscription', async (req, res) => {
         req.session.error = "Le format de la date ne convient pas"
         return res.redirect('/patient/inscription')
     }
-
+ 
     // On essaie de transformer le string correspondant au poids en double
     let weightDouble = 0
     if (weight) {
@@ -120,11 +128,11 @@ router.post('/inscription', async (req, res) => {
             return res.redirect('/patient/inscription')
         }
     }
-
+ 
     const hashPassword = await bcrypt.hash(password, 10)
     let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble)
     patient = await PatientServices.addPatient(patient)
-
+ 
     // Envoyer l'email de confirmation
     nodemailer(
         email, 
@@ -132,10 +140,10 @@ router.post('/inscription', async (req, res) => {
         "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/email/verification/" + patient.getTokenEmail(),
         "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail() + "'>Cliquer sur ce lien</a>" 
     )
-
+ 
     return res.redirect('/patient/email/verification/envoyee')
 })
-
+ 
 
 // /**
 //  * Vérifie les droits d'accès a chaque requête
@@ -146,48 +154,48 @@ router.post('/inscription', async (req, res) => {
 //     }
 //     next()
 // })
-
+ 
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
  router.get('/', (req, res) => {
     res.render('Patient/home')
 })
-
+ 
 /**
  * Gère l'affichage de la page profile du patient
  */
  router.get('/profil', (req, res) => {
     const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
-
+ 
     const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
-
+ 
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
-
+ 
         return res.render("Patient/profil", { ProfilObject: {
             qrcode : qr,
             user: patient
         } })
     })
 })
-
+ 
 
 /**
  * Génère le qr code d'un ordonnance
  */
  router.get('/getordonnance', (req, res)=>{
     const ordo_id = req.body.id_prescription
-
+ 
     const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
     
     QRcode.toDataURL(url, (err, qr) => {
         if (err) res.send('error occurred')
-
+ 
         return qr 
     })
 })
-
+ 
 /**
  * Gère l'affichage de la page profile du patient
  */
@@ -195,30 +203,6 @@ router.post('/inscription', async (req, res) => {
     res.render('Patient/ordonnances')
 })
 
-/**
- * Traite la connexion du patient
- * @method POST
- */
-router.post('/connexion', async (req, res) => {
-    const {email, password} = req.body
-    if (!email || !password) {
-        req.session.error = "Remplissez tous les champs"
-        return res.redirect('/Patient/registerPatient')
-    }
-
-    // Récupérer l'objet
-    const patient = await PatientServices.getPatientByEmail(email)
-
-    // Vérification mdp
-    const verifPass = await bcrypt.compare(password, patient.password)
-    if (!verifPass) {
-        req.session.error = "L'identifiant ou le mot de passe est incorrect"
-        return res.redirect('/Patient/registerPatient')
-    }
-
-    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
-    return res.redirect('/Patient/registerPatient')
-})
 
 /**
  * View indiquant de suivre les indications envoyées dans le mail
@@ -226,18 +210,18 @@ router.post('/connexion', async (req, res) => {
 router.get('/email/verification/envoyee', (req, res) => {
     return res.render('layouts/emailVerification.ejs')
 })
-
+ 
 /**
  * Traitement de la vérification d'un patient
  */
 router.get('/email/verification/:token', async (req, res) => {
     const token = req.params.token
     if (!token) return res.status(500).send("Une erreur est survenue")
-
+ 
     // Essayer de récupérer le patient correspondant
     const patient = await PatientServices.getPatientByTokenEmail(token)
     if (!patient) return res.status(500).send("Une erreur est survenue")
-
+ 
     // On peut certifier que l'email est vérifié
     patient.setIsEmailVerified(true)
     patient.setTokenEmail(null)

@@ -8,52 +8,39 @@
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
     <div class="body">
-        <h1 class="title">S'inscrire en tant que Patient</h1>
+        <h2 class="title">S'inscrire en tant que Patient</h1>
         <section>
             <div class="container">
                 <div class="formulaire">
-                    <form action="/patient/inscription" method="post">
-                        <% if (locals.error) { %> 
-                            <p style="color:var(--danger);"><%= locals.error %> </p>
-                        <% } %> 
-                        <div>
-                            <input class="inputID champ1" name="name" placeholder="Nom" required>
-                            <input class="inputID champ2" name="firstname" placeholder="Prenom" required>
+                    <form class="form">
+                        <div class="profile__input__container" style="margin-bottom: 0px;">
+                            <input class="profilBox" name="name" placeholder="Nom" required>
+                            <input class="profilBox" name="firstname" placeholder="Prenom" required>
+                            <input class="profilBox" name="firstname" type="date" Date de naissance" required>
+                            <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
                         </div>
-                        <div>
-                            <input class="inputID champ3" name="birthdate" type="date" placeholder="Date de naissance" required>
-                            <input class="inputID champ2" name="email" placeholder="Email" type="email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
+                        <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
+                            <p class="titleConsigne" margin-bottom: 0px;>
+                                Consigne du mot de passe
+                            </p>
                         </div>
-                        <div class="confidential">
-                            <div>
-                                <input class="inputID champ3" name="weight" type="text" placeholder="Poids">
-                                <select class="inputID champ3" name="gender">
-                                    <option value="homme">Homme</option>
-                                    <option value="femme">Femme</option>
-                                    <option value="neutre">Ne se prononce pas</option>
-                                </select>
-                            </div>
-                            <div>
-                                <p class="titleConsigne">
-                                    Consigne du mot de passe
-                                </p>
-                                <p class="textConsigne">
-                                    Au moins 8 caractères<br>
-                                    Au moins 1 minuscule<br>
-                                    Au moins 1 majuscule<br>
-                                    Au moins 1 chifre<br>
-                                    Au moins 1 caractère spécial<br>
-                                    Ne contient pas votre nom/pénom
-                                </p>
-                            </div>
-                            <div>
-                                <input class="inputID champ2" name="password" type="password"  placeholder="Mot de passe" require>
-                            </div>
-                            <div>
-                                <input class="inputID champ2" name="password_check" type="password"  placeholder="Répéter le mot de passe" require>
-                            </div>
+                        <div class="profile__input__container" style="margin-bottom: 0px;margin-top:0px;">
+                            <p class="textConsigne">
+                                Au moins 8 caractères<br>
+                                Au moins 1 minuscule<br>
+                                Au moins 1 majuscule<br>
+                                Au moins 1 chifre<br>
+                                Au moins 1 caractère spécial<br>
+                                Ne contient pas votre nom/pénom
+                            </p>
                         </div>
-                        <input class="boutton" type="submit" value="Se connecter">
+                        <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
+                            <input class="profilBox" name=" password" type="password"  placeholder="Mot de passe" require>
+                        </div>
+                        <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
+                            <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
+                        </div>
+                        <input class="btngreen" style="margin:0 auto;margin-bottom: 20px;" type="submit" value="S'inscrire">
                     </form>
                 </div>
             </div>

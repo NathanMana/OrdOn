@@ -89,7 +89,7 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {email: email}
+    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'doctor'}
     return res.redirect('/Doctor/home')
 })
 

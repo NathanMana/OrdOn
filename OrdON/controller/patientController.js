@@ -199,9 +199,17 @@ router.get('/', (req, res) => {
  */
  router.get('/ordonnances', (req, res) => {
     const prescriptions = PrescriptionServices.displayPrescriptionPatient(req.session.user.encryptedId)
+    ordoViewModels = new Array()
+    for (let i=0; i<prescriptions.length; i++){
+        ordoViewModels.push(new OrdonnanceViewModel(prescriptions[i].getPrescriptionId(), prescriptions[i].getDoctorId))
+    }
 
-
-    res.render('Patient/ordonnances', {Prescriptions: prescriptions})
+    res.render('Patient/ordonnances', {OrdonnancesObjects: {
+            Prescriptions: prescriptions,
+            OrdonnancesViewModels: ordoViewModels
+            
+        }
+    })
 })
 
 

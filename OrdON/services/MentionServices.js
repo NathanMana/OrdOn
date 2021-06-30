@@ -40,6 +40,22 @@ class MentionServices {
             return result[0][0].id_mention
         } catch (e) {console.log(e)}
     }
+
+    static async getAllMentions(){
+        try{
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM mention'
+            )
+            if (!result) throw 'Une erreur est survenue'
+            var mentions = new Array()
+            result[0].forEach(function(row){
+                mentions.push(row.name)
+            })
+            return mentions;
+        }
+        catch (e) {console.log(e)}
+    }
 }
 
 module.exports = MentionServices

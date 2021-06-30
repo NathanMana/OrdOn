@@ -135,17 +135,18 @@ class PatientServices {
             console.log('Patient récupéré')
             const patientData = result[0][0]
             if (!patientData) return null
+            console.log("weight : " + patientData.weight)
             const patient = new Patient(
                 patientData.name,
                 patientData.firstname,
                 patientData.email,
                 patientData.password,
                 patientData.birthdate,
+                patientData.gender,
                 patientData.weight
             )
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
-            patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.setIsEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)

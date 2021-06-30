@@ -7,7 +7,8 @@ const router = express.Router()
 const Patient = require('./../models/Patient')
 const QRcode = require('qrcode')
  
-const nodemailer = require('../externalsAPI/NodeMailer')
+const nodemailer = require('../externalsAPI/NodeMailer');
+const PrescriptionServices = require('../services/PrescriptionServices');
  
 /**
  * Créer un locals utilisable en ejs
@@ -197,7 +198,10 @@ router.get('/', (req, res) => {
  * Gère l'affichage de la page profile du patient
  */
  router.get('/ordonnances', (req, res) => {
-    res.render('Patient/ordonnances')
+    const prescriptions = PrescriptionServices.displayPrescriptionPatient(req.session.user.encryptedId)
+
+
+    res.render('Patient/ordonnances', {Prescriptions: prescriptions})
 })
 
 
@@ -235,7 +239,6 @@ router.get('/email/verification/:token', async (req, res) => {
     }
     return res.redirect('/patient/')
 })
-
 
 
 module.exports = router

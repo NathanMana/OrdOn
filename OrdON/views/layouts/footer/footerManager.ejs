@@ -4,23 +4,23 @@
             <li class="footm">Liens</li>
             <% if (locals.user) { %>
                 <% if (locals.user.type === "patient") { %>
-                    <li class="foots"><a>Mon profil</a></li>
-                    <li class="foots"><a>Mes ordonnances</a></li>
+                    <li class="foots"><a href="/patient/profil">Mon profil</a></li>
+                    <li class="foots"><a href="/patient/ordonnances">Mes ordonnances</a></li>
                 <% } else if (locals.user.type === "médecin") {%> 
-                    <li class="foots"><a>Mon profil</a></li>
+                    <li class="foots"><a href="/medecin/profil">Mon profil</a></li>
                 <% } else if (locals.user.type === "pharmacien") {%> 
-                    <li class="foots"><a>Mon profil</a></li>
-                    <li class="foots"><a>Ordonnances archivées</a></li>                
+                    <li class="foots"><a href="/pharmacien/profil">Mon profil</a></li>
+                    <li class="foots"><a href="/pharmacien/ordonnancesarchivees">Ordonnances archivées</a></li>                
                 <% } %>   
                 <li class="foots"><a href="/deconnexion">Se déconnecter</a></li>
             <% } else { %>
-                <li class="foots"><a>Se connecter</a></li>
-                <li class="foots"><a>S'inscrire</a></li>    
+                <li class="foots"><a href="/connexion">Se connecter</a></li>
+                <li class="foots"><a href="/inscription">S'inscrire</a></li>    
             <% } %>  
         </ul>
         <ul class="ulfoot">
             <li class="footm">Aide</li>
-            <li class="foots"><a>FAQ</a></li>
+            <li class="foots"><a href="/faq">FAQ</a></li>
         </ul>
         <ul class="ulfoot">
             <li class="footm">Légal</li>

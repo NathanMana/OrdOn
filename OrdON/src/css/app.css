@@ -427,7 +427,6 @@ input:focus {
 
 .profil__right__section {
     width: 100%;
-    margin-bottom: 2rem;
 }
 
 .profile__input__container {
@@ -499,6 +498,7 @@ input:focus {
     margin: 1rem;
     text-align: left;
     flex:1 0 200px;
+    max-width: calc(50% - 2rem);
 }
 
 .profilBoxGrey{
@@ -513,6 +513,7 @@ input:focus {
     background-color: var(--grey);
     text-align: left;
     flex:1 0 200px;
+    max-width: calc(50% - 2rem);
 }
 
 

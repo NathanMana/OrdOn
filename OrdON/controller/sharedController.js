@@ -38,11 +38,18 @@ router.get('/inscription', (req, res)=>{
 })
 
 /**
+ * Gère l'affichage de la page de suppression de compte
+ */
+ router.get('/profil/supprimermoncompte', (req, res) => {
+    res.render('Profile/deleteAccount')
+})
+/**
  * Gère l'affichage de la page de l'oublie du mot de passe
  */
  router.get('/motdepasseoublie', (req, res) => {
     res.render('forgotPassword')
 })
+
 
 /**
  * Deconnecte n'importe quel utilisateur

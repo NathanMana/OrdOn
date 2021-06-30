@@ -14,6 +14,10 @@ const nodemailer = require('../externalsAPI/NodeMailer')
  */
  router.use((req, res, next) => {
     res.locals.user = req.session.user
+    if (req.session.flash) {
+        res.locals.flash = req.session.flash
+        req.session.flash = undefined
+    }
     next()
 })
 
@@ -150,7 +154,7 @@ router.post('/inscription', async (req, res) => {
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
- router.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.render('Patient/home')
 })
 
@@ -247,6 +251,10 @@ router.get('/email/verification/:token', async (req, res) => {
     req.session.user = {
         type : "patient",
         encryptedId: patient.getEncryptedId()
+    }
+
+    req.session.flash = {
+        sucess : "Compte bien validé :)"
     }
     return res.redirect('/patient/')
 })

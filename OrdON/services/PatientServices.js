@@ -180,11 +180,11 @@ class PatientServices {
                 patientData.email,
                 patientData.password,
                 patientData.birthdate,
+                patientData.gender,
                 patientData.weight
             )
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
-            patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.setIsEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)

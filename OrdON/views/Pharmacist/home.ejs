@@ -6,8 +6,29 @@
     <link rel="stylesheet" href="/src/css/home.css">
 </head>
 <body>
-    <%- include('../layouts/navConnectedPhar'); -%>
-    <%- include('../layouts/greenpharmacie'); -%>
-    <%- include('../layouts/footer'); -%>
+    <%- include('../layouts/nav/connectionManager'); -%>
+    <section class="sectiongreen">
+        <h3>Comment utiliser OrdOn ?</h3>
+        <div class="triple">
+            <article class="article3">
+                <img class="etape" src="/src/images/home/qrcodeOrdOn.png">
+                <p class="liste">1 - Scannez le QR code de l'ordonnance du patient</p>
+            </article>
+            <article class="article3">
+                <img class="etape" src="/src/images/home/médicament.png">
+                <p class="liste">2 - Attribuez les médecins prescrits</p>
+            </article>
+            <article class="article3">
+                <img class="etape" src="/src/images/home/LogoOrdOnwhite.png">
+                <p class="liste">3 - Fermez l’ordonnance, elle sera de nouveau consultable dans vos ordonnances archivées</p>
+            </article>
+        </div>
+        <div style="padding: 50px 0px 20px 0px;">
+            <h5>Il vous reste encore des doutes ?</h5>
+            <a href="/faq"><h5 style="text-decoration: underline;">Consulter notre FAQ</h5></a>
+        </div>
+    </section>
+    <%- include('../layouts/footer/footerManager'); -%>
+    <%- include('../layouts/scripts'); -%>
 </body>
 </html>

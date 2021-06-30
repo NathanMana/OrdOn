@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<style>
+    @media screen and (max-width:1105px) {
+        .profilBox {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width:1105px) {
+        .profilBoxGrey {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width:720px) {
+        .darkSide {
+            display: none;
+        }
+    }
+</style>
+<body>
+    <%- include('../layouts/nav/connectionManager'); -%>
+   <div class="profil">
+        <%- include('../layouts/profiledarknav'); -%>
+       <div class="profil__right__section">
+           <h2 style="color:var(--darkblue); margin:20px auto;">Modifier mon adresse email</h2>
+           <form class="form">
+                <div class="modifier__input__container">
+                    <input class="profilBoxGrey" placeholder="email actuel" disabled>
+                    <input class="profilBox" placeholder="nouvelle email">
+                    <button class="btngreen btn" style="margin: 20px auto;">Valider</button>
+                </div> 
+            </form>
+       </div>
+   </div>
+   <%- include('../layouts/footer/footerManager'); -%>
+    <%- include('../layouts/scripts'); -%>
+</body>
+</html>

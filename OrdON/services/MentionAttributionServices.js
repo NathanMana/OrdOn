@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
 const MentionAttribution = require('../models/AssociationClass/MentionAttribution');
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "R1610q1207$",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 /**
  * Gère toutes les opérations sur la table MentionAttribution

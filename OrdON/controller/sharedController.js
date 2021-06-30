@@ -7,23 +7,49 @@ const PatientServices = require('../services/PatientServices')
 /**
  * Gère l'affichage de la page d'accueil
  */
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     res.render('index')
+})
+
+router.get('/faq', (req, res) => {
+    res.render('faq')
 })
 
 router.get('/connexion', (req, res)=>{
     res.render('connectionPath')
 })
 
-router.get('/pharmacien', (req, res)=>{
-    res.render('../views/Pharmacist/connectionPharmacist')
+router.get('/register', (req, res)=>{
+    res.render('registerPath')
 })
 
-router.get('/patient', (req, res)=>{
-    res.render('connectionPath')
+/**
+ * Gère l'affichage de la page de modification d'email
+ */
+ router.get('/profil/modifieremail', (req, res) => {
+    res.render('Profile/modifyMail')
 })
 
-router.get('/docteur', (req, res)=>{
-    res.render('connectionPath')
+/**
+ * Gère l'affichage de la page de modification du mot de passe
+ */
+ router.get('/profil/modifiermotdepasse', (req, res) => {
+    res.render('Profile/modifyPassword')
 })
+
+/**
+ * Gère l'affichage de la page de l'oublie du mot de passe
+ */
+ router.get('/motdepasseoublie', (req, res) => {
+    res.render('forgotPassword')
+})
+
+/**
+ * Deconnecte n'importe quel utilisateur
+ */
+router.get('/deconnexion', (req, res) => {
+    req.session.user = undefined
+    res.redirect('/')
+})
+
 module.exports = router

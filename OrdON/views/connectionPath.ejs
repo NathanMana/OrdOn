@@ -8,35 +8,35 @@
     <link rel="stylesheet" href="../src/css/app.css">
 </head>
   <body>
-    <%- include('layouts/nav'); -%>
+    <%- include('./layouts/nav/connectionManager'); -%>
         <div class="body">
             <h1 class="title">Veuilez sélectionnez votre statut pour vous connecter</h1>
             <div class="container1">
                 <div class="box">
                   <div class="boxContent">
-                    <a href="Patient/connectionPatient.ejs"><img src="../src/images/connection/patient.png" alt="patien image"></a>
+                    <a href="Patient/connexion"><img src="../src/images/connection/patient.png" alt="patien image"></a>
                     <p class="desc">Patient</p>
                   </div>
                   <a href="#"></a>
                 </div>
                 <div class="box">
                   <div class="boxContent">
-                    <a href="Doctor/connectionDoctor.ejs"><img src="../src/images/connection/doctor.png" alt="docteur image"></a>
+                    <a href="Docteur/connexion"><img src="../src/images/connection/doctor.png" alt="docteur image"></a>
                     <p class="desc">Docteur</p>
                   </div>
                   <a href="#"></a>
                 </div>
                 <div class="box">
                   <div class="boxContent">
-                    <a href="/pharmacien"><img src="../src/images/connection/pharmacien.jpg" alt="pharmacien image"></a>
+                    <a href="Pharmacien/connexion"><img src="../src/images/connection/pharmacien.jpg" alt="pharmacien image"></a>
                     <p class="desc">Pharmacien</p>
                   </div>
                   <a href="#"></a>
                 </div>
             </div>
         </div>
-        <%- include('layouts/footer'); -%>
-        <%- include('layouts/scripts'); -%>
+        <%- include('./layouts/footer/footerManager'); -%>
+        <%- include('./layouts/scripts'); -%>
         <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
   </body>
 </html>

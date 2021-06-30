@@ -30,6 +30,12 @@ class Attribution {
      */
     #listMentions = []
 
+    /**
+     * Id de l'ordonnance (parent)
+     * @type {long}
+     */
+    #id_prescription
+
 
     //Manque l'id de la prescription
     constructor(description, quantity, drug, listMentions){
@@ -39,7 +45,7 @@ class Attribution {
         this.#listMentions = listMentions
     }
 
-    getIdAttribution(){return this.#id_attribution}
+    getAttributionId(){return this.#id_attribution}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}
@@ -69,6 +75,9 @@ class Attribution {
         this.#listMentions.splice(index, 1)
     }
     setListMentions(listMentions){this.#listMentions = listMentions}
+
+    getPrescriptionId(){return this.#id_prescription}
+    setPrescriptionId(id){this.#id_prescription = id}
 }
 
 module.exports = Attribution

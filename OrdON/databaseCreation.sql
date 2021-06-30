@@ -13,13 +13,17 @@ create table ordon.Patient(
         id_patient         Int  Auto_increment  NOT NULL ,
         encryptedId        Varchar (100) ,
         birthdate          Date NOT NULL ,
+        weight             FLOAT, 
         isQRCodeVisible    Bool NOT NULL ,
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,
         email              Varchar (100) NOT NULL ,
         password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL,
-        tokenEmail         Varchar(200)
+        isEmailVerified    Bool NOT NULL,
+        tokenResetPassword              Varchar(200),  
+        tokenEmail         Varchar(200),        
+        gender             Varchar (30) NOT NULL 
 	,CONSTRAINT Patient_PK PRIMARY KEY (id_patient)
 )ENGINE=InnoDB;
 
@@ -61,7 +65,10 @@ create table ordon.Pharmacist(
         email              Varchar (100) NOT NULL ,
         password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL ,
+        isEmailVerified    Bool NOT NULL,
         tokenEmail         Varchar(200) ,
+        tokenResetPassword              Varchar(200),  
+        gender             Varchar (30) NOT NULL,
         id_professionnal   Int NOT NULL
 	,CONSTRAINT Pharmacist_PK PRIMARY KEY (id_pharmacist)
 
@@ -81,7 +88,10 @@ create table ordon.Doctor(
         email              Varchar (100) NOT NULL ,
         password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL,
+        isEmailVerified    Bool NOT NULL,
         tokenEmail         Varchar(200),
+        tokenResetPassword              Varchar(200),  
+        gender             Varchar (30) NOT NULL ,
         id_professionnal   Int NOT NULL 
 	,CONSTRAINT Doctor_PK PRIMARY KEY (id_doctor)
 
@@ -167,14 +177,14 @@ create table ordon.mention_attribution(
 
 
 #---------------------------------------------------------
-# JEU DES TEST
+# JEU DE TEST
 # --------------------------------------------------------
 INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Sainte-Suz', 'Le Moulin des forges', '53270', 'http://placehold.it/20x20');
 INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`, `proofpath`) VALUES ('Evron', 'Rue de la mairie', '53600', 'oui.jpg');
 INSERT INTO `ordon`.`professionnal` (`city`, `address`, `zipcode`) VALUES ('Ville', 'Adresse', '45789');
 
-INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Manaranche', 'Nathan', 'nat.manar@gmail.com', 'qsdjlkqjdk', '0', '1');
-INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Benessam', 'Iliana', 'iliana@orange.fr', 'qdqsddsqq', '0', '2');
-INSERT INTO `ordon`.`pharmacist` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`) VALUES ('Yannick', 'keh', 'yannickkeh@ozebi.fr', 'chelfigang', '0', '3');
+INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Manaranche', 'Nathan', 'nat.manar@gmail.com', 'qsdjlkqjdk', '0', '1', false, 'homme');
+INSERT INTO `ordon`.`doctor` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Benessam', 'Iliana', 'iliana@orange.fr', 'qdqsddsqq', '0', '2', false, 'femme');
+INSERT INTO `ordon`.`pharmacist` (`name`, `firstname`, `email`, `password`, `isAccountValidated`, `id_professionnal`, `isEmailVerified`, `gender`) VALUES ('Yannick', 'keh', 'yannickkeh@ozebi.fr', 'chelfigang', '0', '3', false, 'homme');
 use ordon;
 select * from Pharmacist;

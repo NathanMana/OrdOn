@@ -21,7 +21,7 @@ class Drug {
         this.#name = name
     }
 
-    getIdDrug(){return this.#id_drug}
+    getDrugId(){return this.#id_drug}
 
     getName(){return this.#name}
 

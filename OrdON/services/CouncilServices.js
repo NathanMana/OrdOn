@@ -1,12 +1,4 @@
-const mysql = require('mysql2/promise');
-
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "R1610q1207$",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 const Council = require('../models/Council');
 

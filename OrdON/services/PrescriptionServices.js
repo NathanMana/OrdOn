@@ -1,14 +1,7 @@
-const mysql = require('mysql2/promise');
 const Attribution = require('../models/Attribution');
 const Prescription = require('../models/Prescription');
 const AttributionService = require('./AttributionService');
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "R1610q1207$",
-    database: 'ordon',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')
 
 /**
  * Gère toutes les opérations sur la table Prescription

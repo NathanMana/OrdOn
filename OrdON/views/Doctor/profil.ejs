@@ -5,23 +5,31 @@
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
 </head>
+<style>
+    @media screen and (max-width:1105px) {
+        .profilBox {
+            width: 100%;
+        }
+    }
+    @media screen and (max-width:720px) {
+        .darkSide {
+            display: none;
+        }
+    }
+    @media screen and (max-width:1105px) {
+        .profilBoxGrey {
+            width: 100%;
+        }
+    }
+</style>
 <body>
-    <%- include('../layouts/navConnectedMed'); -%>
+    <%- include('../layouts/nav/connectionManager'); -%>
    <div class="profil">
-       <div class="darkSide">
-            <ul class="ulprofil">
-                <li class="liprofil"><a>Accueil profil</a></li>
-                <li class="liprofil"><a>Modifier email</a></li>
-                <li class="liprofil"><a>Modifier le mot de passe</a></li>
-                <div style="padding-top:70px;padding-bottom: 380px;">
-                </div>
-                <li class="liprofil"><a>Supprimer le compte</a></li>
-            </ul>
-       </div>
-       <div class="profilform">
+        <%- include('../layouts/profiledarknav'); -%>
+       <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Mon profil</h2>
            <form>
-                <div class="formleft">
+                <div class="profile__input__container">
                     <input class="profilBoxGrey" placeholder="Nom" disabled>
                     <input class="profilBoxGrey" placeholder="Prénom" disabled>
                     <input class="profilBoxGrey" placeholder="mail@mail.com" disabled>
@@ -31,6 +39,7 @@
             </form>
        </div>
    </div>
-    <%- include('../layouts/footer'); -%>
+   <%- include('../layouts/footer/footerManager'); -%>
+   <%- include('../layouts/scripts'); -%>
 </body>
 </html>

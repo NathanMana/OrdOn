@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-    <%- include('../layouts/nav'); -%>
+    <%- include('../layouts/nav/connectionManagerAdmin'); -%>
     <div class="container">
         <h1><%= locals.pro.firstname + " " + locals.pro.name %> </h1>
         <h2>Spécialité : <%= locals.proType %> </h2>
@@ -54,6 +54,7 @@
             <a href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/refuser/<%= locals.link %>"><button class="btndanger">Refuser le profil</button></a>
         </div>
     </div>
+    <%- include('../layouts/footer/footerManager'); -%>
     <%- include('../layouts/scripts'); -%>
 </body>
 </html>

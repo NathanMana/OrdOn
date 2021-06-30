@@ -13,14 +13,19 @@ class Patient extends Person {
     #isQrCodeVisible = false
 
     /**
-     * Id secret du patient
+     * Indique si le compte du patient est validée
      */
-    #encryptedId = null
+    #isAccountValidated = false
 
     /**
      * Date de naissance
      */
     #birthdate
+
+    /**
+     * poids
+     */
+    #weight
 
     /**
      * Constructeur de la classe Patient
@@ -31,26 +36,30 @@ class Patient extends Person {
      * @param {Date} birthdate 
      * @param {long} id_patient 
      */
-    constructor(name, firstname, email, password, birthdate) {
-        super(name, firstname, email, password)
+    constructor(name, firstname, email, password, birthdate, gender, weight = null) {
+        super(name, firstname, email, password, gender)
         this.#birthdate = birthdate
+        this.#weight = weight
     }
 
-    getId(){return this.#id_patient}
-    setId(idpatient){this.#id_patient = idpatient}
+    getPatientId(){return this.#id_patient}
+    setPatientId(idpatient){this.#id_patient = idpatient}
     
-    isQrCodeVisible() {return this.#isQrCodeVisible}
+    getIsQrCodeVisible() {return this.#isQrCodeVisible}
     setIsQrCodeVisible(isQrCodeVisible) {
         this.#isQrCodeVisible = isQrCodeVisible
+    }
+
+    isAccountValidated(){return this.#isAccountValidated}
+    setIsAccountValidated(isAccountValidated){
+        this.#isAccountValidated  = isAccountValidated
     }
 
     getBirthdate(){return this.#birthdate}
     setBirthdate(birthdate){this.#birthdate = birthdate}
 
-    // Permet de récupérer l'id encrypté
-    getEncryptedId() { return this.#encryptedId }
-    // Permet de modifier l'id encrypté (a ne jamais utiliser autrement qu'à l'ajout en BDD)
-    setEncryptedId(encryptedId) { this.#encryptedId = encryptedId}
+    getWeight(){return this.#weight}
+    setWeight(weight){this.#weight = weight}
 
     /**
      * Permet une insertion plus rapide dans le service
@@ -64,10 +73,15 @@ class Patient extends Person {
             email : this.getEmail(), 
             password : this.getPassword(),
             birthdate : this.#birthdate,
+            weight: this.#weight,
             id_patient : this.#id_patient,
             isQrCodeVisible : this.#isQrCodeVisible,
             isAccountValidated : this.isAccountValidated(),
-            encryptedId : this.#encryptedId
+            encryptedId : this.getEncryptedId(),
+            gender : this.getGender(),
+            isEmailVerified : this.getIsEmailVerified(),
+            tokenEmail : this.getTokenEmail(),
+            tokenResetPassword : this.getTokenResetPassword()
         }
     }
 }

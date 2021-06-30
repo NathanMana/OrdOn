@@ -10,6 +10,8 @@ class Pharmacist extends Profesionnal{
      */
     #id_pharmacist
 
+    #id_professionnal
+
     /**
      * Constructeur de la classe Pharmacist
      * @param {string} name 
@@ -19,13 +21,41 @@ class Pharmacist extends Profesionnal{
      * @param {string} city 
      * @param {string} address 
      * @param {string} zipcode 
+     * @param {string} gender
      */
-    constructor(name, firstname, email, password, city, address, zipcode){
-        super(name, firstname, email, password, city, address, zipcode)
+    constructor(name, firstname, email, password, city, address, zipcode, gender){
+        super(name, firstname, email, password, city, address, zipcode, gender)
     }
 
-    getId(){return this.#id_pharmacist}
-    setId(id){this.#id_pharmacist = id}
+    getPharmacistId(){return this.#id_pharmacist}
+    setPharmacistId(id){this.#id_pharmacist = id}
+
+    getProfessionnalId() {return this.#id_professionnal}
+    setProfessionnalId(id) {this.#id_professionnal = id}
+
+    /**
+     * Permet une insertion plus rapide dans le service
+     * Converti l'instance en object JS classique
+     * @returns {Object}
+     */
+    toObject() {
+        return {
+            name : this.getName(),
+            firstname : this.getFirstname(),
+            email : this.getEmail(), 
+            password : this.getPassword(),
+            id_pharmacist : this.#id_pharmacist,
+            isAccountValidated : this.getIsAccountValidated(),
+            encryptedId : this.getEncryptedId(),
+            city : this.getCity(),
+            zipcode : this.getZipcode(),
+            address : this.getAddress(),
+            gender : this.getGender(),
+            isEmailVerified : this.getIsEmailVerified(),
+            tokenEmail : this.getTokenEmail(),
+            tokenResetPassword : this.getTokenResetPassword()
+        }
+    }
 }
 
 

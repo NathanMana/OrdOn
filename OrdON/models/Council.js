@@ -21,7 +21,7 @@ class Council {
         this.#description = description
     }
 
-    getIdCouncil(){return this.#id_council}
+    getCouncilId(){return this.#id_council}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}

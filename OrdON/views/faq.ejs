@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('layouts/header'); -%>
+        <title>OrdOn</title>
+        <link rel="stylesheet" href="/src/css/home.css">
+        <link rel="stylesheet" href="/src/css/faq.css">
+</head>
+
+<body>
+    <%- include('layouts/nav/connectionManager'); -%>
+        <section class="sectionwhite">
+            <h2 class="darkbluefont">Consultez la foire aux questions !</h2>
+            <div class="container-faq">
+
+                <div class="questions">
+                    <div class="visible-pannel">
+                        <h4>Pourquoi utiliser des ordonnances en ligne ?</h2>
+                        <img src="/src/images/faq/cross.png" alt="croix animation">
+                    </div>
+                    <div class="toggle-pannel">
+                        <p>En plus de réduire la consommation de papier pour les ordonnances, vous n'aurez plus à reconsulter un médecin si vous perdez votre ordonnance.
+                            De plus, la falsification ou l'utilisation multiple de l'ordonnance reste encore aujourd'hui un gros problème pour la régulation et la circulation des médicaments, OrdOn propose une solution pour ses différents problèmes.
+                        </p>
+                    </div>
+                </div>
+                <div class="questions">
+                    <div class="visible-pannel">
+                        <h4>Question</h2>
+                        <img src="/src/images/faq/cross.png" alt="croix animation">
+                    </div>
+                    <div class="toggle-pannel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem et asperiores, quod qui in ducimus rerum nisi dolorum. Optio, vel?</p>
+                    </div>
+                </div>
+                <div class="questions">
+                    <div class="visible-pannel">
+                        <h4>J'ai un traitement long qui nécessite un renouvellement des médicaments, dois-je reconsulter un médecin ?</h2>
+                        <img src="/src/images/faq/cross.png" alt="croix animation">
+                    </div>
+                    <div class="toggle-pannel">
+                        <p>Pour certains traitements longs, le médecin peut indiquer la mention « AR x fois » (AR = à renouveler) ou « à renouveler tous les mois » pour que vous n'ayez pas besoin de consulter à nouveau. Vous pourrez donc réutiliser votre ordonnance et votre QR code.</p>
+                    </div>
+                </div>
+                <div class="questions">
+                    <div class="visible-pannel">
+                        <h4>Question</h2>
+                        <img src="/src/images/faq/cross.png" alt="croix animation">
+                    </div>
+                    <div class="toggle-pannel">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem et asperiores, quod qui in ducimus rerum nisi dolorum. Optio, vel?</p>
+                    </div>
+                </div>
+                <div class="questions">
+                    <div class="visible-pannel">
+                        <h4>En savoir plus sur le groupe OrdOn</h2>
+                        <img src="/src/images/faq/cross.png" alt="croix animation">
+                    </div>
+                    <div class="toggle-pannel">
+                        <p>Nous sommes un groupe de 6 étudiants de l'école d'ingénieur numérique Efrei Paris. Avec nos parcours différents, on a su exploiter les forces de chacun afin de concevoir ce projet.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <%- include('layouts/footer/footerManager'); -%>
+        <%- include('layouts/scripts'); -%>
+        <script src="/src/js/faq.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.min.js"></script>
+</body>
+
+</html>

@@ -5,12 +5,19 @@ const Council = require('../models/Council')
 const Mention = require('../models/Mention')
 const AttributionService = require('../services/AttributionService')
 const PrescriptionServices = require('../services/PrescriptionServices')
-const MentionServices = require('../services/MentionService')
+const MentionServices = require('../services/MentionServices')
 const router = express.Router()
 const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
 // const DoctorServices = require('../services/DoctorServices')
 
+router.get('/connexion', (req, res)=>{
+    res.render('Doctor/connectionDoctor')
+})
+
+router.get('/inscription', (req, res)=>{
+    res.render('Doctor/registerDoctor')
+})
 /**
  * Traite l'inscription des médecins
  * @method POST

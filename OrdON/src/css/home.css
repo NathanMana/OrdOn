@@ -138,6 +138,18 @@ article{
     font-weight: initial;
 }
 
+#QRCodeDiv{ 
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#qrcode{
+    height: 500px;
+    width: 500px;
+}
+
 @media screen and (max-width:1247px) {
     .sectionwhite .triple {
         flex-direction: column;

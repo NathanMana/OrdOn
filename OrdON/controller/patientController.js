@@ -54,7 +54,7 @@ router.get('/connexion', (req, res)=>{
         isValidated: false,
         entier : entierAleatoire(100000,199999)
     } // on ne met pas le type, car on est pas sur que le mec se connecte a 100% 
-    nodemailer(patient.getEmail(),'votre code est'+req.session.user.entier,'votre code est'+req.session.user.entier,'votre code est'+req.session.user.entier)
+    nodemailer(patient.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })
  

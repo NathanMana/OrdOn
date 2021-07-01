@@ -8,9 +8,8 @@ class PatientServices {
     /**
      * Ajoute un patient et le modifie pour lui attribuer un id encrypté unique
      * @param {Patient} patient 
-     * @param {int} entier
      */
-    static async addPatient(patient,entier) {
+    static async addPatient(patient) {
         try {
             const object = patient.toObject()
             const connection = await pool.getConnection();
@@ -20,8 +19,8 @@ class PatientServices {
             patient.setEncryptedId(patient.encryptId(patient.getPatientId()))
             patient.setTokenEmail(patient.getEncryptedId() + patient.encryptId(patient.getPatientId()))
             await connection.query(
-                'UPDATE patient SET code_email = ?, encryptedId = ?, tokenEmail = ? WHERE id_patient = ? ', 
-                [entier, patient.getEncryptedId(), patient.getTokenEmail(), patient.getPatientId()]
+                'UPDATE patient SET encryptedId = ?, tokenEmail = ? WHERE id_patient = ? ', 
+                [ patient.getEncryptedId(), patient.getTokenEmail(), patient.getPatientId()]
             )
             console.log("Patient inséré")
             connection.release()
@@ -275,7 +274,7 @@ class PatientServices {
         }
     }
 
-    changeEmailPatient(id_patient){
+   /* changeEmailPatient(id_patient){
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
@@ -284,7 +283,7 @@ class PatientServices {
             )
             connection.release()
         }catch(e) {console.log(e)}
-    }
+    }*/
 
 }
 

@@ -171,7 +171,7 @@ const pool = require('./DatabaseConnection')
         catch(e) {console.log(e)}
     }
 
-    changeEmailDoctor(id_doctor){
+   /* changeEmailDoctor(id_doctor){
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
@@ -180,7 +180,7 @@ const pool = require('./DatabaseConnection')
             )
             connection.release()
         }catch(e) {console.log(e)}
-    }
+    }*/
 
 }
 

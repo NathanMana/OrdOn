@@ -121,7 +121,7 @@ router.post('/inscription', async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10)
     let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble, entier)
     patient = await PatientServices.addPatient(patient,entier)
- 
+    console.log(entier)
     function entierAleatoire(min, max)
     {
         return Math.floor(Math.random() * (max - min + 1)) + min;

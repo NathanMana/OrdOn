@@ -272,9 +272,11 @@ router.get('/', (req, res) => {
     
     QRcode.toDataURL(url, (err, qr) => {
         if (err) res.send('error occurred')
- 
+
         return res.send(qr) 
     })
+
+    return null
 })
  
 /**

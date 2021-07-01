@@ -1,4 +1,4 @@
-<% if (locals.user) { %>
+<% if (locals.user && locals.user.isValidated) { %>
     <% if (locals.user.type === "patient") { %>
         <%- include('./navConnected'); -%>
     <% } else if (locals.user.type === "médecin") {%> 
@@ -13,8 +13,8 @@
 <% } %> 
 <% if (locals.flash) { %> 
     <% if (typeof locals.flash.success != undefined) { %> 
-        <div class="sectiongreen flash"><%= locals.flash.success %> </div>
+        <div class="sectiongreen flash"><span><%= locals.flash.success %></span></div>
     <% } else if(typeof locals.flash.error != undefined) { %> 
-        <div class="sectionred flash"><%= locals.flash.error %> </div>
+        <div class="sectionred flash"><span><%= locals.flash.error %></span></div>
     <% } %> 
 <% } %> 

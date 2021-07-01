@@ -148,7 +148,7 @@ class PatientServices {
             )
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
-            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setIsEmailVerified(patientData.isEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
@@ -187,7 +187,7 @@ class PatientServices {
             )
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
-            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setIsEmailVerified(patientData.isEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
@@ -195,6 +195,44 @@ class PatientServices {
         catch (e) { console.log(e)}
     }
 
+    /**
+     * Récupère un patient spécifique via le token du resetPassword
+     * @param {string} token
+     * @returns {Patient} le patient cherché
+     */
+     static async getPatientByTokenResetPassword(token) {
+        try {
+            if (!token) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM patient WHERE tokenResetPassword = ?', 
+                [token]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('Patient récupéré')
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.gender,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setIsEmailVerified(patientData.isEmailVerified)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
+            return patient
+        }
+        catch (e) { console.log(e)}
+    }
 
     /**
      * vérifie si un email est déjà présent en bdd
@@ -263,7 +301,7 @@ class PatientServices {
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
-            patient.setIsEmailVerified(patientData.setIsEmailVerified)
+            patient.setIsEmailVerified(patientData.isEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
             console.log(patient)
@@ -275,16 +313,16 @@ class PatientServices {
         }
     }
 
-    changeEmailPatient(id_patient){
-        try {
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'UPDATE patient SET email = ? WHERE id_patient= ?'
-                [res.body.email, id_patient]
-            )
-            connection.release()
-        }catch(e) {console.log(e)}
-    }
+    // static async changeEmailPatient(id_patient){
+    //     try {
+    //         const connection = await pool.getConnection();
+    //         const result = await connection.query(
+    //             'UPDATE patient SET email = ? WHERE id_patient= ?'
+    //             [res.body.email, id_patient]
+    //         )
+    //         connection.release()
+    //     }catch(e) {console.log(e)}
+    // }
 
 }
 

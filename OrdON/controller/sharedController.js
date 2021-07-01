@@ -46,9 +46,14 @@ router.get('/inscription', (req, res)=>{
 /**
  * Gère l'affichage de la page de l'oublie du mot de passe
  */
- router.get('/motdepasseoublie', (req, res) => {
-    res.render('forgotPassword')
+router.get('/motdepasseoublie/:typeUser', (req, res) => {
+    const type = req.params.typeUser
+    const list = ["patient", "pharmacien", "docteur"]
+    if (!list.find(c => c === type)) return res.redirect('/')
+    res.render('forgotPassword', {type})
 })
+
+
 /**
  * Gère l'affichage de la page de double authentification
  */

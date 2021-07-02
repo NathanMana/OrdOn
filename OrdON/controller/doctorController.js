@@ -91,8 +91,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'doctor'}
-    return res.redirect('/Doctor/home')
+    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'docteur'}
+    return res.redirect('/doubleauthentification')
 })
 
 //Donne l'accès à la page de création d'ordonnance

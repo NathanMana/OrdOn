@@ -22,7 +22,7 @@ class PrescriptionServices {
             prescription.setPrescriptionId(result[0].insertId)
             prescription.setEncryptedId(prescription.encryptId(prescription.getPatientId()))
             await connection.query(
-                'UPDATE prescription SET enncryptedId = ? WHERE id_prescription = ? ', 
+                'UPDATE prescription SET encryptedId = ? WHERE id_prescription = ? ', 
                 [prescription.getEncryptedId(), prescription.getPrescriptionId()]
             )
             console.log("Prescription insérée")
@@ -70,19 +70,20 @@ class PrescriptionServices {
         catch (e) { console.log(e)}
     }
 
-    
+
 
 
      /**
      * @returns {listPrescription} la liste d'ordonnance
      */
-      static async displayPrescriptionPatient(){
+      static async displayPrescriptionPatient(id_patient){
         try {
-            listPrescription = []
+            listPrescriptionNoneArchived = []
+            listePrescriptionArchived = []
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient= ? ORDER BY date_archive',
-                [req.session.id], function(err,rows){
+                'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NULL',
+                [id_patient], function(err,rows){
                     rows.forEach(element => {
                         // On convertit le résultat en objet js
                         const prescription = new Prescription()
@@ -90,12 +91,26 @@ class PrescriptionServices {
                         //On complete l'objet prescription avec les Attributions et les conseils
                         prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
                         prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
-                        listPrescription.add(prescription)
+                        listPrescriptionNoneArchived.add(prescription)
                     });    
                 })
-            if (!result) throw 'Une erreur est survenue'
+                if (!result) throw 'Une erreur est survenue'
+                const result2 = await connection.query(
+                    'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NOT NULL',
+                    [id_patient], function(err,rows){
+                        rows.forEach(element => {
+                            // On convertit le résultat en objet js
+                            const prescription = new Prescription()
+                            Object.assign(prescription, element[0][0])
+                            //On complete l'objet prescription avec les Attributions et les conseils
+                            prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
+                            prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
+                            listPrescriptionArchived.add(prescription)
+                        });    
+                    })
+            if (!result2) throw 'Une erreur est survenue'
             connection.release()
-            return listPrescription
+            return listPrescriptionNoneArchived, listePrescriptionArchived
         }catch(e){ console.log(e)}     
     }
 

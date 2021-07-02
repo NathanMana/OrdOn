@@ -25,6 +25,9 @@ function getQRcode() {
             qrcode.appendChild(p)
             document.querySelector('body').appendChild(qrcode)
 
+        },
+        error: function(e) {
+            console.log(e)
         }
     });
 }

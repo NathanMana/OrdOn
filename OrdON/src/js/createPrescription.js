@@ -1,4 +1,3 @@
-
 let medicRowCounter = 0;
 let rowMedicIdEditing = "";
 let tipRowCounter = 0;
@@ -345,7 +344,13 @@ function rowToAttributtion(row){
     })
     const attribution_mentions = mentionList;
 
-    const attribution = [drug_name, attribution_desc, attribution_quantity, attribution_mentions];
+    // const attribution = [drug_name, attribution_desc, attribution_quantity, attribution_mentions];
+    const attribution = {
+        drug_name: drug_name,
+        attribution_desc: attribution_desc,
+        attribution_quantity: attribution_quantity,
+        attribution_mentions: attribution_mentions
+    }
     return attribution;
 }
 
@@ -357,7 +362,6 @@ function getAllAttributionsInArray(){
         attributionList[i] = rowToAttributtion(row);
         i++;
     })
-    console.log(attributionList);
     return attributionList;
 }
 
@@ -369,16 +373,33 @@ function getAllTipsInArray(){
         tipList[i] = row.children[0].textContent;
         i++;
     })
-    console.log(tipList);
     return tipList;
 }
 
 function createOrdonnance(){
-
-    //1 - Get the attributions and the tips in an array of their classes
+    //1 - Get the attributions and the tips in an array of their classes*
+    console.log("calling this")
+    attributionList = new Array()
     attributionList = getAllAttributionsInArray();
+    console.log("attris : " + attributionList)
+    tipList = new Array()
     tipList = getAllTipsInArray();
+    console.log("tips : " + tipList)
+    callPostRoute(attributionList, tipList);
+}
 
+function callPostRoute(attributionList, tipList){
     //2 - Call the post route
-    
+    console.log("calling post route")
+    $.ajax({
+        url : '/docteur/ordonnance/creer/:encryptedIdPatient',
+        type : 'POST',
+        dataType : 'json',
+        data: { 'data' : JSON.stringify({tipList : tipList, attributionList : attributionList})},
+        success : function(res){
+
+            console.log("bien joué mon frère")
+
+        }
+    });
 }

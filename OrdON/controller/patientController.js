@@ -16,7 +16,12 @@ const PrescriptionServices = require('../services/PrescriptionServices');
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
- 
+ function entierAleatoire(min, max)
+        {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    //Utilisation
+    //La variable contient un nombre aléatoire compris entre 1 et 10
 /**
  * Traite la connexion du patient
  * @method POST
@@ -43,8 +48,14 @@ router.get('/connexion', (req, res)=>{
         return res.redirect('/patient/connexion')
     }
 
-    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
-    return res.redirect('/patient/')
+    req.session.user = {
+        encryptedId: patient.getEncryptedId(),
+        type: 'patient',
+        isValidated: false,
+        entier : entierAleatoire(100000,199999)
+    } // on ne met pas le type, car on est pas sur que le mec se connecte a 100% 
+    nodemailer(patient.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
+    return res.redirect('/doubleauthentification')
 })
  
 /**
@@ -117,25 +128,148 @@ router.post('/inscription', async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10)
     let patient = new Patient(name, firstName, email, hashPassword, birthdateToAdd, gender, weightDouble)
     patient = await PatientServices.addPatient(patient)
- 
     // Envoyer l'email de confirmation
     nodemailer(
         email, 
         "Confirmation d'inscription à OrdON", 
         "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/patient/email/verification/" + patient.getTokenEmail(),
-        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail() + "'>Cliquer sur ce lien</a>" 
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail()
     )
  
     return res.redirect('/patient/email/verification/envoyee')
+})
+
+/**
+ * Envoi l'email de réinitialisation de mot de passe
+ */
+router.post('/motdepasseoublie', async (req, res) => {
+    const email = req.body.email
+    if (!email) {
+        req.session.error = "Vous devez remplir l'email"
+        res.redirect('/motdepasseoublie/patient')
+    } 
+
+    // On cherche un patient avec cet email
+    const patient = await PatientServices.getPatientByEmail(email)
+    if (!patient) {
+        req.session.error = "Cet email n'existe pas"
+        res.redirect('/motdepasseoublie/patient')
+    }
+
+    // On commence le setup pour envoyer le mail
+    patient.setTokenResetPassword(patient.getEncryptedId() + patient.encryptId(patient.getPatientId()))
+    PatientServices.updatePatient(patient)
+
+    nodemailer(
+        patient.getEmail(),
+        "Réinitialisation de votre mot de passe",
+        "Cliquez sur ce lien pour réinitialiser votre mot de passe : http://localhost:8000/patient/reinitialisation/motdepasse/" + patient.getTokenResetPassword(),
+        "Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/patient/reinitialisation/motdepasse/" + patient.getTokenResetPassword() + "'>http://localhost:8000/patient/reinitialisation/motdepasse/" + patient.getTokenResetPassword() + "</a>"
+    )
+
+    return res.render('layouts/emailVerification.ejs')
+})
+
+/**
+ * Formulaire réinitilsiation mot de passe
+ */
+router.get('/reinitialisation/motdepasse/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) {
+        return res.redirect('/')
+    }
+
+    // Trouver le patient
+    const patient = await PatientServices.getPatientByTokenResetPassword(token)
+    if (!patient) return res.redirect('/')
+
+    res.render('reinitPassword', {patientId : patient.getEncryptedId(), type: 'patient'})
+})
+
+/**
+ * Traitement réinitialisation mot de passe
+ */
+router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
+    const {encryptedId} = req.body
+    const password = JSON.stringify(req.body.password)
+    const check_password = JSON.stringify(req.body.check_password)
+    const token = req.params.token
+    if (!token) return res.redirect('/')
+    if (!password || !check_password || !encryptedId) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return redirect('/reinitialisation/motdepasse/' + token)
+    }
+
+    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+        req.session.error = "Le mot de passe ne respecte pas tous les critères"
+        return res.redirect('/patient/inscription')
+    }
+    if (password !== check_password) {
+        req.session.error = "Les mots de passe ne correspondent pas"
+        return redirect('/reinitialisation/motdepasse/' + token)
+    }
+
+    const patient = await PatientServices.getPatientByTokenResetPassword(token)
+    if (!patient) return redirect('/reinitialisation/motdepasse/' + token)
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    patient.setPassword(hashPassword)
+    patient.setTokenResetPassword(null)
+    PatientServices.updatePatient(patient)
+
+    // On le connecte directement
+    req.session.user = {encryptedId: patient.getEncryptedId(), type: 'patient'}
+    req.session.flash = {
+        success : "Réinitialisation du mot de passe effectuée avec succès !"
+    }
+    return res.redirect('/patient/')
+})
+
+
+/**
+ * View indiquant de suivre les indications envoyées dans le mail
+ */
+ router.get('/email/verification/envoyee', (req, res) => {
+    return res.render('layouts/emailVerification.ejs')
+})
+ 
+/**
+ * Traitement de la vérification d'un patient
+ */
+router.get('/email/verification/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) return res.status(500).send("Une erreur est survenue")
+ 
+    // Essayer de récupérer le patient correspondant
+    const patient = await PatientServices.getPatientByTokenEmail(token)
+    if (!patient) return res.status(500).send("Une erreur est survenue")
+ 
+    // On peut certifier que l'email est vérifié
+    patient.setIsEmailVerified(true)
+    patient.setTokenEmail(null)
+    PatientServices.updatePatient(patient)
+    
+    // On considère que ca le connecte directement
+    req.session.user = {
+        type: "patient",
+        encryptedId: patient.getEncryptedId(),
+        isValidated: true
+    }
+
+    req.session.flash = {
+        success : "Compte bien validé :)"
+    }
+    return res.redirect('/patient/')
 })
  
 /**
  * Vérifie les droits d'accès a chaque requête
  */
  router.use((req, res, next) => {
-    if (typeof req.session.user === 'undefined' || !req.session.user) {
+    if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "patient") {
         return res.redirect("/patient/connexion")
     }
+    if (!req.session.user.isValidated) return res.redirect("/patient/connexion")
     next()
 })
  
@@ -174,9 +308,11 @@ router.get('/', (req, res) => {
     
     QRcode.toDataURL(url, (err, qr) => {
         if (err) res.send('error occurred')
- 
-        return qr 
+
+        return res.send(qr) 
     })
+
+    return null
 })
  
 /**
@@ -197,41 +333,6 @@ router.get('/', (req, res) => {
     })
 })
 
-
-/**
- * View indiquant de suivre les indications envoyées dans le mail
- */
-router.get('/email/verification/envoyee', (req, res) => {
-    return res.render('layouts/emailVerification.ejs')
-})
- 
-/**
- * Traitement de la vérification d'un patient
- */
-router.get('/email/verification/:token', async (req, res) => {
-    const token = req.params.token
-    if (!token) return res.status(500).send("Une erreur est survenue")
- 
-    // Essayer de récupérer le patient correspondant
-    const patient = await PatientServices.getPatientByTokenEmail(token)
-    if (!patient) return res.status(500).send("Une erreur est survenue")
- 
-    // On peut certifier que l'email est vérifié
-    patient.setIsEmailVerified(true)
-    patient.setTokenEmail(null)
-    PatientServices.updatePatient(patient)
-    
-    // On considère que ca le connecte directement
-    req.session.user = {
-        type : "patient",
-        encryptedId: patient.getEncryptedId()
-    }
-
-    req.session.flash = {
-        sucess : "Compte bien validé :)"
-    }
-    return res.redirect('/patient/')
-})
 
 
 module.exports = router

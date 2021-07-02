@@ -97,8 +97,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Pharmacist/registerPharmacist')
     }
 
-    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacist'}
-    return res.redirect('/Pharmacist/home')
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacien'}
+    return res.redirect('/doubleauthentification')
 })
 
 /**

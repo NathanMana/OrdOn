@@ -46,9 +46,14 @@ router.get('/inscription', (req, res)=>{
 /**
  * Gère l'affichage de la page de l'oublie du mot de passe
  */
- router.get('/motdepasseoublie', (req, res) => {
-    res.render('forgotPassword')
+router.get('/motdepasseoublie/:typeUser', (req, res) => {
+    const type = req.params.typeUser
+    const list = ["patient", "pharmacien", "docteur"]
+    if (!list.find(c => c === type)) return res.redirect('/')
+    res.render('forgotPassword', {type})
 })
+
+
 /**
  * Gère l'affichage de la page de double authentification
  */
@@ -67,4 +72,26 @@ router.get('/deconnexion', (req, res) => {
     res.redirect('/')
 })
 
+
+
+router.post('/doubleauthentification', async (req, res) => {
+    const code= req.body.code
+    if (!code) {
+        req.session.error = "Remplis bien le champ"
+        return res.redirect('/doubleauthentification')
+    }
+    if (!req.session.user.entier)
+    {
+        req.session.error = "Une erreur est surevenue"
+        return res.redirect('/doubleauthentification')
+    }
+    // Vérification code
+    if (code != req.session.user.entier)
+    {
+        req.session.error = "ce n'est pas le bon code"
+        return res.redirect('/doubleauthentification')
+    }
+    req.session.user.isValidated = true
+    return res.redirect('/patient/')
+})
 module.exports = router

@@ -1,5 +1,6 @@
 const MentionAttribution = require('../models/AssociationClass/MentionAttribution');
 const pool = require('./DatabaseConnection')
+const Mention = require('../models/Mention')
 
 /**
  * Gère toutes les opérations sur la table MentionAttribution
@@ -42,13 +43,15 @@ class MentionAttributionServices {
             // On convertit le résultat en objet js
             let listMentions = []
             result[0].forEach((mentionData) => {
-                const mention = new Mention()
-                Object.assign(mention, mentionData)
+                const mention = new Mention(
+                    mentionData.name,
+                    mentionData.id_mention
+                )
                 listMentions.push(mention)
             })
 
             connection.release()
-            console.log("Mention récupérées !")
+            console.log("Mentions récupérées !")
             return listMentions
         }
         catch (e) { console.log(e)}

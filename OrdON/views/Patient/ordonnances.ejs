@@ -4,7 +4,7 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
-    <script src="./../../src/js/recupQrcodeOrdonnance.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
@@ -12,7 +12,23 @@
         <p>Montrez votre ordonnance à la pharmacie afin de récupérer vos médicaments</p>
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
-        <h2 style="color: var(--darkblue);">Mes ordonnances valides</h2>
+        <h2 style="color: var(--darkblue);">Vos ordonnances valides</h2>
+        <!--<div class="mesordonnances">
+            <article class="consultation">
+                <div>
+                    <p class="date">Ma consultation du 17 juin 2021</p>
+                    <p class="peremption">Date de péremption : 18 septembre 2021</p>
+                </div>
+                <div>
+                    <p class="doctor">Dr Pathy - podologue</p>
+                </div>
+                <div class="voirgenerer">
+                    <a href=""><button class="btngreensmall">Voir</button></a>
+                    <button class="btndark" onclick="showQR()">Générer QR CODE</button> 
+                </div>
+            </article>
+
+        </div>-->
         <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
             <div class="mesordonnances">
                 <article class="consultation">
@@ -30,9 +46,26 @@
                 </article>
             </div>
         <%}%>
+<<<<<<< HEAD
         </div>
+=======
+>>>>>>> ac27a71683801b319ff9655904a86c15d5886cf2
     </section>
+
+    <div id="coverPage">
+    
+        
+    </div>
+
+    <div id="QRCodeDiv" style="display:none">
+        <h3 id="qrPatientText"></h3>
+        <img id="qrcode">
+        <p id="pd"></p>
+    </div>
+
     <%- include('../layouts/footer/footerManager'); -%>
     <%- include('../layouts/scripts'); -%>
+    <script src="/src/js/recupQrcodeOrdonnance.js"></script>
+
 </body>
 </html>

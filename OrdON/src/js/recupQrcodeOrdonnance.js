@@ -1,27 +1,48 @@
-const { JSDOM } = require( "jsdom" );
-const { window } = new JSDOM( "" );
-const $ = require( "jquery" )( window );
+// const { JSDOM } = require( "jsdom");
+// const { window } = new JSDOM( "" );
+// const $ = require( "jquery" )( window );
 
 
 function getQRcode() {
+    console.log("Appel de get QR");
+
     $.ajax({
-        url : '/getordonnance',
+        url : '/patient/getordonnance',
         type : 'GET',
         success : function(res){
-            var h3 = document.createElement('h3');
-            h3.id="qrPatientText"
+            console.log(res)
+            var h3 = document.getElementById('qrPatientText');
             h3.textContent = "Votre QR Code patient"
-            var img = document.createElement('img');
+            var img = document.getElementById('qrcode');
             img.src = res;
-            img.id = "qrcode"
-            var p = document.createElement('p')
+            var p = document.getElementById('pd');
             p.className = "textCenter";
-            p.onClick = "closeQR()";
-            var qrcode = document.createElement('div').appendChild(h3)
-            qrcode.appendChild(img)
-            qrcode.appendChild(p)
-            document.querySelector('body').appendChild(qrcode)
+            p.setAttribute("onClick", "closeQR()");
+            p.textContent = "Fermer";
+        
 
+        },
+        error: function(e) {
+            console.log(e)
         }
     });
+}
+
+
+function showQR(){
+    getQRcode()
+
+    var qrDiv = document.getElementById("QRCodeDiv");
+    qrDiv.style.display = "block";
+
+    var basePage = document.getElementById("coverPage");
+    basePage.style.display = "block"
+}
+
+function closeQR(){
+    var qrDiv = document.getElementById("QRCodeDiv");
+    qrDiv.style.display = "none";
+
+    var basePage = document.getElementById("coverPage");
+    basePage.style.display = "none"
 }

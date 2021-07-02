@@ -170,6 +170,29 @@ const pool = require('./DatabaseConnection')
         }
         catch(e) {console.log(e)}
     }
+
+    static async changeEmailDoctor(doctor){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE doctor SET email = ? WHERE encryptedId= ?'
+                [doctor.getEmail(), doctor.getEncryptedId()]
+            )
+            connection.release()
+        }catch(e) {console.log(e)}
+    }
+
+    static async changePasswordDoctor(doctor){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE doctor SET password = ? WHERE encryptedId= ?'
+                [doctor.getPassword(), doctor.getEncryptedId()]
+            )
+            connection.release()
+        }catch(e) {console.log(e)}
+    }
+
 }
 
 module.exports = DoctorServices

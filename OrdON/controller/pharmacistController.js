@@ -57,8 +57,9 @@ router.post('/inscription', async (req, res) => {
     const address = req.body.address
     const zipcode = req.body.zipcode
     const password_check = JSON.stringify(req.body.password_check)
+    const gender = req.body.gender
 
-    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
     }
@@ -71,7 +72,7 @@ router.post('/inscription', async (req, res) => {
         return res.redirect('/patient/inscription')
     }
     const hashPassword = await bcrypt.hash(password, 10)
-    const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode)
+    const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
     PharmacistServices.addPharmacist(pharmacist)
 
 

@@ -105,11 +105,11 @@ router.post('/connexion',  async (res,req)=>{
  * Gère l'affichage de l'ordonnance du patient après le scanne du qr code
  * @method GET
  */
-router.get('/pharmacien/ordonnance/:id_ordo', async (req, res) => {
+router.get('/ordonnance/:id_ordo', async (req, res) => {
     const id = req.params.id_ordo
     
     const prescription = await PrescriptionService.getPrescriptionById(id)
-    res.render ('/pharmacien/ordonnance', { ordonnance : prescription })
+    res.render ('/pharmacien/viewOrdonnance', { ordonnance : prescription })
 })
 
 module.exports = router

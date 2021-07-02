@@ -224,15 +224,52 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     }
     return res.redirect('/patient/')
 })
+
+
+/**
+ * View indiquant de suivre les indications envoyées dans le mail
+ */
+ router.get('/email/verification/envoyee', (req, res) => {
+    return res.render('layouts/emailVerification.ejs')
+})
+ 
+/**
+ * Traitement de la vérification d'un patient
+ */
+router.get('/email/verification/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) return res.status(500).send("Une erreur est survenue")
+ 
+    // Essayer de récupérer le patient correspondant
+    const patient = await PatientServices.getPatientByTokenEmail(token)
+    if (!patient) return res.status(500).send("Une erreur est survenue")
+ 
+    // On peut certifier que l'email est vérifié
+    patient.setIsEmailVerified(true)
+    patient.setTokenEmail(null)
+    PatientServices.updatePatient(patient)
+    
+    // On considère que ca le connecte directement
+    req.session.user = {
+        type: "patient",
+        encryptedId: patient.getEncryptedId(),
+        isValidated: true
+    }
+
+    req.session.flash = {
+        success : "Compte bien validé :)"
+    }
+    return res.redirect('/patient/')
+})
  
 /**
  * Vérifie les droits d'accès a chaque requête
  */
  router.use((req, res, next) => {
-    if (typeof req.session.user === 'undefined' || !req.session.user) {
+    if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "patient") {
         return res.redirect("/patient/connexion")
     }
-    // if (!req.session.user.isValidated) return res.redirect("/patient/connexion")
+    if (!req.session.user.isValidated) return res.redirect("/patient/connexion")
     next()
 })
  
@@ -294,42 +331,6 @@ router.get('/', (req, res) => {
             
         }
     })
-})
-
-
-/**
- * View indiquant de suivre les indications envoyées dans le mail
- */
-router.get('/email/verification/envoyee', (req, res) => {
-    return res.render('layouts/emailVerification.ejs')
-})
- 
-/**
- * Traitement de la vérification d'un patient
- */
-router.get('/email/verification/:token', async (req, res) => {
-    const token = req.params.token
-    if (!token) return res.status(500).send("Une erreur est survenue")
- 
-    // Essayer de récupérer le patient correspondant
-    const patient = await PatientServices.getPatientByTokenEmail(token)
-    if (!patient) return res.status(500).send("Une erreur est survenue")
- 
-    // On peut certifier que l'email est vérifié
-    patient.setIsEmailVerified(true)
-    patient.setTokenEmail(null)
-    PatientServices.updatePatient(patient)
-    
-    // On considère que ca le connecte directement
-    req.session.user = {
-        type : "patient",
-        encryptedId: patient.getEncryptedId()
-    }
-
-    req.session.flash = {
-        sucess : "Compte bien validé :)"
-    }
-    return res.redirect('/patient/')
 })
 
 

@@ -27,12 +27,13 @@
         <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue); margin:20px auto;">Supprimez votre compte OrdOn</h2>
-           <form class="form">
+           <form action="/<%= locals.user.type %>/profil/supprimermoncompte"  method="post" class="form">
                 <div class="modifier__input__container">
-                    <input class="modifBox" placeholder="entrer votre email">
-                    <input class="modifBox" type="password" placeholder="entrer votre mot de passe">
+                    <input class="modifBox" name="password" type="password" placeholder="Mot de passe">
                     <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte supprimé vous ne pourrez plus avoir accès à vos anciennes ordonnances, vous devrez recréer un compte pour pouvoir utiliser OrdOn.</p>
-                    <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Identifiant incorrect</p>
+                    <% if (locals.error){ %> 
+                        <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:15px auto;"><%= locals.error %> </p>
+                    <% } %>                     
                     <button class="btngreen btn" style="margin: auto;background-color: var(--danger_light);">Supprimer</button>
                 </div> 
             </form>

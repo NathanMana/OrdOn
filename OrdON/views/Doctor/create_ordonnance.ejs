@@ -12,27 +12,47 @@
         <%- include('../layouts/nav/connectionManager'); -%>
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
-                <h3 class="doctorTextLeft">Docteur</h3>
-                <h3 class="doctorTextLeft">Nom du docteur</h3>
+                <h3 class="doctorTextLeft">Dr <%= locals.PrescriptionObjects.doctor.name %> </h3>
+                <h3 class="doctorTextLeft">Médecine générale</h3>
             </div>
             <div id="doctorInfosRight">
                 <div id="doctorInfosRightTop">
-                    <h3 class="doctorTextRight">Adresse du docteur</h3>
-                    <h3 class="doctorTextRight">CP et ville</h3>
-                    <h3 class="doctorTextRight">Tel cabinet</h3>
+                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.address %></h3>
+                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.zipcode + ", " + <%= locals.PrescriptionObjects.doctor.city %> %></h3>
                 </div>
             </div>
         </div>
 
         <div class="fixedRight">
-            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le <%= locals.PrescriptionObjects.madeDate %></h3>
+            <h3 id="madeWhereWhen" class="doctorText">Fait à <%= locals.PrescriptionObjects.doctor.city %>, le <%= locals.PrescriptionObjects.madeDate %></h3>
         </div>
 
         <div id="infosPatient">
-            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname + " " %> </h3>
-            <h3><%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " " + locals.PrescriptionObjects.patient.weight %></h3>
+            <h3>
+                <% if (locals.PrescriptionObjects.patient.gender === 'homme') { %>
+                    M.
+                <% } else if (locals.PrescriptionObjects.patient.gender === 'femme') { %>  
+                    Mme.
+                <% } %> 
+                <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> 
+            </h3>
+            <h3>
+                <% if (locals.PrescriptionObjects.patient.gender === 'homme') { %>
+                    Né
+                <% } else if (locals.PrescriptionObjects.patient.gender === 'femme') { %>  
+                    Née
+                <% } else { %> 
+                    Né(e)
+                <% } %> 
+                le <%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10)  %>
+            </h3>
+            <h4>
+                <% if (locals.PrescriptionObjects.patient.weight) { %>
+                    Pesant <%= locals.PrescriptionObjects.patient.weight %>kg
+                <% } %>
+            </h4>
         </div>
-
+        <p id="errorMessage" style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"></p>
         <div id="prescription">
             <div id="prescriptionTab">
                 <table>

@@ -48,6 +48,12 @@ router.get('/connexion', (req, res)=>{
         return res.redirect('/patient/connexion')
     }
 
+    // Vérification validation email
+    if (!patient.getIsEmailVerified()) {
+        req.session.error = "L'adresse email de ce compte n'a pas été vérifiée"
+        return res.redirect('/patient/connexion')
+    }
+
     req.session.user = {
         encryptedId: patient.getEncryptedId(),
         type: 'patient',
@@ -327,6 +333,37 @@ router.get('/', (req, res) => {
             
         }
     })
+})
+
+/**
+ * Gère la suppression du compte
+ */
+ router.post('/profil/supprimermoncompte', async (req, res) => {
+    const {password} = req.body
+    if (!password) {
+        req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    // Récupérer la patient
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    if (!patient) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
+    if (!verifPass) {
+        req.session.error = "Mot de passe incorrect"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    await PatientServices.deletePatient(patient)
+    req.session.user = undefined
+    req.session.flash = {
+        success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"
+    }
+    res.redirect('/')
 })
 
 

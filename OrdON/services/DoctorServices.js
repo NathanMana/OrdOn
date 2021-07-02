@@ -112,21 +112,34 @@ const pool = require('./DatabaseConnection')
      * @param {long} encryptedId 
      * @returns {Doctor} le docteur cherché
      */
-     static async getDoctorIdByEncryptedId(encryptedId) {
+     static async getDoctorByEncryptedId(encryptedId) {
         try {
             if (!encryptedId) throw 'L\id indiqué est erroné'
 
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT id_doctor FROM doctor WHERE encryptedId = ?', 
+                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE encryptedId = ?', 
                 [encryptedId]
             )
-            if (!result[0][0]) return
             connection.release()
+            if(!result[0][0]) throw 'Pas de résultat'
+            const doctorData = result[0][0]
+            let doctor = new Doctor(
+                doctorData.name,
+                doctorData.firstname,
+                doctorData.email,
+                doctorData.password, 
+                doctorData.city,
+                doctorData.address,
+                doctorData.zipcode
+            )
+            doctor.setDoctorId(doctorData.id_doctor)
+            doctor.setEncryptedId(doctorData.encryptedId)
+            doctor.setProfessionnalId(doctorData.id_professionnal)
             // On convertit le résultat en objet js
             console.log('doctor récupéré')
-            return result[0][0].id_doctor
+            return doctor
         }
         catch (e) { console.log(e)}
     }

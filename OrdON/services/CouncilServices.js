@@ -14,8 +14,8 @@ class CouncilServices {
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'INSERT INTO council(description) VALUES (?) ', 
-                [council.getDescription()]
+                'INSERT INTO council(description, id_prescription) VALUES (?, ?) ', 
+                [council.getDescription(), council.getPrescriptionId()]
             )
             if (!result) throw 'Une erreur est survenue'
             console.log("Conseil inséré")
@@ -41,8 +41,10 @@ class CouncilServices {
             )
             if (!result) throw 'Une erreur est survenue'
             // On convertit le résultat en objet js
-            const council = new Council()
-            Object.assign(council, result[0][0])
+            const council = new Council(
+                result[0][0].description
+            )
+            council.setCouncilId(result[0][0].id_council)
 
             connection.release()
             console.log('Conseil récupéré')
@@ -68,8 +70,10 @@ class CouncilServices {
             if (!result) throw 'Une erreur est survenue'
             let listCouncils = []
             result[0].forEach((councilData) => {
-                const council = new Council()
-                Object.assign(council, councilData)
+                const council = new Council(
+                    councilData.description
+                )
+                council.setCouncilId(councilData.id_council)
                 listCouncils.push(council)
             })
 

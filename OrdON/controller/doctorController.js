@@ -19,6 +19,7 @@ const DoctorServices = require('../services/DoctorServices')
 const MentionAttributionServices = require('../services/MentionAttributionServices')
 const DrugServices = require('../services/DrugServices')
 const AttributionServices = require('../services/AttributionServices')
+const CouncilServices = require('../services/CouncilServices')
 
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
@@ -102,19 +103,30 @@ router.post('/connexion',  async (res,req)=>{
 //Donne l'accès à la page de création d'ordonnance
 router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
     const id_patient = req.params.encryptedIdPatient;
-
     const patient = await PatientServices.getPatientByEncryptedId(id_patient);
+    if (!patient) {
+        req.session.flash = {
+            error : "Patient introuvable"
+        }
+        return res.redirect('/docteur/')
+    }
 
     const today = new Date(Date.now());
     const date_creation = today.toLocaleString().substring(0,10);
-
     const mentions = await MentionServices.getAllMentions();
-
     const drugs = await DrugServices.getAllDrugs();
+    const doctor = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+    if (!doctor) {
+        req.session.flash = {
+            error : "Une erreur est survenue"
+        }
+        req.session.user = undefined
+        return res.redirect('/')
+    }
 
     res.render('Doctor/create_ordonnance', {PrescriptionObjects: {
         patient: patient.toObject(),
-        doctor: req.session.doctor,
+        doctor: doctor,
         madeDate: date_creation,
         mentions: mentions,
         drugs: drugs
@@ -122,59 +134,33 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
     });
 })
 
-function formatTipList(tipList){
-    var councilList = new Array();
-    for (let i=0; i<tipList.length; i++){
-        const council = new Council(tipList[i]);
-        councilList.push(council);
-    }
-    return councilList;
-}
-
-function formatAttributionList(attributionList){
-    var attributionList = new Array();
-    for (let i=0; i<attributionList.length; i++){
-        const drug = new Drug(attributionList[i][0]);
-        const description = attributionList[i][1];
-        const quantity = attributionList[i][2];
-        const mentions = attributionList[i][3];
-        const mentionList = generateMentionList(mentions);
-        const attribution = new Attribution(description, quantity, drug, mentionList);
-        attributionList.push(attribution);
-    }
-    return attributionList;
-}
-
-function generateMentionList(mentions){
-    var mentionList = new Array();
-    for (let i=0; i<mentions.length; i++){
-        const mention = new Mention(mentions[i]);
-        mentionList.push(mention);
-    }
-    return mentionList;
-}
-
 //Créer l'ordonnance
 router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
     let id_doctor = req.session.encryptedId;
     let id_patient = req.params.encryptedIdPatient;
-    const today = new Date(Date.now());
-    today.toLocaleString().substring(0,10);
-    const date_creation = today;
 
     const data = JSON.parse(req.body.data) // ligne du saint graal
     const listAttributionsJSON = data.attributionList
+    const listCouncilsJSON = data.tipList
+    if (listAttributionsJSON.length === 0 && listCouncilsJSON.length === 0) {
+        return res.send({status: false, message: 'L\'ordonnance ne peut pas être vide'})
+    }
 
     // On ajoute la prescription (pour avoir son id)
-    id_doctor = DoctorServices.getDoctorByEncryptedId(id_doctor)
+    // id_doctor = await DoctorServices.getDoctorIdByEncryptedId(id_doctor)
     id_patient = await PatientServices.getPatientIdByEncryptedId(id_patient) 
-    const prescriptionToAdd = new Prescription(id_doctor, id_patient)
+    // if (!id_doctor || id_doctor <= 0 || !id_patient || id_patient <= 0) 
+    //     return res.send({status: false, message: 'Une erreur est survenue, déconnectez-vous et reconnectez-vous'})
+
+    const prescriptionToAdd = new Prescription(1, id_patient)
     let prescription = await PrescriptionServices.addPrescription(prescriptionToAdd)
+    if (!prescription) return res.send({status: false, message:"Impossible de créer l'ordonnance"})
     
     // On convertit le JSON en objet
     listAttributionsJSON.forEach(async (attributionJSON) => {
         // Récupérer l'id du médicament
         idDrug = await DrugServices.getDrugIdByName(attributionJSON.drug_name)
+        if (!idDrug || idDrug <= 0) return res.send({status: false, message: attributionJSON.drug_name + "n'existe pas"})
         
         // Ajouter l'attribution
         let attribution = new Attribution(
@@ -183,7 +169,8 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
             idDrug,
             prescription.getPrescriptionId()
         )
-        attribution = await AttributionServices.addAttribution(attribution)    
+        attribution = await AttributionServices.addAttribution(attribution)
+        if (!attribution) return res.send({status: false, message:"Impossible d'ajouter la prescription concernant le médicament : " + attributionJSON.drug_name})
 
         // Tout d'abord convertir les mentions
         attributionJSON.attribution_mentions.forEach(async (mentionData) => {
@@ -193,6 +180,10 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
                 MentionAttributionServices.addMentionAttribution(new MentionAttribution(attribution.getAttributionId(), idMention))
             }
         })    
+    })
+
+    listCouncilsJSON.forEach((councilData) => {
+        CouncilServices.addCouncil(new Council(councilData, prescription.getPrescriptionId()))
     })
 
     res.send({status: true})

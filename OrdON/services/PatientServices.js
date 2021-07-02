@@ -60,12 +60,14 @@ class PatientServices {
      * Supprime un patient
      * @param {Patient} patient 
      */
-    static async deletePatientWithId(patient) {
+    static async deletePatient(patient) {
         try {
             if (!patient || patient.getPatientId() <= 0) throw 'L\id indiqué est erroné'
-
+            // récupérer la largeur de l'id clair
+            const lengthId = (patient.getPatientId() + "").length
+            const a = patient.getEncryptedId().substring(29, 29 + lengthId)
             // Double vérification avec l'id encrypté
-            if (patient.getPatientId() != patient.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (patient.getPatientId() != patient.getEncryptedId().substring(29, 29 + lengthId)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
             await connection.query(
                 'DELETE FROM patient WHERE id_patient = ? AND encryptedId = ?', 

@@ -2,6 +2,8 @@
 /* "/"  */
 const express = require('express')
 const router = express.Router()
+const bcrypt = require('bcrypt')
+
 const Patient = require('../models/Patient')
 const PatientServices = require('../services/PatientServices')
 /**
@@ -43,6 +45,7 @@ router.get('/inscription', (req, res)=>{
  router.get('/profil/supprimermoncompte', (req, res) => {
     res.render('Profile/deleteAccount')
 })
+
 /**
  * Gère l'affichage de la page de l'oublie du mot de passe
  */

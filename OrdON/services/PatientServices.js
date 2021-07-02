@@ -274,16 +274,16 @@ class PatientServices {
         }
     }
 
-   /* changeEmailPatient(id_patient){
+    changeEmailPatient(patient){
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
                 'UPDATE patient SET email = ? WHERE id_patient= ?'
-                [res.body.email, id_patient]
+                [patient.getEmail(), patient.getPatientId]
             )
             connection.release()
         }catch(e) {console.log(e)}
-    }*/
+    }
 
 }
 

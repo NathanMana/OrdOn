@@ -10,7 +10,7 @@ const pool = require('./DatabaseConnection')
      * Ajoute un pharmacien et le modifie pour lui attribuer un id encrypté unique
      * @param {Pharmacist} pharmacist 
      */
-     static async addPharmacist(pharmacist) {
+    static async addPharmacist(pharmacist) {
         try {
             const object = pharmacist.toObject();
             const connection = await pool.getConnection();
@@ -26,6 +26,7 @@ const pool = require('./DatabaseConnection')
                 isAccountValidated: pharmacist.getIsAccountValidated(),
                 isEmailVerified: pharmacist.getIsEmailVerified(),
                 gender: pharmacist.getGender(),
+                id_professionnal: pharmacist.getProfessionnalId()
             }
             const result = await connection.query('INSERT INTO pharmacist SET ? ', pharma_insert)
             if (!result) throw 'Une erreur est survenue'
@@ -37,7 +38,8 @@ const pool = require('./DatabaseConnection')
         } catch(e){
             console.log(e)
         }
-     }
+    }
+
      /**
      * Modifie un pharmacien
      * @param {Pharmacist} pharmacist 

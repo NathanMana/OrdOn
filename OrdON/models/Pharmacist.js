@@ -22,8 +22,8 @@ class Pharmacist extends Profesionnal{
      * @param {string} address 
      * @param {string} zipcode 
      */
-    constructor(name, firstname, email, password, city, address, zipcode){
-        super(name, firstname, email, password, city, address, zipcode)
+    constructor(name, firstname, email, password, city, address, zipcode, gender){
+        super(name, firstname, email, password, city, address, zipcode, gender)
     }
 
     getPharmacistId(){return this.#id_pharmacist}

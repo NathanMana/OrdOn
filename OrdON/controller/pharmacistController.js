@@ -61,19 +61,20 @@ router.post('/inscription', async (req, res) => {
 
     if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
-            return res.redirect('/docteur/inscription')
+            return res.redirect('/pharmacien/inscription')
     }
     if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
         req.session.error = "Le mot de passe ne respecte pas tous les critères"
-        return res.redirect('/docteur/inscription')
+        return res.redirect('/pharmacien/inscription')
     }
     if (password !== password_check) {
         req.session.error = "Les mots de passe ne correspondent pas"
-        return res.redirect('/patient/inscription')
+        return res.redirect('/pharmacien/inscription')
     }
     const hashPassword = await bcrypt.hash(password, 10)
     const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
     PharmacistServices.addPharmacist(pharmacist)
+    return res.redirect('/pharmacien/connexion')
 
 
 })

@@ -1,24 +1,20 @@
 /* GERE LES ROUTES DU MEDECIN */
 /* "/medecin/"  */
 const express = require('express')
-const router = express.Router()
-const bcrypt = require('bcrypt')
-
 const Council = require('../models/Council')
 const Mention = require('../models/Mention')
-const Attribution = require('../models/Attribution')
-const Doctor = require('./../models/Doctor')
-const Prescription = require('./../models/Prescription')
-const Patient = require('../models/Patient')
-const MentionAttribution = require('../models/AssociationClass/MentionAttribution')
-
+const AttributionService = require('../services/AttributionService')
 const PrescriptionServices = require('../services/PrescriptionServices')
 const MentionServices = require('../services/MentionServices')
+const router = express.Router()
+const bcrypt = require('bcrypt')
+const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
+const Prescription = require('./../models/Prescription')
+const Patient = require('../models/Patient')
+// const DoctorServices = require('../services/DoctorServices')
 const DoctorServices = require('../services/DoctorServices')
 const MentionAttributionServices = require('../services/MentionAttributionServices')
-const DrugServices = require('../services/DrugServices')
-const AttributionServices = require('../services/AttributionServices')
 
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
@@ -38,12 +34,11 @@ router.post('/inscription', async(req, res) => {
     const password = JSON.stringify(req.body.password)
     const city = req.body.city
     const address = req.body.address
-    const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+    const password_check = JSON.stringify(req.body.password_check)
+    const gender = req.body.gender
 
-    if (!name || !firstName || !email || !password || !city || !cabinetLocation
-        || !zipcode || !typeProfesionnal) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
     }
@@ -53,10 +48,9 @@ router.post('/inscription', async(req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode)
-    doctor.setProfessionnalId(typeProfesionnal)
+    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
     DoctorServices.addDoctor(doctor)
-
+    return res.render('/Doctor/connexionDoctor')
     
 
 })
@@ -79,7 +73,8 @@ router.post('/inscription', async(req, res) => {
  * @method POST
  */
 router.post('/connexion',  async (res,req)=>{
-    const {email, password} = req.body
+    const password = req.body.password
+    const email = requ.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Doctor/registerDoctor')
@@ -87,7 +82,7 @@ router.post('/connexion',  async (res,req)=>{
 
     // Récupérer l'objet
     const doctor = await DoctorServices.getDoctorByEmail(email)
-    req.session.doctor = doctor;
+    
     // Vérification mdp
     const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
     if (!verifPass) {
@@ -109,15 +104,13 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
     const date_creation = today.toLocaleString().substring(0,10);
 
     const mentions = await MentionServices.getAllMentions();
-
-    const drugs = await DrugServices.getAllDrugs();
+    console.log("mentions : " + mentions)
 
     res.render('Doctor/create_ordonnance', {PrescriptionObjects: {
         patient: patient.toObject(),
         doctor: req.session.doctor,
         madeDate: date_creation,
-        mentions: mentions,
-        drugs: drugs
+        mentions: mentions
         }
     });
 })
@@ -155,52 +148,36 @@ function generateMentionList(mentions){
 }
 
 //Créer l'ordonnance
-router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
-    let id_doctor = req.session.encryptedId;
-    let id_patient = req.params.encryptedIdPatient;
+router.post('/ordonnance/creer/:encryptedIdPatient', (req, res)=>{
+    const id_doctor = req.session.encryptedIdDoctor;
+    const id_patient = req.params.encryptedIdPatient;
     const today = new Date(Date.now());
     today.toLocaleString().substring(0,10);
     const date_creation = today;
 
     const data = JSON.parse(req.body.data) // ligne du saint graal
-    const listAttributionsJSON = data.attributionList
 
-    // On ajoute la prescription (pour avoir son id)
-    id_doctor = DoctorServices.getDoctorByEncryptedId(id_doctor)
-    id_patient = await PatientServices.getPatientIdByEncryptedId(id_patient) 
-    const prescriptionToAdd = new Prescription(id_doctor, id_patient)
-    let prescription = await PrescriptionServices.addPrescription(prescriptionToAdd)
-    
-    // On convertit le JSON en objet
-    listAttributionsJSON.forEach(async (attributionJSON) => {
-        // Récupérer l'id du médicament
-        idDrug = await DrugServices.getDrugIdByName(attributionJSON.drug_name)
-        
-        // Ajouter l'attribution
-        let attribution = new Attribution(
-            attributionJSON.attribution_desc,
-            attributionJSON.attribution_quantity,
-            idDrug,
-            prescription.getPrescriptionId()
-        )
-        attribution = await AttributionServices.addAttribution(attribution)    
+    const listCouncils = formatTipList(req.body.tipList);
+    const listAttributions = formatAttributionList(req.body.attributionList);
 
-        // Tout d'abord convertir les mentions
-        attributionJSON.attribution_mentions.forEach(async (mentionData) => {
-            // Récupérer l'id de la mention par le biais de son nom
-            idMention = await MentionServices.getMentionIdByName(mentionData)
-            if (idMention) {
-                MentionAttributionServices.addMentionAttribution(new MentionAttribution(attribution.getAttributionId(), idMention))
-            }
-        })    
-    })
+    const prescription = new Prescription(id_doctor, id_patient, date_creation, listAttributions, listCouncils);
+    prescription =  PrescriptionServices.addPrescription(prescription);
+    id_prescription = prescription.getPrescriptionId();
+    for (let i = 0; i<listAttributions.length; i++){
+        listAttributions[i].setPrescriptionId(id_prescription)
+        attribution = AttributionService.addAttribution(listAttributions[i])
+        id_attribution = attribution.getAttributionId();
 
-    res.send({status: true})
-})
+        //Récupérer mentions
+        //Les ajouter à la table
+        mentions = generateMentionList(listAttributions[i][3])
+        for (let i = 0; i < mentions.length; i++){
+            mentionId = MentionServices.getMentionIdByName(mentions[i])
+            mentionAttrib = new MentionAttribution(id_attribution, mentionId)
+            MentionAttributionServices.addMentionAttribution(mentionAttrib)
+        }
+    }
 
-
-router.get('/ordonnance/envoyee', (req, res) => {
-    res.render('Doctor/prescription_sent')
 })
 
 module.exports = router

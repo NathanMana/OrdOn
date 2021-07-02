@@ -109,13 +109,15 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
     const date_creation = today.toLocaleString().substring(0,10);
 
     const mentions = await MentionServices.getAllMentions();
-    console.log("mentions : " + mentions)
+
+    const drugs = await DrugServices.getAllDrugs();
 
     res.render('Doctor/create_ordonnance', {PrescriptionObjects: {
         patient: patient.toObject(),
         doctor: req.session.doctor,
         madeDate: date_creation,
-        mentions: mentions
+        mentions: mentions,
+        drugs: drugs
         }
     });
 })

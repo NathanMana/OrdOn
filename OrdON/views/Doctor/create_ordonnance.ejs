@@ -10,7 +10,6 @@
     </head>
     <body>
         <%- include('../layouts/nav/connectionManager'); -%>
-
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
                 <h3 class="doctorTextLeft">Docteur</h3>
@@ -84,8 +83,15 @@
 
             <h5 onclick="closeMedicWindow()">Fermer</h5>
             <h2>Ajouter un médicament</h2>
-            
-            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
+
+
+            <input list="drugList" id="nameInput" type="text" placeholder="Médicament"/>
+            <datalist id="drugList">
+                <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
+                    <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
+                <%}%>
+            </datalist>
+
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
             <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
             <!--Cette div est cachée et apparait lorsque l'utilisateur clique sur ajouter un médicament-->
@@ -123,5 +129,6 @@
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>
         <script src='/src/js/createPrescription.js'></script>
+        <script defer src="/src/js/all.js"></script> <!--load all styles -->
     </body>
 </html>

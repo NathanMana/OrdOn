@@ -9,7 +9,6 @@
     </head>
     <body>
         <%- include('../layouts/nav/connectionManager'); -%>
-
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
                 <h3 class="doctorTextLeft">Docteur</h3>
@@ -83,8 +82,15 @@
 
             <h5 onclick="closeMedicWindow()">Fermer</h5>
             <h2>Ajouter un médicament</h2>
-            
-            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
+
+
+            <input list="drugsList" id="nameInput" type="text" placeholder="Médicament">
+            <datalist id="drugList">
+                <option value="1">Medic1</option>
+                <option value="2">Medic2</option>
+                <option value="3">Medic3</option>
+            </datalist>
+
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
             <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
             <!--Cette div est cachée et apparait lorsque l'utilisateur clique sur ajouter un médicament-->

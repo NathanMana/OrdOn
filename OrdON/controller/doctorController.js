@@ -10,6 +10,7 @@ const router = express.Router()
 const bcrypt = require('bcrypt')
 const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
+const Prescription = require('./../models/Prescription')
 const Patient = require('../models/Patient')
 // const DoctorServices = require('../services/DoctorServices')
 const DoctorServices = require('../services/DoctorServices')
@@ -155,8 +156,9 @@ router.post('/ordonnance/creer/:encryptedIdPatient', (req, res)=>{
     today.toLocaleString().substring(0,10);
     const date_creation = today;
 
-    const listCouncils = formatTipList(req.body.tipList);
-    const listAttributions = formatAttributionList(req.body.attributionList);
+    const listCouncils = formatTipList(req.body['tipList[]']);
+    const jsonAttributions = JSON.parse(req.body.attributionList)
+    const listAttributions = formatAttributionList(jsonAttributions)
 
     const prescription = new Prescription(id_doctor, id_patient, date_creation, listAttributions, listCouncils);
     prescription =  PrescriptionServices.addPrescription(prescription);

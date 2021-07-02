@@ -13,7 +13,7 @@
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
         <h2 style="color: var(--darkblue);">Vos ordonnances valides</h2>
-        <div class="mesordonnances">
+        <!--<div class="mesordonnances">
             <article class="consultation">
                 <div>
                     <p class="date">Ma consultation du 17 juin 2021</p>
@@ -27,12 +27,36 @@
                     <button class="btndark" onclick="showQR()">Générer QR CODE</button> 
                 </div>
             </article>
-        </div>
+
+        </div>-->
+        <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
+            <div class="mesordonnances">
+                <article class="consultation">
+                    <div>
+                        <p class="date">Ma consultation du <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %></p>
+                        <p class="peremption">Date de péremption : <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %> (ajouter 12 mois)</p>
+                    </div>
+                    <div>
+                        <p class="doctor"><%= locals.OrdonnancesObjects[i].OrdonnancesViewModels.doctor_name %></p>
+                    </div>
+                    <div class="voirgenerer">
+                        <a href=""><button class="btngreensmall">Voir</button></a>
+                        <a href=""><button class="btndark">Générer QR CODE</button></a>
+                    </div>
+                </article>
+            </div>
+        <%}%>
     </section>
 
+    <div id="coverPage">
+    
+        
+    </div>
+
     <div id="QRCodeDiv" style="display:none">
-
-
+        <h3 id="qrPatientText"></h3>
+        <img id="qrcode">
+        <p id="pd"></p>
     </div>
 
     <%- include('../layouts/footer/footerManager'); -%>

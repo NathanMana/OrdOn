@@ -2,11 +2,13 @@
 /* "/pharmacien/"  */
 const express = require('express');
 const router = express.Router()
-const bcyrpt = require('bcrypt')
+const bcrypt = require('bcrypt')
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
 const Prescription = require('./../models/Prescription')
 const PrescriptionService = require('./../services/PrescriptionServices')
+const PatientService = require('./../services/PatientServices')
+const DoctorService = require('./../services/DoctorServices')
 
 router.get('/connexion', (req, res)=>{
     res.render('Pharmacist/connectionPharmacist')
@@ -43,15 +45,13 @@ router.post('/inscription', async (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstName
     const email = req.body.email
-    const password = req.body.password
+    const password = JSON.stringify(req.body.password)
     const city = req.body.city
     const address = req.body.address
-    const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+    const password_check = JSON.stringify(req.body.password_check)
 
-    if (!name || !firstName || !email || !password || !city || !cabinetLocation
-        || !zipcode || !typeProfesionnal) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
     }
@@ -59,10 +59,12 @@ router.post('/inscription', async (req, res) => {
         req.session.error = "Le mot de passe ne respecte pas tous les critères"
         return res.redirect('/docteur/inscription')
     }
-
+    if (password !== password_check) {
+        req.session.error = "Les mots de passe ne correspondent pas"
+        return res.redirect('/patient/inscription')
+    }
     const hashPassword = await bcrypt.hash(password, 10)
     const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode)
-    pharmacist.setProfessionnalId(typeProfesionnal)
     PharmacistServices.addPharmacist(pharmacist)
 
 
@@ -98,11 +100,18 @@ router.post('/connexion',  async (res,req)=>{
  * Gère l'affichage de l'ordonnance du patient après le scanne du qr code
  * @method GET
  */
-router.get('/pharmacien/ordonnance/:id_ordo', async (req, res) => {
+ router.get('/ordonnance/:id_ordo', async (req, res) => {
     const id = req.params.id_ordo
-    
+
     const prescription = await PrescriptionService.getPrescriptionById(id)
-    res.render ('/pharmacien/ordonnance', { ordonnance : prescription })
+    const patient = await PatientService.getPatientById(prescription.getPatientId())
+    const doctor = await DoctorService.getDoctorById(prescription.getDoctorId())
+    const ordonnance = {
+        prescription: prescription,
+        patient: patient,
+        docteur: doctor
+    }
+    res.render ('/pharmacien/ordonnance', { ordonnance : ordonnance })
 })
 
 module.exports = router

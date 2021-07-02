@@ -9,6 +9,7 @@ const Prescription = require('./../models/Prescription')
 const PrescriptionService = require('./../services/PrescriptionServices')
 const PatientService = require('./../services/PatientServices')
 const DoctorService = require('./../services/DoctorServices')
+const nodemailer = require('../externalsAPI/NodeMailer');
 
 router.get('/connexion', (req, res)=>{
     res.render('Pharmacist/connectionPharmacist')
@@ -79,13 +80,19 @@ router.post('/inscription', async (req, res) => {
 
 })
 
+
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /**
  * Traite la connexion des pharmaciens
  * @method POST
  */
-router.post('/connexion',  async (res,req)=>{
+router.post('/connexion',  async (req, res)=>{
     const password = req.body.password
-    const email = requ.body.email
+    const email = req.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Pharmacist/registerPharmacist')
@@ -101,7 +108,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Pharmacist/registerPharmacist')
     }
 
-    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacien'}
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), entier: entierAleatoire(100000,199999)}
+    nodemailer(pharmacist.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })
 

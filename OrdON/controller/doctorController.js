@@ -12,9 +12,10 @@ const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
 const Prescription = require('./../models/Prescription')
 const Patient = require('../models/Patient')
-// const DoctorServices = require('../services/DoctorServices')
 const DoctorServices = require('../services/DoctorServices')
 const MentionAttributionServices = require('../services/MentionAttributionServices')
+const nodemailer = require('../externalsAPI/NodeMailer');
+
 
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
@@ -68,13 +69,18 @@ router.post('/inscription', async(req, res) => {
     res.render('Doctor/profil')
 })
 
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /**
  * Traite la connexion des médecins
  * @method POST
  */
-router.post('/connexion',  async (res,req)=>{
+router.post('/connexion',  async (req, res)=>{
     const password = req.body.password
-    const email = requ.body.email
+    const email = req.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Doctor/registerDoctor')
@@ -90,7 +96,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'docteur'}
+    req.session.user = {encryptedId: doctor.getEncryptedId(), entier: entierAleatoire(100000,199999)}
+    nodemailer(doctor.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })
 

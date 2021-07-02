@@ -173,12 +173,23 @@ const pool = require('./DatabaseConnection')
         catch(e) {console.log(e)}
     }
 
-    changeEmailPharmacist(pharmacist){
+    static async changeEmailPharmacist(pharmacist){
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'UPDATE pharmacist SET email = ? WHERE id_pharmacist= ?'
-                [pharmacist.getEmail(), pharmacist.getPharmacistId()]
+                'UPDATE pharmacist SET email = ? WHERE encryptedId= ?'
+                [pharmacist.getEmail(), pharmacist.getEncryptedId()]
+            )
+            connection.release()
+        }catch(e) {console.log(e)}
+    }
+
+    static async changePasswordPharmacist(pharmacist){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE pharmacist SET password = ? WHERE encryptedId= ?'
+                [pharmacist.getPassword(), pharmacist.getEncryptedId()]
             )
             connection.release()
         }catch(e) {console.log(e)}

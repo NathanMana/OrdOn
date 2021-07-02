@@ -307,12 +307,23 @@ class PatientServices {
         }
     }
 
-    changeEmailPatient(patient){
+    static async changeEmailPatient(patient){
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'UPDATE patient SET email = ? WHERE id_patient= ?'
-                [patient.getEmail(), patient.getPatientId]
+                'UPDATE patient SET email = ? WHERE encryptedId= ?'
+                [patient.getEmail(), patient.getEncryptedId()]
+            )
+            connection.release()
+        }catch(e) {console.log(e)}
+    }
+
+    static async changePasswordPatient(patient){
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE patient SET password = ? WHERE encryptedId= ?'
+                [patient.getPassword(), patient.getEncryptedId()]
             )
             connection.release()
         }catch(e) {console.log(e)}

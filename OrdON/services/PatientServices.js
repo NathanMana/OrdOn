@@ -8,9 +8,8 @@ class PatientServices {
     /**
      * Ajoute un patient et le modifie pour lui attribuer un id encrypté unique
      * @param {Patient} patient 
-     * @param {int} entier
      */
-    static async addPatient(patient,entier) {
+    static async addPatient(patient) {
         try {
             const object = patient.toObject()
             const connection = await pool.getConnection();
@@ -20,8 +19,8 @@ class PatientServices {
             patient.setEncryptedId(patient.encryptId(patient.getPatientId()))
             patient.setTokenEmail(patient.getEncryptedId() + patient.encryptId(patient.getPatientId()))
             await connection.query(
-                'UPDATE patient SET code_email = ?, encryptedId = ?, tokenEmail = ? WHERE id_patient = ? ', 
-                [entier, patient.getEncryptedId(), patient.getTokenEmail(), patient.getPatientId()]
+                'UPDATE patient SET encryptedId = ?, tokenEmail = ? WHERE id_patient = ? ', 
+                [ patient.getEncryptedId(), patient.getTokenEmail(), patient.getPatientId()]
             )
             console.log("Patient inséré")
             connection.release()
@@ -279,7 +278,6 @@ class PatientServices {
      */
     static async getPatientByEmail(email) {
         try {
-            console.log('hello')
             const connection = await pool.getConnection();
             const result = await connection.query(
                 'SELECT * FROM patient WHERE email = ?',
@@ -287,7 +285,6 @@ class PatientServices {
             )
             connection.release()
             const patientData = result[0][0]
-            console.log('on est la  '+patientData)
             if (!patientData) return null
             const patient = new Patient(
                 patientData.name,
@@ -297,15 +294,12 @@ class PatientServices {
                 patientData.birthdate,
                 patientData.weight
             )
-            console.log('helloworld')
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
             patient.setIsEmailVerified(patientData.isEmailVerified)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
-            console.log(patient)
-            console.log('heyhey')
             return patient
         }
         catch (e) {

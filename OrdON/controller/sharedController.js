@@ -91,7 +91,10 @@ router.post('/doubleauthentification', async (req, res) => {
         req.session.error = "ce n'est pas le bon code"
         return res.redirect('/doubleauthentification')
     }
-    req.session.user.isValidated = true
-    return res.redirect('/patient/')
+    if(req.session.user.type === "patient")
+        return res.redirect('/patient/')
+    if(req.session.user.type === "doctor")
+        return res.redirect('/docteur/')
+    return res.redirect('/pharmacien/')
 })
 module.exports = router

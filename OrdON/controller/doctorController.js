@@ -51,7 +51,7 @@ router.post('/inscription', async(req, res) => {
     const hashPassword = await bcrypt.hash(password, 10)
     const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
     DoctorServices.addDoctor(doctor)
-    return res.render('/Doctor/connexionDoctor')
+    return res.redirect('/docteur/connexion')
     
 
 })
@@ -96,7 +96,7 @@ router.post('/connexion',  async (req, res)=>{
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {encryptedId: doctor.getEncryptedId(), entier: entierAleatoire(100000,199999)}
+    req.session.user = {encryptedId: doctor.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'doctor'}
     nodemailer(doctor.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })

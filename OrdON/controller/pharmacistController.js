@@ -108,7 +108,7 @@ router.post('/connexion',  async (req, res)=>{
         return res.redirect('/Pharmacist/registerPharmacist')
     }
 
-    req.session.user = {encryptedId: pharmacist.getEncryptedId(), entier: entierAleatoire(100000,199999)}
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'pharmacist'}
     nodemailer(pharmacist.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })

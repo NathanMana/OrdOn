@@ -85,11 +85,11 @@
             <h2>Ajouter un médicament</h2>
 
 
-            <input list="drugsList" id="nameInput" type="text" placeholder="Médicament">
+            <input list="drugList" id="nameInput" type="text" placeholder="Médicament"/>
             <datalist id="drugList">
-                <option value="1">Medic1</option>
-                <option value="2">Medic2</option>
-                <option value="3">Medic3</option>
+                <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
+                    <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
+                <%}%>
             </datalist>
 
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>

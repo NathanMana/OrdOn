@@ -33,6 +33,22 @@ const pool = require('./DatabaseConnection')
         }
         catch (e) { console.log(e)}
     }
+
+    static async getAllDrugs(){
+        try{
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM drug'
+            )
+            if (!result) throw 'Une erreur est survenue'
+            var drugs = new Array()
+            result[0].forEach(function(row){
+                drugs.push(row.name)
+            })
+            return drugs;
+        }
+        catch (e) {console.log(e)}
+    }
 }
 
 module.exports = DrugServices

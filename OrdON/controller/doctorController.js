@@ -3,19 +3,16 @@
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
-
 const Council = require('../models/Council')
 const Mention = require('../models/Mention')
-const Attribution = require('../models/Attribution')
+const Patient = require('../models/Patient')
 const Doctor = require('./../models/Doctor')
 const Prescription = require('./../models/Prescription')
-const Patient = require('../models/Patient')
-const MentionAttribution = require('../models/AssociationClass/MentionAttribution')
 
-const PrescriptionServices = require('../services/PrescriptionServices')
-const MentionServices = require('../services/MentionServices')
 const PatientServices = require('../services/PatientServices')
 const DoctorServices = require('../services/DoctorServices')
+const PrescriptionServices = require('../services/PrescriptionServices')
+const MentionServices = require('../services/MentionServices')
 const MentionAttributionServices = require('../services/MentionAttributionServices')
 const DrugServices = require('../services/DrugServices')
 const AttributionServices = require('../services/AttributionServices')
@@ -39,12 +36,11 @@ router.post('/inscription', async(req, res) => {
     const password = JSON.stringify(req.body.password)
     const city = req.body.city
     const address = req.body.address
-    const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+    const password_check = JSON.stringify(req.body.password_check)
+    const gender = req.body.gender
 
-    if (!name || !firstName || !email || !password || !city || !cabinetLocation
-        || !zipcode || !typeProfesionnal) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
     }
@@ -54,10 +50,9 @@ router.post('/inscription', async(req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode)
-    doctor.setProfessionnalId(typeProfesionnal)
+    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
     DoctorServices.addDoctor(doctor)
-
+    return res.render('/Doctor/connexionDoctor')
     
 
 })
@@ -80,7 +75,8 @@ router.post('/inscription', async(req, res) => {
  * @method POST
  */
 router.post('/connexion',  async (res,req)=>{
-    const {email, password} = req.body
+    const password = req.body.password
+    const email = requ.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Doctor/registerDoctor')
@@ -88,7 +84,7 @@ router.post('/connexion',  async (res,req)=>{
 
     // Récupérer l'objet
     const doctor = await DoctorServices.getDoctorByEmail(email)
-    req.session.doctor = doctor;
+    
     // Vérification mdp
     const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
     if (!verifPass) {
@@ -128,8 +124,7 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
         patient: patient.toObject(),
         doctor: doctor,
         madeDate: date_creation,
-        mentions: mentions,
-        drugs: drugs
+        mentions: mentions
         }
     });
 })
@@ -187,11 +182,6 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
     })
 
     res.send({status: true})
-})
-
-
-router.get('/ordonnance/envoyee', (req, res) => {
-    res.render('Doctor/prescription_sent')
 })
 
 module.exports = router

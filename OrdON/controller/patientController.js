@@ -93,11 +93,7 @@ router.post('/inscription', async (req, res) => {
     }
     if (password !== password_check) {
         req.session.error = "Les mots de passe ne correspondent pas"
-        return res.redirect('/patient/inscription', { Patient : {
-            name: name,
-            firstName: firstName,
-            email: email
-        }})
+        return res.redirect('/patient/inscription')
     }
  
     // Vérifier si l'email est déjà utilisé

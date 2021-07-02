@@ -2,11 +2,14 @@
 /* "/pharmacien/"  */
 const express = require('express');
 const router = express.Router()
-const bcyrpt = require('bcrypt')
+const bcrypt = require('bcrypt')
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
 const Prescription = require('./../models/Prescription')
 const PrescriptionService = require('./../services/PrescriptionServices')
+const PatientService = require('./../services/PatientServices')
+const DoctorService = require('./../services/DoctorServices')
+const nodemailer = require('../externalsAPI/NodeMailer');
 
 router.get('/connexion', (req, res)=>{
     res.render('Pharmacist/connectionPharmacist')
@@ -50,38 +53,46 @@ router.post('/inscription', async (req, res) => {
     const name = req.body.name
     const firstName = req.body.firstName
     const email = req.body.email
-    const password = req.body.password
+    const password = JSON.stringify(req.body.password)
     const city = req.body.city
     const address = req.body.address
-    const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+    const password_check = JSON.stringify(req.body.password_check)
+    const gender = req.body.gender
 
-    if (!name || !firstName || !email || !password || !city || !cabinetLocation
-        || !zipcode || !typeProfesionnal) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
-            return res.redirect('/docteur/inscription')
+            return res.redirect('/pharmacien/inscription')
     }
     if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
         req.session.error = "Le mot de passe ne respecte pas tous les critères"
-        return res.redirect('/docteur/inscription')
+        return res.redirect('/pharmacien/inscription')
     }
-
+    if (password !== password_check) {
+        req.session.error = "Les mots de passe ne correspondent pas"
+        return res.redirect('/pharmacien/inscription')
+    }
     const hashPassword = await bcrypt.hash(password, 10)
-    const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode)
-    pharmacist.setProfessionnalId(typeProfesionnal)
+    const pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
     PharmacistServices.addPharmacist(pharmacist)
+    return res.redirect('/pharmacien/connexion')
 
 
 })
+
+
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 /**
  * Traite la connexion des pharmaciens
  * @method POST
  */
-router.post('/connexion',  async (res,req)=>{
+router.post('/connexion',  async (req, res)=>{
     const password = req.body.password
-    const email = requ.body.email
+    const email = req.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Pharmacist/registerPharmacist')
@@ -97,7 +108,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Pharmacist/registerPharmacist')
     }
 
-    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacien'}
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'pharmacist'}
+    nodemailer(pharmacist.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })
 
@@ -105,11 +117,18 @@ router.post('/connexion',  async (res,req)=>{
  * Gère l'affichage de l'ordonnance du patient après le scanne du qr code
  * @method GET
  */
-router.get('/ordonnance/:id_ordo', async (req, res) => {
+ router.get('/ordonnance/:id_ordo', async (req, res) => {
     const id = req.params.id_ordo
-    
+
     const prescription = await PrescriptionService.getPrescriptionById(id)
-    res.render ('/pharmacien/viewOrdonnance', { ordonnance : prescription })
+    const patient = await PatientService.getPatientById(prescription.getPatientId())
+    const doctor = await DoctorService.getDoctorById(prescription.getDoctorId())
+    const ordonnance = {
+        prescription: prescription,
+        patient: patient,
+        docteur: doctor
+    }
+    res.render ('/Pharmacist/viewOrdonnance', { ordonnance : ordonnance })
 })
 
 module.exports = router

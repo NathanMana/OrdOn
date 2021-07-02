@@ -1,6 +1,6 @@
 const Attribution = require('../models/Attribution');
 const Prescription = require('../models/Prescription');
-const AttributionService = require('./AttributionService');
+const AttributionService = require('./AttributionServices');
 const pool = require('./DatabaseConnection')
 
 /**
@@ -16,7 +16,7 @@ class PrescriptionServices {
             const connection = await pool.getConnection();
             const result = await connection.query(
                 'INSERT INTO prescription(date_creation, isQRCodeVisible, id_doctor, id_patient) VALUES (?, false, ?, ?) ', 
-                [prescription.getDateCreation(), prescription.getIdDoctor(), prescription.getIdPatient()]
+                [prescription.getDateCreation(), prescription.getDoctorId(), prescription.getPatientId()]
             )
             if (!result) throw 'Une erreur est survenue'
             prescription.setPrescriptionId(result[0].insertId)

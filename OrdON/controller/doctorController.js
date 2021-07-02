@@ -12,9 +12,10 @@ const Doctor = require('./../models/Doctor')
 const PatientServices = require('../services/PatientServices')
 const Prescription = require('./../models/Prescription')
 const Patient = require('../models/Patient')
-// const DoctorServices = require('../services/DoctorServices')
 const DoctorServices = require('../services/DoctorServices')
 const MentionAttributionServices = require('../services/MentionAttributionServices')
+const nodemailer = require('../externalsAPI/NodeMailer');
+
 
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
@@ -34,12 +35,11 @@ router.post('/inscription', async(req, res) => {
     const password = JSON.stringify(req.body.password)
     const city = req.body.city
     const address = req.body.address
-    const cabinetLocation = req.body.cabinetLocation
     const zipcode = req.body.zipcode
-    const typeProfesionnal = req.body.typeProfesionnal
+    const password_check = JSON.stringify(req.body.password_check)
+    const gender = req.body.gender
 
-    if (!name || !firstName || !email || !password || !city || !cabinetLocation
-        || !zipcode || !typeProfesionnal) {
+    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
     }
@@ -49,10 +49,9 @@ router.post('/inscription', async(req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
-    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode)
-    doctor.setProfessionnalId(typeProfesionnal)
+    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
     DoctorServices.addDoctor(doctor)
-
+    return res.redirect('/docteur/connexion')
     
 
 })
@@ -70,12 +69,18 @@ router.post('/inscription', async(req, res) => {
     res.render('Doctor/profil')
 })
 
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /**
  * Traite la connexion des médecins
  * @method POST
  */
-router.post('/connexion',  async (res,req)=>{
-    const {email, password} = req.body
+router.post('/connexion',  async (req, res)=>{
+    const password = req.body.password
+    const email = req.body.email
     if (!email || !password) {
         req.session.error = "Remplissez tous les champs"
         return res.redirect('/Doctor/registerDoctor')
@@ -83,7 +88,7 @@ router.post('/connexion',  async (res,req)=>{
 
     // Récupérer l'objet
     const doctor = await DoctorServices.getDoctorByEmail(email)
-    req.session.doctor = doctor;
+    
     // Vérification mdp
     const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
     if (!verifPass) {
@@ -91,7 +96,8 @@ router.post('/connexion',  async (res,req)=>{
         return res.redirect('/Doctor/registerDoctor')
     }
 
-    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'docteur'}
+    req.session.user = {encryptedId: doctor.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'doctor'}
+    nodemailer(doctor.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     return res.redirect('/doubleauthentification')
 })
 

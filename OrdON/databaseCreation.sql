@@ -18,7 +18,7 @@ create table ordon.Patient(
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,
         email              Varchar (100) NOT NULL ,
-        password           Varchar (300) NOT NULL ,
+        password           Varchar (200) NOT NULL ,
         isAccountValidated Bool NOT NULL,
         isEmailVerified    Bool NOT NULL,
         tokenResetPassword              Varchar(200),  
@@ -105,10 +105,9 @@ create table ordon.Doctor(
 
 create table ordon.Prescription(
         id_prescription  Int  Auto_increment  NOT NULL ,
-        encryptedId        Varchar (100) ,
         date_creation    Date NOT NULL ,
         isQRCodeVisible  Bool NOT NULL ,
-        date_archived    Date NOT NULL ,
+        date_archived    Date ,
         id_doctor        Int NOT NULL ,
         id_patient       Int NOT NULL
 	,CONSTRAINT Prescription_PK PRIMARY KEY (id_prescription)
@@ -176,6 +175,10 @@ create table ordon.mention_attribution(
 	,CONSTRAINT mention_attribution_Mention0_FK FOREIGN KEY (id_mention) REFERENCES Mention(id_mention)
 )ENGINE=InnoDB;
 
+
+#---------------------------------------------------------
+# Mentions
+#---------------------------------------------------------
 INSERT INTO`ordon`.`Mention` (`name`) VALUES ('Non substituable (MTE)');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('Non substituable (EFG)');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('Non substituable (CIF)');
@@ -189,6 +192,69 @@ INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 7 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 8 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 9 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 10 mois');
-INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 111 mois');
+<<<<<<< HEAD
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 11 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('SP');
+=======
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 111 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('QSP');
+>>>>>>> 516a7be62222e075f16e55bc1cafb33a0019165d
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('NR');
+
+#----------------------------------------------------------
+# Drugs
+# ---------------------------------------------------------
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DOLIPRANE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('EFFERALGAN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DAFALGAN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('LEVOTHYROX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('IMODIUM');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('KARDEGIC');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('SPASFON');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ISIMIG');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('TAHOR');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('SPEDIFEN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('VOLTARENE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ELUDRIL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('IXPRIM');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PARACETAMOL BIOGARAN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('FORLAX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('MAGNE B6');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('HELICIDINE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('CLAMOXYL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PIASCLEDINE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('LAMALINE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('GAVISCON');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DAFLON');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ANTARENE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('RHINOFLUIMUCIL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PLAVIX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('MOPRAL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('SUBUTEX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('AERIUS');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ORELOX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('INEXIUM');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('METEOSPASMYL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('AUGMENTIN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('TOPLEXIL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PIVALONE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('VASTAREL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ADVIL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('EUPANTOL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DEXERYL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('RENUTRYL 500');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('XANAX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('EMLAPATCH');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('LASILIX');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ENDOTELON');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DEROXAT');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('TEMESTA');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('EFFEXOR');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PARACETAMOL SANDOZ');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('VENTOLINE');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('SOLUPRED');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('DEXTROPROPOXYPHENE PARAC BIOG');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PNEUMOREL');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('INIPOMP');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('PREVISCAN');
+INSERT INTO `ordon`.`drug` (`name`) VALUES ('ASPEGIC');

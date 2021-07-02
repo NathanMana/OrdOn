@@ -10,7 +10,6 @@
     </head>
     <body>
         <%- include('../layouts/nav/connectionManager'); -%>
-
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
                 <h3 class="doctorTextLeft">Docteur</h3>
@@ -30,7 +29,7 @@
         </div>
 
         <div id="infosPatient">
-            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
+            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname + " " %> </h3>
             <h3><%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " " + locals.PrescriptionObjects.patient.weight %></h3>
         </div>
 
@@ -85,8 +84,15 @@
 
             <h5 onclick="closeMedicWindow()">Fermer</h5>
             <h2>Ajouter un médicament</h2>
-            
-            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
+
+
+            <input list="drugList" id="nameInput" type="text" placeholder="Médicament"/>
+            <datalist id="drugList">
+                <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
+                    <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
+                <%}%>
+            </datalist>
+
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
             <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
             <!--Cette div est cachée et apparait lorsque l'utilisateur clique sur ajouter un médicament-->
@@ -120,9 +126,9 @@
             <button class="blueButton" id="validTip" type="button" onclick="validTip()">Valider ce conseil</button>
 
         </div>
+        <input type="hidden" id="encryptedPatientId" value="<%= locals.PrescriptionObjects.patient.encryptedId %> ">
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>
-
         <script src='/src/js/createPrescription.js'></script>
         <script defer src="/src/js/all.js"></script> <!--load all styles -->
     </body>

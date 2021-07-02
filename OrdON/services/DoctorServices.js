@@ -13,7 +13,21 @@ const pool = require('./DatabaseConnection')
         try {
             const object = doctor.toObject();
             const connection = await pool.getConnection();
-            const result = await connection.query('INSERT INTO doctor SET ? ', object)
+            const result_pro = await connection.query('INSERT INTO professionnal (city, address, zipcode) VALUES (?, ?, ?)', 
+                [doctor.getCity(), doctor.getAddress(), doctor.getZipcode()])
+            if (!result_pro) throw 'Une erreur est survenue'
+            doctor.setProfessionnalId(result_pro[0].insertId)
+            const doctor_insert = {
+                name: doctor.getName(),
+                firstname: doctor.getFirstname(),
+                email: doctor.getEmail(),
+                password: doctor.getPassword(),
+                isAccountValidated: doctor.getIsAccountValidated(),
+                isEmailVerified: doctor.getIsEmailVerified(),
+                gender: doctor.getGender(),
+                id_professionnal: doctor.getProfessionnalId()
+            }
+            const result = await connection.query('INSERT INTO doctor SET ? ', doctor_insert)
             if (!result) throw 'Une erreur est survenue'
             doctor.setDoctorId(result[0].insertId)
             doctor.setEncryptedId(doctor.encryptId(doctor.getDoctorId()))

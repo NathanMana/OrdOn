@@ -14,7 +14,21 @@ const pool = require('./DatabaseConnection')
         try {
             const object = pharmacist.toObject();
             const connection = await pool.getConnection();
-            const result = await connection.query('INSERT INTO pharmacist SET ? ', object)
+            const result_pro = await connection.query('INSERT INTO professionnal (city, address, zipcode) VALUES (?, ?, ?)', 
+                [pharmacist.getCity(), pharmacist.getAddress(), pharmacist.getZipcode()])
+            if (!result_pro) throw 'Une erreur est survenue'
+            pharmacist.setProfessionnalId(result_pro[0].insertId)
+            const pharma_insert = {
+                name: pharmacist.getName(),
+                firstname: pharmacist.getFirstname(),
+                email: pharmacist.getEmail(),
+                password: pharmacist.getPassword(),
+                isAccountValidated: pharmacist.getIsAccountValidated(),
+                isEmailVerified: pharmacist.getIsEmailVerified(),
+                gender: pharmacist.getGender(),
+                id_professionnal: pharmacist.getProfessionnalId()
+            }
+            const result = await connection.query('INSERT INTO pharmacist SET ? ', pharma_insert)
             if (!result) throw 'Une erreur est survenue'
             pharmacist.setPharmacistId(result[0].insertId)
             pharmacist.setEncryptedId(pharmacist.encryptId(pharmacist.getPharmacistId()))

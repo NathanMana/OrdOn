@@ -389,17 +389,19 @@ function createOrdonnance(){
 }
 
 function callPostRoute(attributionList, tipList){
+    let encryptedIdPatient = document.getElementById('encryptedPatientId').value
+    console.log(encryptedIdPatient)    
     //2 - Call the post route
     console.log("calling post route")
     $.ajax({
-        url : '/docteur/ordonnance/creer/:encryptedIdPatient',
+        url : '/docteur/ordonnance/creer/' + encryptedIdPatient,
         type : 'POST',
         dataType : 'json',
         data: { 'data' : JSON.stringify({tipList : tipList, attributionList : attributionList})},
         success : function(res){
-
-            console.log("bien joué mon frère")
-
+            if (res && res.status){
+                window.location = "/docteur/ordonnance/envoyee"
+            }
         }
     });
 }

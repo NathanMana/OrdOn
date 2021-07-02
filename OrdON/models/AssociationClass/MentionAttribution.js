@@ -27,3 +27,5 @@ class MentionAttribution {
     getMentionId(){return this.#id_mention}
 
 }
+
+module.exports = MentionAttribution

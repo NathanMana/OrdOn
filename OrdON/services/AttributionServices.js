@@ -1,7 +1,9 @@
 const pool = require('./DatabaseConnection')
 
 const Attribution = require('../models/Attribution');
-const MentionService = require('./MentionServices')
+const MentionService = require('./MentionServices');
+const DrugServices = require('./DrugServices');
+const MentionAttributionServices = require('./MentionAttributionServices');
 
 /**
  * Gère toutes les opérations sur la table Attribution
@@ -16,11 +18,13 @@ class AttributionServices {
             const connection = await pool.getConnection();
             const result = await connection.query(
                 'INSERT INTO attribution(description, quantity, id_prescription, id_drug) VALUES (?, ?, ?, ?) ', 
-                [attribution.getDescription(), attribution.getQuantity(), attribution.getIdPrescription(), attribution.getDrug().getIdDrug()]
+                [attribution.getDescription(), attribution.getQuantity(), attribution.getPrescriptionId(), attribution.getDrugId()]
             )
             if (!result) throw 'Une erreur est survenue'
+            attribution.setAttributionId(result[0].insertId)
             console.log("Attribution insérée")
             connection.release()
+            return attribution
         } catch(e){
             console.log(e)
         }
@@ -40,15 +44,23 @@ class AttributionServices {
                 'SELECT * FROM attribution WHERE id_attribution = ?', 
                 [idAttribution]
             )
-            if (!result) throw 'Une erreur est survenue'
+            if (!result[0][0]) throw 'Une erreur est survenue'
             // On convertit le résultat en objet js
-            const attribution = new Attribution()
-            Object.assign(attribution, result[0][0])
-
+            const attributionData = result[0][0]
+            const attribution = new Attribution(
+                attributionData.description,
+                attributionData.quantity,
+                attributionData.id_drug,
+                attributionData.id_prescription,
+                null
+            )
+            attribution.setAttributionId(attributionData.id_attribution)
+            
             //On complete l'objet prescription avec les Attributions et les conseils
-            const listMentions = MentionService.getListMentionsByAttributionId(attribution.getIdAttribution())
+            const drug = DrugServices.getDrugById(attributionData.id_drug)
+            attribution.setDrug(drug)
+            const listMentions = MentionAttributionServices.getListMentionsByAttributionId(attribution.getAttributionId())
             attribution.setListMentions(listMentions)
-
             connection.release()
             console.log('Attribution récupérée')
             return attribution
@@ -73,9 +85,20 @@ class AttributionServices {
             if (!result) throw 'Une erreur est survenue'
             let listAttributions = []
             result[0].forEach((attributionData) => {
-                const attribution = new Attribution()
-                Object.assign(attribution, attributionData)
-                attribution.setListMentions(MentionService.getListMentionsByAttributionId(attribution.getIdAttribution()))
+                const attribution = new Attribution(
+                    attributionData.description,
+                    attributionData.quantity,
+                    attributionData.id_drug,
+                    attributionData.id_prescription,
+                    null
+                )
+                attribution.setAttributionId(attributionData.id_attribution)
+                
+                //On complete l'objet prescription avec les Attributions et les conseils
+                const drug = DrugServices.getDrugById(attributionData.id_drug)
+                attribution.setDrug(drug)
+                const listMentions = MentionAttributionServices.getListMentionsByAttributionId(attribution.getAttributionId())
+                attribution.setListMentions(listMentions)
                 listAttributions.push(attribution)
             })
 

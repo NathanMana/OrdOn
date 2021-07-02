@@ -116,6 +116,30 @@ class PatientServices {
     }
 
     /**
+     * Récupère l'id d'un patient spécifique via son id encrypté
+     * @param {long} encryptedId 
+     * @returns {long} l'id clair
+     */
+    static async getPatientIdByEncryptedId(encryptedId) {
+        try {
+            if (!encryptedId) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT id_patient FROM patient WHERE encryptedId = ?', 
+                [encryptedId]
+            )
+            if (!result[0][0]) return
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('patient récupéré')
+            return result[0][0].id_patient
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
      * Récupère un patient spécifique via son id clair
      * @param {long} encryptedId 
      * @returns {Patient} le patient cherché

@@ -108,7 +108,7 @@ create table ordon.Prescription(
         encryptedId        Varchar (100) ,
         date_creation    Date NOT NULL ,
         isQRCodeVisible  Bool NOT NULL ,
-        date_archived    Date NOT NULL ,
+        date_archived    Date ,
         id_doctor        Int NOT NULL ,
         id_patient       Int NOT NULL
 	,CONSTRAINT Prescription_PK PRIMARY KEY (id_prescription)
@@ -189,6 +189,6 @@ INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 7 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 8 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 9 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 10 mois');
-INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 111 mois');
+INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('AR 11 mois');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('SP');
 INSERT INTO`ordon`.`Mention` (`name`)  VALUES ('NR');

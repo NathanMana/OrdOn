@@ -11,7 +11,7 @@
     /**
      * id de l'ordonnance hashée
      */
-     #encryptedId
+    #encryptedId
 
     /**
      * Date a laquelle l'ordonnance a été prescrite
@@ -53,10 +53,10 @@
      * @param {Array(Attribution)} listAttributions 
      * @param {Array(Council)} listCouncils 
      */
-    constructor(id_doctor, id_patient, listAttributions, listCouncils){
+    constructor(id_doctor, id_patient, listAttributions = null, listCouncils = null){
         this.#id_doctor = id_doctor
         this.#id_patient = id_patient
-        this.#date_creation = date_creation
+        this.#date_creation = new Date()
         this.#listCouncils = listCouncils
         this.#listAttributions = listAttributions
     }

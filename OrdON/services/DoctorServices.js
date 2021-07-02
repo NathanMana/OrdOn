@@ -108,6 +108,30 @@ const pool = require('./DatabaseConnection')
     }
 
     /**
+     * Récupère un docteur spécifique via son id clair
+     * @param {long} encryptedId 
+     * @returns {Doctor} le docteur cherché
+     */
+     static async getDoctorIdByEncryptedId(encryptedId) {
+        try {
+            if (!encryptedId) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT id_doctor FROM doctor WHERE encryptedId = ?', 
+                [encryptedId]
+            )
+            if (!result[0][0]) return
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('doctor récupéré')
+            return result[0][0].id_doctor
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
      * Récupère un docteur a partir d'un email et d'un mdp
      * @param {string} email
      * @returns {Doctor} le docteur

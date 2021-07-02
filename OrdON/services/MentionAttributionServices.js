@@ -14,8 +14,8 @@ class MentionAttributionServices {
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'INSERT INTO attribution(id_attribution, id_mention) VALUES (?, ?) ', 
-                [mentionAttribution.getIdAttribution(), mentionAttribution.getIdMention()]
+                'INSERT INTO mention_attribution(id_attribution, id_mention) VALUES (?, ?) ', 
+                [mentionAttribution.getAttributionId(), mentionAttribution.getMentionId()]
             )
             if (!result) throw 'Une erreur est survenue'
             console.log("Mention ajoutée à la prescription")

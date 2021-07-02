@@ -43,7 +43,7 @@ class Attribution {
     #id_drug
 
     //Manque l'id de la prescription
-    constructor(description, quantity, id_drug, idPrescription, listMentions){
+    constructor(description, quantity, id_drug, idPrescription, listMentions = null){
         this.#description = description
         this.#quantity = quantity
         this.#id_drug = id_drug
@@ -52,6 +52,7 @@ class Attribution {
     }
 
     getAttributionId(){return this.#id_attribution}
+    setAttributionId(id){this.#id_attribution = id}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}

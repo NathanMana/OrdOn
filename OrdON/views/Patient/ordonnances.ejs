@@ -13,7 +13,6 @@
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
         <h2 style="color: var(--darkblue);">Mes ordonnances valides</h2>
-<<<<<<< HEAD
         <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
             <div class="mesordonnances">
                 <article class="consultation">
@@ -22,7 +21,7 @@
                         <p class="peremption">Date de péremption : <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %> (ajouter 12 mois)</p>
                     </div>
                     <div>
-                        <p class="doctor"><%= locals.OrdonnancesObjects[i].doctor.name %></p>
+                        <p class="doctor"><%= locals.OrdonnancesObjects[i].OrdonnancesViewModels.doctor_name %></p>
                     </div>
                     <div class="voirgenerer">
                         <a href=""><button class="btngreensmall">Voir</button></a>
@@ -31,22 +30,6 @@
                 </article>
             </div>
         <%}%>
-=======
-        <div class="mesordonnances">
-            <article class="consultation">
-                <div>
-                    <p class="date">Ma consultation du 17 juin 2021</p>
-                    <p class="peremption">Date de péremption : 18 septembre 2021</p>
-                </div>
-                <div>
-                    <p class="doctor">Dr Pathy - podologue</p>
-                </div>
-                <div class="voirgenerer">
-                    <a href=""><button class="btngreensmall">Voir</button></a>
-                    <a href=""><button class="btndark" onclick="getQRcode()">Générer QR CODE</button></a>
-                </div>
-            </article>
->>>>>>> 62d124bf9fa2719124eea5bf0fffda642615a749
         </div>
     </section>
     <%- include('../layouts/footer/footerManager'); -%>

@@ -156,9 +156,10 @@ router.post('/ordonnance/creer/:encryptedIdPatient', (req, res)=>{
     today.toLocaleString().substring(0,10);
     const date_creation = today;
 
-    const listCouncils = formatTipList(req.body['tipList[]']);
-    const jsonAttributions = JSON.parse(req.body.attributionList)
-    const listAttributions = formatAttributionList(jsonAttributions)
+    const data = JSON.parse(req.body.data) // ligne du saint graal
+
+    const listCouncils = formatTipList(req.body.tipList);
+    const listAttributions = formatAttributionList(req.body.attributionList);
 
     const prescription = new Prescription(id_doctor, id_patient, date_creation, listAttributions, listCouncils);
     prescription =  PrescriptionServices.addPrescription(prescription);

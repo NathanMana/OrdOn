@@ -35,6 +35,13 @@ router.get('/inscription', (req, res)=>{
  router.get('/ordonnancesarchivees', (req, res) => {
     res.render('Pharmacist/ordonnanceArchive')
 })
+
+/**
+ * Gère l'affichage de la page ordonnance scanné par le médecin
+ */
+ router.get('/ordonnancepatient', (req, res) => {
+    res.render('Pharmacist/viewOrdonnance')
+})
 /**
  * Traite l'inscription des pharmaciens
  * @method POST

@@ -344,7 +344,13 @@ function rowToAttributtion(row){
     })
     const attribution_mentions = mentionList;
 
-    const attribution = [drug_name, attribution_desc, attribution_quantity, attribution_mentions];
+    // const attribution = [drug_name, attribution_desc, attribution_quantity, attribution_mentions];
+    const attribution = {
+        drug_name: drug_name,
+        attribution_desc: attribution_desc,
+        attribution_quantity: attribution_quantity,
+        attribution_mentions: attribution_mentions
+    }
     return attribution;
 }
 
@@ -388,7 +394,8 @@ function callPostRoute(attributionList, tipList){
     $.ajax({
         url : '/docteur/ordonnance/creer/:encryptedIdPatient',
         type : 'POST',
-        data: { tipList : tipList, attributionList : attributionList},
+        dataType : 'json',
+        data: { 'data' : JSON.stringify({tipList : tipList, attributionList : attributionList})},
         success : function(res){
 
             console.log("bien joué mon frère")

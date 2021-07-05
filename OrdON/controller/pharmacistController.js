@@ -162,8 +162,9 @@ function entierAleatoire(min, max)
 /**
  * Gère l'affichage de la page profile du pharmacien
  */
- router.get('/profil', (req, res) => {
-    res.render('Pharmacist/profil')
+ router.get('/profil', async (req, res) => {
+    const pharmacien = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    res.render('Pharmacist/profil',  { profil : pharmacien.toObject()})
 })
 
 /**

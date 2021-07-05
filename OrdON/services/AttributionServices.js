@@ -84,7 +84,8 @@ class AttributionServices {
             )
             if (!result) throw 'Une erreur est survenue'
             let listAttributions = []
-            result[0].forEach((attributionData) => {
+            for (let i = 0; i < result[0].length; i++) {
+                const attributionData = result[0][i]
                 const attribution = new Attribution(
                     attributionData.description,
                     attributionData.quantity,
@@ -95,12 +96,12 @@ class AttributionServices {
                 attribution.setAttributionId(attributionData.id_attribution)
                 
                 //On complete l'objet prescription avec les Attributions et les conseils
-                const drug = DrugServices.getDrugById(attributionData.id_drug)
+                const drug = await DrugServices.getDrugById(attributionData.id_drug)
                 attribution.setDrug(drug)
-                const listMentions = MentionAttributionServices.getListMentionsByAttributionId(attribution.getAttributionId())
+                const listMentions = await MentionAttributionServices.getListMentionsByAttributionId(attribution.getAttributionId())
                 attribution.setListMentions(listMentions)
                 listAttributions.push(attribution)
-            })
+            }
 
             connection.release()
             console.log('Prescriptions récupérées')

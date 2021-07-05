@@ -24,6 +24,8 @@ const pool = require('./DatabaseConnection')
             // On convertit le résultat en objet js
             console.log('Drug récupérée')
             const drugData = result[0][0]
+            if (!drugData) return
+
             let drug = new Drug(
                 drugData.name
             )

@@ -141,9 +141,13 @@ function entierAleatoire(min, max)
  */
  router.use((req, res, next) => {
     if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "pharmacien") {
+        req.session.desiredUrl = req.originalUrl
         return res.redirect("/pharmacien/connexion")
     }
-    if (!req.session.user.isValidated) return res.redirect("/pharmacien/connexion")
+    if (!req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/pharmacien/connexion")
+    } 
     next()
 })
 

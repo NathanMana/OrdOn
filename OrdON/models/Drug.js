@@ -26,4 +26,13 @@ class Drug {
 
     getName(){return this.#name}
 
+    toObject() {
+        return {
+            id_drug: this.#id_drug,
+            name: this.#name
+        }
+    }
+
 }
+
+module.exports = Drug

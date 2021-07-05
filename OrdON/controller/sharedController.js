@@ -104,6 +104,13 @@ router.post('/doubleauthentification', async (req, res) => {
 
     req.session.user.isValidated = true
 
+    // S'il voulait accéder un endroit particulier, on lui retourne l'url voulue
+    if (req.session.desiredUrl) {
+        const url = req.session.desiredUrl
+        req.session.desiredUrl = undefined
+        return res.redirect(url)
+    }
+
     if(req.session.user.type === "patient")
         return res.redirect('/patient/')
     if(req.session.user.type === "docteur")

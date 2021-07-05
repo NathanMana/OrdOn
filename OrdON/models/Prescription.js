@@ -1,3 +1,5 @@
+const Patient = require("./Patient")
+
 /**
  * Classe représentant l'ordonnance
  */
@@ -45,6 +47,16 @@
      * @type {long}
      */
     #id_doctor
+
+    /**
+     * @type {Doctor}
+     */
+     #doctor 
+
+    /**
+     * @type {Patient}
+     */
+    #patient 
 
     /**
      * Constructeur de la classe Prescription
@@ -120,6 +132,12 @@
     }
     setListAttributions(listAttributions){this.#listAttributions = listAttributions}
 
+    getDoctor(){return this.#doctor}
+    setDoctor(doctor) { this.#doctor = doctor}
+
+    getPatient(){return this.#patient}
+    setPatient(patient) { this.#patient = patient}
+
     /**
      * Permet de transformer l'id de l'ordonnance en un id plus secret
      * Algorithme inspiré par https://www.codegrepper.com/code-examples/javascript/javascript+generate+unique+key
@@ -139,10 +157,12 @@
             encryptedId: this.#encryptedId,
             date_creation: this.#date_creation,
             isQrCodeVisible: this.#isQrCodeVisible,
-            listAttributions: this.#listAttributions,
-            listCouncils: this.#listCouncils,
+            listAttributions: this.#listAttributions.map((a) => a.toObject()),
+            listCouncils: this.#listCouncils.map((c) => c.toObject()),
             id_patient: this.#id_patient,
-            id_doctor: this.#id_doctor
+            id_doctor: this.#id_doctor,
+            patient: this.#patient.toObject(),
+            doctor: this.#doctor.toObject()
         }
     }
 

@@ -61,6 +61,7 @@ router.get('/connexion', (req, res)=>{
         entier : entierAleatoire(100000,199999)
     } // on ne met pas le type, car on est pas sur que le mec se connecte a 100% 
     nodemailer(patient.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
+    
     return res.redirect('/doubleauthentification')
 })
  
@@ -261,17 +262,32 @@ router.get('/email/verification/:token', async (req, res) => {
  */
  router.use((req, res, next) => {
     if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "patient") {
+        req.session.desiredUrl = req.originalUrl
         return res.redirect("/patient/connexion")
     }
-    if (!req.session.user.isValidated) return res.redirect("/patient/connexion")
+    if (!req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/patient/connexion")
+    }
     next()
 })
  
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
-router.get('/', (req, res) => {
-    res.render('Patient/home')
+router.get('/', async (req, res) => {
+    // Récupérer les ordonnances valides
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const listValidPrescriptions = await PrescriptionServices.getListValidPrescriptionsByPatientId(patient.getPatientId(), 4)
+    const listValidPrescriptionsToObject = listValidPrescriptions.map(p => p.toObject())
+
+    const listInvalidPrescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId(), 4)
+    const listInvalidPrescriptionsToObject = listInvalidPrescriptions.map(p => p.toObject())
+
+    res.render('Patient/home', {
+        listValidPrescriptions: listValidPrescriptionsToObject,
+        listInvalidPrescriptions: listInvalidPrescriptionsToObject
+    })
 })
  
 /**

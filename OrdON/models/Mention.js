@@ -30,6 +30,13 @@ class Mention {
 
     getIdMention(){return this.#id_mention}
     setIdMention(id){this.#id_mention = id}
+
+    toObject() {
+        return {
+            name: this.#name,
+            id_mention: this.#id_mention
+        }
+    }
 }
 
 module.exports = Mention

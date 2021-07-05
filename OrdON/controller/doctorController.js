@@ -147,9 +147,13 @@ router.post('/inscription', async(req, res) => {
  */
  router.use((req, res, next) => {
     if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "docteur") {
+        req.session.desiredUrl = req.originalUrl
         return res.redirect("/docteur/connexion")
     }
-    if (!req.session.user.isValidated) return res.redirect("/docteur/connexion")
+    if (!req.session.user.isValidated){
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/docteur/connexion")
+    } 
     next()
 })
 
@@ -211,7 +215,7 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
 
 //Créer l'ordonnance
 router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
-    let id_doctor = req.session.encryptedId;
+    let id_doctor = req.session.user.encryptedId;
     let id_patient = req.params.encryptedIdPatient;
 
     const data = JSON.parse(req.body.data) // ligne du saint graal
@@ -222,12 +226,12 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
     }
 
     // On ajoute la prescription (pour avoir son id)
-    // id_doctor = await DoctorServices.getDoctorIdByEncryptedId(id_doctor)
-    id_patient = await PatientServices.getPatientIdByEncryptedId(id_patient) 
-    // if (!id_doctor || id_doctor <= 0 || !id_patient || id_patient <= 0) 
-    //     return res.send({status: false, message: 'Une erreur est survenue, déconnectez-vous et reconnectez-vous'})
+    const doctor = await DoctorServices.getDoctorByEncryptedId(id_doctor)
+    const patient = await PatientServices.getPatientByEncryptedId(id_patient) 
+    if (!doctor || !patient) 
+        return res.send({status: false, message: 'Une erreur est survenue, déconnectez-vous et reconnectez-vous'})
 
-    const prescriptionToAdd = new Prescription(1, id_patient)
+    const prescriptionToAdd = new Prescription(doctor.getDoctorId(), patient.getPatientId())
     let prescription = await PrescriptionServices.addPrescription(prescriptionToAdd)
     if (!prescription) return res.send({status: false, message:"Impossible de créer l'ordonnance"})
     

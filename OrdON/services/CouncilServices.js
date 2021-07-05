@@ -58,7 +58,7 @@ class CouncilServices {
      * @param {long} idPrescription 
      * @returns {array(Council)} les conseils cherchés
      */
-     static async getListAttributionsByPrescriptionId(idPrescription) {
+     static async getListCouncilsByPrescriptionId(idPrescription) {
         try {
             if (!idPrescription || idPrescription <= 0) throw 'L\id indiqué est erroné'
 

@@ -14,49 +14,46 @@
     <section class="sectionblueConnected">
         <h2>Vos ordonnances valides</h2>
         <div class="triple" style="justify-content: flex-start;">
-            <article class="articleOrd">
-                <h6 style="color:var(--danger_light);">17 juin 2021</h6>
-                <p class="parBlue">Émise par le Dr Pathy</p>
-                <p class="parBlue">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
-            <article class="articleOrd">
-                <h6 style="color:var(--danger_light);">17 juin 2021</h6>
-                <p class="parBlue">Émise par le Dr Pathy</p>
-                <p class="parBlue">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
+            <% if (locals.listValidPrescriptions.length > 0) { %> 
+                <% locals.listValidPrescriptions.forEach((prescription) => { %>
+                    <article class="articleOrd">
+                        <h6 style="color:var(--danger_light);">Prescrite le <%= prescription.date_creation.toLocaleDateString() %> </h6>
+                        <p class="parBlue">Émise par le Dr <%= prescription.doctor.name %> à <%= prescription.doctor.city %> </p>
+                        <% if (prescription.listAttributions.length > 0) { %> 
+                            <p class="parBlue">Comprenant des prescriptions de médicaments</p>
+                        <% } %>  
+                        <% if (prescription.listCouncils.length > 0) { %> 
+                            <p class="parBlue">Comprenant des avis médicaux</p>
+                        <% } %>  
+                        <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+                    </article>
+                <% }) %> 
+            <% } else { %> 
+                <p style="display: block; margin: 0 auto;">Il n'y aucune ordonnance à afficher</p>
+            <% } %> 
         </div>
         <a><btn class="btngreensmall" style="margin: 5px auto;padding: 10px 20px;">Tout voir</btn> </a>
     </section>
     <section class="sectionwhiteConnected">
         <h2 class="darkbluefont">Historique de mes ordonnances</h2>
-        <div class="triple" style="justify-content: space-around;">
-            <article class="articleOrdpass">
-                <h6>17 juin 2021</h6>
-                <p class="parWhite">Émise par le Dr Pathy</p>
-                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
-            <article class="articleOrdpass">
-                <h6>17 juin 2021</h6>
-                <p class="parWhite">Émise par le Dr Pathy</p>
-                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
-            <article class="articleOrdpass">
-                <h6>17 juin 2021</h6>
-                <p class="parWhite">Émise par le Dr Pathy</p>
-                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
-            <article class="articleOrdpass">
-                <h6>17 juin 2021</h6>
-                <p class="parWhite">Émise par le Dr Pathy</p>
-                <p class="parWhite">3 doses de paracétamol, 12 boites de viagra, 45 XXxx ........</p>
-                <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
-            </article>
-            
+        <div class="triple" style="justify-content: flex-start;">
+            <% if (locals.listInvalidPrescriptions.length > 0) { %> 
+                <% locals.listInvalidPrescriptions.forEach((prescription) => { %>
+                    <article class="articleOrdpass">
+                        <h6 style="color:var(--white);">Prescrite le <%= prescription.date_creation.toLocaleDateString() %> </h6>
+                        <p class="parWhite">Émise par le Dr <%= prescription.doctor.name %> à <%= prescription.doctor.city %> </p>
+                        <% if (prescription.listAttributions.length > 0) { %> 
+                            <p class="parWhite">Comprenant des prescriptions de médicaments</p>
+                        <% } %>  
+                        <% if (prescription.listCouncils.length > 0) { %> 
+                            <p class="parWhite">Comprenant des avis médicaux</p>
+                        <% } %>  
+                        <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+                    </article>
+                <% }) %> 
+            <% } else { %> 
+                <p style="color: var(--darkblue);display: block; margin: 0 auto;">Il n'y aucune ordonnance à afficher</p>
+            <% } %> 
         </div>
         <a><btn class="btngreensmall" style="margin: 10px auto;padding: 10px 20px;">Tout voir</btn> </a>
     </section>

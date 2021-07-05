@@ -88,6 +88,18 @@ class Attribution {
 
     getDrugId(){return this.#id_drug}
     setDrugId(id){this.#id_drug = id}
+
+    toObject() {
+        return {
+            id_attribution: this.#id_attribution,
+            description: this.#description,
+            quantity: this.#quantity,
+            drug: this.#drug.toObject(),
+            listMentions: this.#listMentions.map((m) => m.toObject()),
+            id_prescription: this.#id_prescription,
+            id_drug: this.#id_drug
+        }
+    }
 }
 
 module.exports = Attribution

@@ -24,11 +24,13 @@
                         <p class="peremption" style="font-size: 1rem;padding-top: 0.35rem;">Date péremption prescription : <%= dateCreation.toLocaleDateString() %></p>
                     </div>
                     <div>
-                        <p class="doctor">Dr <%= prescription.doctor.name %></p>
+                        <% if (prescription.doctor.name) { %> 
+                            <p class="doctor">Dr <%= prescription.doctor.name %></p>
+                        <% } %> 
                     </div>
                     <div class="voirgenerer">
                         <a href=""><button class="btngreensmall">Voir</button></a>
-                        <a href=""><button class="btndark" onclick="">Générer QR CODE</button></a>
+                        <button class="btndark">Générer QR CODE</button>
                     </div>
                 </article>
             <% }) %>

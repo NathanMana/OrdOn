@@ -167,8 +167,9 @@ router.post('/inscription', async(req, res) => {
 /**
  * Gère l'affichage de la page profile du docteur
  */
- router.get('/profil', (req, res) => {
-    res.render('Doctor/profil')
+ router.get('/profil', async (req, res) => {
+    const doctor = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+    res.render('Doctor/profil', { profil : doctor.toObject()})
 })
 
 function entierAleatoire(min, max)

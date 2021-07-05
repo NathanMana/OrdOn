@@ -328,18 +328,26 @@ router.get('/', async (req, res) => {
 /**
  * Gère l'affichage de la page profile du patient
  */
- router.get('/ordonnances', (req, res) => {
-    const prescriptions = PrescriptionServices.displayPrescriptionPatient(req.session.user.encryptedId)
-    ordoViewModels = new Array()
-    for (let i=0; i<prescriptions.length; i++){
-        ordoViewModels.push(new OrdonnanceViewModel(prescriptions[i].getPrescriptionId(), prescriptions[i].getDoctorId))
-    }
+ router.get('/ordonnances', async (req, res) => {
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const prescriptions = await PrescriptionServices.getListValidPrescriptionsByPatientId(patient.getPatientId())
+    const prescriptionsToObject = prescriptions.map(p => p.toObject());
 
-    res.render('Patient/ordonnances', {OrdonnancesObjects: {
-            Prescriptions: prescriptions,
-            OrdonnancesViewModels: ordoViewModels
-            
-        }
+    res.render('Patient/ordonnances', {
+        listPrescriptions : prescriptionsToObject
+    })
+})
+
+/**
+ * Gère l'affichage de la page historique du patient
+ */
+ router.get('/historique', async (req, res) => {
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const prescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId())
+    const prescriptionsToObject = prescriptions.map(p => p.toObject());
+
+    res.render('Patient/history', {
+        listPrescriptions : prescriptionsToObject
     })
 })
 

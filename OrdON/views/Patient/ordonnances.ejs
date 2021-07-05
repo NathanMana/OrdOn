@@ -13,43 +13,26 @@
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
         <h2 style="color: var(--darkblue);">Vos ordonnances valides</h2>
-        <!--<div class="mesordonnances">
-            <article class="consultation">
-                <div>
-                    <p class="date">Ma consultation du 17 juin 2021</p>
-                    <p class="peremption">Date de péremption : 18 septembre 2021</p>
-                </div>
-                <div>
-                    <p class="doctor">Dr Pathy - podologue</p>
-                </div>
-                <div class="voirgenerer">
-                    <a href=""><button class="btngreensmall">Voir</button></a>
-                    <button class="btndark" onclick="showQR()">Générer QR CODE</button> 
-                </div>
-            </article>
-
-        </div>-->
-        <% for(var i=0; i < locals.OrdonnancesObjects.length; i++){ %>
-            <div class="mesordonnances">
+        <p style="color:var(--dark);font-size:1.1rem;margin: 0 auto; display:block;text-align:center;">Vous avez 3 mois pour récupérer vos médicaments prescrits en pharmacie. La durée du traitement est elle valide pendant maximum un an</p>
+        <div class="mesordonnances" style="margin-top: 2rem;">
+        <% locals.listPrescriptions.forEach((prescription) => { %>
                 <article class="consultation">
                     <div>
-                        <p class="date">Ma consultation du <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %></p>
-                        <p class="peremption">Date de péremption : <%= locals.OrdonnancesObjects[i].prescriptions.date_creation %> (ajouter 12 mois)</p>
+                        <% let dateCreation = new Date(prescription.date_creation) %>
+                        <% dateCreation.setMonth(dateCreation.getMonth() + 3) %> 
+                        <p class="date">Ma consultation du <%= prescription.date_creation.toLocaleDateString() %></p>
+                        <p class="peremption" style="font-size: 1rem;padding-top: 0.35rem;">Date péremption prescription : <%= dateCreation.toLocaleDateString() %></p>
                     </div>
                     <div>
-                        <p class="doctor"><%= locals.OrdonnancesObjects[i].OrdonnancesViewModels.doctor_name %></p>
+                        <p class="doctor">Dr <%= prescription.doctor.name %></p>
                     </div>
                     <div class="voirgenerer">
                         <a href=""><button class="btngreensmall">Voir</button></a>
-                        <a href=""><button class="btndark">Générer QR CODE</button></a>
+                        <a href=""><button class="btndark" onclick="">Générer QR CODE</button></a>
                     </div>
                 </article>
-            </div>
-        <%}%>
-<<<<<<< HEAD
+            <% }) %>
         </div>
-=======
->>>>>>> ac27a71683801b319ff9655904a86c15d5886cf2
     </section>
 
     <div id="coverPage">

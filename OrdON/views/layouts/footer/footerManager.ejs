@@ -6,6 +6,7 @@
                 <% if (locals.user.type === "patient") { %>
                     <li class="foots"><a href="/patient/profil">Mon profil</a></li>
                     <li class="foots"><a href="/patient/ordonnances">Mes ordonnances</a></li>
+                    <li class="foots"><a href="/patient/historique">Historique</a></li>
                 <% } else if (locals.user.type === "docteur") {%> 
                     <li class="foots"><a href="/medecin/profil">Mon profil</a></li>
                 <% } else if (locals.user.type === "pharmacien") {%> 

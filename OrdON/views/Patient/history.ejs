@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../layouts/header'); -%>
+    <title>OrdOn</title>
+    <link rel="stylesheet" href="/src/css/home.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <%- include('../layouts/nav/connectionManager'); -%>
+    <section class="sectiondark">
+        <p>Montrez votre ordonnance à la pharmacie afin de récupérer vos médicaments</p>
+    </section>
+    <section class="sectionwhiteConnected" style="height:100%;">
+        <h2 style="color: var(--darkblue);">Vos ordonnances archivées</h2>
+        <p style="color:var(--dark);font-size:1.1rem;margin: 0 auto; display:block;text-align:center;">
+            Une ordonnance peut être archivée lorsque tous les médicaments ont été transmis ou quand la date de péremption est dépassée
+        </p>
+        <div class="mesordonnances" style="margin-top: 2rem;">
+        <% locals.listPrescriptions.forEach((prescription) => { %>
+                <article class="consultation">
+                    <div>
+                        <p class="date">Ma consultation du <%= prescription.date_creation.toLocaleDateString() %></p>
+                        <p class="peremption" style="font-size: 1rem;padding-top: 0.35rem;">
+                            Date archivage : 
+                            <% if (!prescription.date_archived) { %> 
+                                <% let dateArchived = new Date(prescription.date_creation) %>
+                                <% dateArchived.setMonth(dateArchived.getMonth() + 3) %> 
+                                <%= dateArchived.toLocaleDateString() %> 
+                            <% } else { %>
+                                <%= prescription.date_archived.toLocaleDateString() %>
+                            <% } %> 
+                        </p>
+                    </div>
+                    <div>
+                        <p class="doctor">Dr <%= prescription.doctor.name %></p>
+                    </div>
+                    <div class="voirgenerer">
+                        <a href=""><button class="btngreensmall">Voir</button></a>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    </section>
+
+    <div id="coverPage">
+    
+        
+    </div>
+
+    <div id="QRCodeDiv" style="display:none">
+        <h3 id="qrPatientText"></h3>
+        <img id="qrcode">
+        <p id="pd"></p>
+    </div>
+
+    <%- include('../layouts/footer/footerManager'); -%>
+    <%- include('../layouts/scripts'); -%>
+    <script src="/src/js/recupQrcodeOrdonnance.js"></script>
+
+</body>
+</html>

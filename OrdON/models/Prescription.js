@@ -21,6 +21,11 @@ const Patient = require("./Patient")
     #date_creation
 
     /**
+     * Date a laquelle l'ordonnance a été prescrite
+     */
+     #date_archived
+
+    /**
      * Indique si le QRCode esy visible
      */
     #isQrCodeVisible = false
@@ -81,6 +86,10 @@ const Patient = require("./Patient")
     getPatientId(){return this.#id_patient}
 
     getDateCreation(){return this.#date_creation}
+    setDateCreation(date) {this.#date_creation = date}
+
+    getDateArchived(){return this.#date_archived}
+    setDateArchived(date) {this.#date_archived = date}
 
     // Permet de récupérer l'id encrypté
     getEncryptedId() { return this.#encryptedId }
@@ -156,6 +165,7 @@ const Patient = require("./Patient")
             id_prescription: this.#id_prescription,
             encryptedId: this.#encryptedId,
             date_creation: this.#date_creation,
+            date_archived: this.#date_archived,
             isQrCodeVisible: this.#isQrCodeVisible,
             listAttributions: this.#listAttributions.map((a) => a.toObject()),
             listCouncils: this.#listCouncils.map((c) => c.toObject()),

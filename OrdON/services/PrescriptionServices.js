@@ -91,7 +91,7 @@ class PrescriptionServices {
                 limitQuery = 'LIMIT ' + limit
             }
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient = ? AND date_archived IS NULL ' + limitQuery, // rajouter un et 3 ans <
+                'SELECT * FROM prescription WHERE id_patient = ? AND date_archived IS NULL AND DATE_ADD(date_creation, INTERVAL 3 MONTH) >= CURDATE() ' + limitQuery, // rajouter un et 3 ans <
                 [id]
             )
             connection.release()
@@ -131,11 +131,15 @@ class PrescriptionServices {
      * Récupère une liste d'ordonnances valides et qui n'ont pas encore été archivées
      * @return Array(Prescription)
      */
-     static async getListInvalidPrescriptionsByPatientId(id) {
+     static async getListInvalidPrescriptionsByPatientId(id, limit = null) {
         try {
             const connection = await pool.getConnection();
+            let limitQuery = ''
+            if (limit) {
+                limitQuery = 'LIMIT ' + limit
+            }
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient = ? AND date_archived IS NOT NULL LIMIT 4', // rajouter un et 3 ans <
+                'SELECT * FROM prescription WHERE id_patient = ? AND (date_archived IS NOT NULL OR (date_archived IS NULL AND DATE_ADD(date_creation, INTERVAL 3 MONTH) < CURDATE())) ' + limitQuery,
                 [id]
             )
             connection.release()
@@ -149,6 +153,8 @@ class PrescriptionServices {
                     null
                 )
                 //On complete l'objet prescription avec les Attributions et les conseils
+                prescription.setDateCreation(prescriptionData.date_creation)
+                prescription.setDateArchived(prescriptionData.date_archived)
                 prescription.setPrescriptionId(prescriptionData.id_prescription)
                 const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
                 prescription.setListAttributions(listAttributions)
@@ -169,48 +175,6 @@ class PrescriptionServices {
             return listPrescriptions
         }
         catch(e) {console.log(e)}
-    }
-
-
-     /**
-     * @returns {listPrescription} la liste d'ordonnance
-     */
-      static async displayPrescriptionPatient(id_patient){
-        try {
-            listPrescriptionNoneArchived = []
-            listePrescriptionArchived = []
-            const connection = await pool.getConnection();
-            const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NULL',
-                [id_patient], function(err,rows){
-                    rows.forEach(element => {
-                        // On convertit le résultat en objet js
-                        const prescription = new Prescription()
-                        Object.assign(prescription, element[0][0])
-                        //On complete l'objet prescription avec les Attributions et les conseils
-                        prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
-                        prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
-                        listPrescriptionNoneArchived.add(prescription)
-                    });    
-                })
-                if (!result) throw 'Une erreur est survenue'
-                const result2 = await connection.query(
-                    'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NOT NULL',
-                    [id_patient], function(err,rows){
-                        rows.forEach(element => {
-                            // On convertit le résultat en objet js
-                            const prescription = new Prescription()
-                            Object.assign(prescription, element[0][0])
-                            //On complete l'objet prescription avec les Attributions et les conseils
-                            prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
-                            prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
-                            listPrescriptionArchived.add(prescription)
-                        });    
-                    })
-            if (!result2) throw 'Une erreur est survenue'
-            connection.release()
-            return listPrescriptionNoneArchived, listePrescriptionArchived
-        }catch(e){ console.log(e)}     
     }
 
 }

@@ -1,0 +1,6 @@
+# ignore node_modules folder
+/OrdON/node_modules/*
+/OrdON/.vscode/*
+/OrdON/services/DatabaseConnection.js
+# Every patterns that match
+\.DS_STORE

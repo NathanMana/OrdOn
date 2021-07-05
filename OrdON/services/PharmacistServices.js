@@ -239,7 +239,8 @@ const pool = require('./DatabaseConnection')
                 pharmacistData.password, 
                 pharmacistData.city,
                 pharmacistData.address,
-                pharmacistData.zipcode
+                pharmacistData.zipcode,
+                pharmacistData.gender
             )
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setEncryptedId(pharmacistData.encryptedId)

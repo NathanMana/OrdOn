@@ -203,7 +203,8 @@ const pool = require('./DatabaseConnection')
                 doctorData.password, 
                 doctorData.city,
                 doctorData.address,
-                doctorData.zipcode
+                doctorData.zipcode,
+                doctorData.gender
             )
             doctor.setDoctorId(doctorData.id_doctor)
             doctor.setEncryptedId(doctorData.encryptedId)

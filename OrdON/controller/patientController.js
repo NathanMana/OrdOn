@@ -311,8 +311,8 @@ router.get('/', async (req, res) => {
 /**
  * Génère le qr code d'un ordonnance
  */
- router.get('/getordonnance', (req, res)=>{
-    const ordo_id = req.body.id_prescription
+ router.get('/getordonnance/:id', (req, res)=>{
+    const ordo_id = req.params.id
  
     const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
     

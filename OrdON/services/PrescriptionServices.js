@@ -42,12 +42,12 @@ class PrescriptionServices {
      * @param {long} idPrescription 
      * @returns {Prescription} l'ordonnance cherchée
      */
-    static async getPrescriptionById(idPrescription) {
+    static async getPrescriptionById(encryptedId) {
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient = ? AND date_archived IS NOT NULL LIMIT 4', // rajouter un et 3 ans <
-                [id]
+                'SELECT * FROM prescription WHERE encryptedId = ?', // rajouter un et 3 ans <
+                [encryptedId]
             )
             connection.release()
             const prescriptionData = result[0][0]
@@ -74,7 +74,7 @@ class PrescriptionServices {
             
             connection.release()
             console.log('Presriptions récupérées')
-            return listPrescriptions
+            return prescription
         }
         catch (e) { console.log(e)}
     }

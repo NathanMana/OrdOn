@@ -161,7 +161,6 @@ class PatientServices {
             console.log('Patient récupéré')
             const patientData = result[0][0]
             if (!patientData) return null
-            console.log("weight : " + patientData.weight)
             const patient = new Patient(
                 patientData.name,
                 patientData.firstname,

@@ -69,26 +69,34 @@ const pool = require('./DatabaseConnection')
         }
     }
 
+    
     /**
-     * Supprime un Docteur
+     * Supprime un docteur
      * @param {Doctor} doctor 
      */
-     static async deleteDoctorWithId(doctor) {
+     static async deleteDoctor(doctor) {
         try {
             if (!doctor || doctor.getDoctorId() <= 0) throw 'L\id indiqué est erroné'
-
+            // récupérer la largeur de l'id clair
+            const lengthId = (doctor.getDoctorId() + "").length
+            const a = doctor.getEncryptedId().substring(29, 29 + lengthId)
             // Double vérification avec l'id encrypté
-            if (doctor.getDoctorId() != doctor.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (doctor.getDoctorId() != doctor.getEncryptedId().substring(29, 29 + lengthId)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
-            await connection.query(
+            connection.query(
                 'DELETE FROM doctor WHERE id_doctor = ? AND encryptedId = ?', 
                 [doctor.getDoctorId(), doctor.getEncryptedId()]
             )
+            connection.query(
+                'DELETE FROM professionnal WHERE id_professionnal = ?', 
+                [doctor.getProfessionnalId()]
+            )
             connection.release()
-            console.log('Doctor supprimé')
+            console.log('Patient supprimé')
         }
         catch (e) { console.log(e)}
     }
+
 
     /**
      * Récupère un docteur spécifique via son id clair
@@ -121,6 +129,8 @@ const pool = require('./DatabaseConnection')
             doctor.setDoctorId(doctorData.id_doctor)
             doctor.setEncryptedId(doctorData.encryptedId)
             doctor.setProfessionnalId(doctorData.id_professionnal)
+            doctor.setTokenEmail(doctorData.tokenEmail)
+            doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             doctor.setIsAccountValidated(doctorData.isEmailVerified)
             doctor.setIsEmailVerified(doctorData.isEmailVerified)
             return doctor
@@ -231,6 +241,7 @@ const pool = require('./DatabaseConnection')
                 doctorData.password,
             )
             doctor.setDoctorId(doctorData.id_doctor)
+            doctor.setEncryptedId(doctorData.encryptedId)
             doctor.setProfessionnalId(doctorData.id_professionnal)
             doctor.setTokenEmail(doctorData.tokenEmail)
             doctor.setTokenResetPassword(doctorData.tokenResetPassword)
@@ -272,6 +283,8 @@ const pool = require('./DatabaseConnection')
                 doctor.setProfessionnalId(data.id_professionnal)
                 doctor.setTokenEmail(data.tokenEmail)
                 doctor.setTokenResetPassword(data.tokenResetPassword)
+                doctor.setIsAccountValidated(data.isAccountValidated)
+                doctor.setIsEmailVerified(data.isEmailVerified)
                 listDoctors.push(doctor)
             })
             return listDoctors

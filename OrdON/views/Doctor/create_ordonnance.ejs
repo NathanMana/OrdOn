@@ -18,7 +18,7 @@
             <div id="doctorInfosRight">
                 <div id="doctorInfosRightTop">
                     <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.address %></h3>
-                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.zipcode + ", " + <%= locals.PrescriptionObjects.doctor.city %> %></h3>
+                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.zipcode + ", " + locals.PrescriptionObjects.doctor.city %></h3>
                 </div>
             </div>
         </div>
@@ -108,9 +108,11 @@
 
             <input list="drugList" id="nameInput" type="text" placeholder="Médicament"/>
             <datalist id="drugList">
-                <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
-                    <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
-                <%}%>
+                <% if (locals.PrescriptionObjects.drugs) { %> 
+                    <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
+                        <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
+                    <% } %>
+                <% } %>
             </datalist>
 
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>

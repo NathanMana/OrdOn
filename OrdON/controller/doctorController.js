@@ -10,6 +10,8 @@ const Mention = require('../models/Mention')
 const Patient = require('../models/Patient')
 const Doctor = require('./../models/Doctor')
 const Prescription = require('./../models/Prescription')
+const Attribution = require('./../models/Attribution')
+const MentionAttribution = require('./../models/AssociationClass/MentionAttribution')
 
 const PatientServices = require('../services/PatientServices')
 const DoctorServices = require('../services/DoctorServices')
@@ -194,12 +196,16 @@ router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
         return res.redirect('/')
     }
 
-    res.render('Doctor/create_ordonnance', {PrescriptionObjects: {
-        patient: patient.toObject(),
-        doctor: doctor,
-        madeDate: date_creation,
-        mentions: mentions
-        }
+    res.render(
+        'Doctor/create_ordonnance', 
+        {
+            PrescriptionObjects: {
+                patient: patient.toObject(),
+                doctor: doctor.toObject(),
+                madeDate: date_creation,
+                mentions: mentions,
+                drugs : drugs
+            }
     });
 })
 
@@ -256,6 +262,41 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
     })
 
     res.send({status: true})
+})
+
+router.get('/ordonnance/envoyee', (req, res) => {
+    res.render('Doctor/prescription_sent')
+})
+
+/**
+ * Gère la suppression du compte
+ */
+ router.post('/profil/supprimermoncompte', async (req, res) => {
+    const {password} = req.body
+    if (!password) {
+        req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    // Récupérer la patient
+    const doctor = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+    if (!doctor) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
+    if (!verifPass) {
+        req.session.error = "Mot de passe incorrect"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    DoctorServices.deleteDoctor(doctor)
+    req.session.user = undefined
+    req.session.flash = {
+        success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"
+    }
+    res.redirect('/')
 })
 
 module.exports = router

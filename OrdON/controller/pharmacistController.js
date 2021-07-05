@@ -194,4 +194,35 @@ function entierAleatoire(min, max)
     res.render ('/Pharmacist/viewOrdonnance', { ordonnance : ordonnance })
 })
 
+/**
+ * Gère la suppression du compte
+ */
+ router.post('/profil/supprimermoncompte', async (req, res) => {
+    const {password} = req.body
+    if (!password) {
+        req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    // Récupérer la patient
+    const pharmacist = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    if (!pharmacist) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), pharmacist.getPassword())
+    if (!verifPass) {
+        req.session.error = "Mot de passe incorrect"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    PharmacistServices.deletePharmacist(pharmacist)
+    req.session.user = undefined
+    req.session.flash = {
+        success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"
+    }
+    res.redirect('/')
+})
+
 module.exports = router

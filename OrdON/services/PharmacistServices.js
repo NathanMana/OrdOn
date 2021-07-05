@@ -74,19 +74,25 @@ const pool = require('./DatabaseConnection')
      * Supprime un pharmacien
      * @param {Pharmacist} pharmacist 
      */
-     static async deletePharmacistWithId(pharmacist) {
+     static async deletePharmacist(pharmacist) {
         try {
             if (!pharmacist || pharmacist.getPharmacistId() <= 0) throw 'L\id indiqué est erroné'
-
+            // récupérer la largeur de l'id clair
+            const lengthId = (pharmacist.getPharmacistId() + "").length
+            const a = pharmacist.getEncryptedId().substring(29, 29 + lengthId)
             // Double vérification avec l'id encrypté
-            if (pharmacist.getPharmacistId() != pharmacist.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (pharmacist.getPharmacistId() != pharmacist.getEncryptedId().substring(29, 29 + lengthId)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
-            await connection.query(
+            connection.query(
                 'DELETE FROM pharmacist WHERE id_pharmacist = ? AND encryptedId = ?', 
                 [pharmacist.getPharmacistId(), pharmacist.getEncryptedId()]
             )
+            connection.query(
+                'DELETE FROM professionnal WHERE id_professionnal = ?', 
+                [pharmacist.getProfessionnalId()]
+            )
             connection.release()
-            console.log('pharmacien supprimé')
+            console.log('Patient supprimé')
         }
         catch (e) { console.log(e)}
     }
@@ -195,6 +201,7 @@ const pool = require('./DatabaseConnection')
                 pharmacistData.password,
             )
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
+            pharmacist.setEncryptedId(pharmacistData.encryptedId)
             pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
             pharmacist.setTokenEmail(pharmacistData.tokenEmail)
             pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
@@ -205,6 +212,47 @@ const pool = require('./DatabaseConnection')
         catch (e) {
             console.log(e)
         }
+    }
+
+    /**
+     * Récupère un pharmacien spécifique via son id clair
+     * @param {long} encryptedId 
+     * @returns {Pharmacist} le pharmacien cherché
+     */
+     static async getPharmacistByEncryptedId(encryptedId) {
+        try {
+            if (!encryptedId) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE encryptedId = ?', 
+                [encryptedId]
+            )
+            connection.release()
+            if(!result[0][0]) throw 'Pas de résultat'
+            const pharmacistData = result[0][0]
+            let pharmacist = new Pharmacist(
+                pharmacistData.name,
+                pharmacistData.firstname,
+                pharmacistData.email,
+                pharmacistData.password, 
+                pharmacistData.city,
+                pharmacistData.address,
+                pharmacistData.zipcode
+            )
+            pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
+            pharmacist.setEncryptedId(pharmacistData.encryptedId)
+            pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
+            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
+            pharmacist.setIsAccountValidated(pharmacistData.isEmailVerified)
+            pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            // On convertit le résultat en objet js
+            console.log('doctor récupéré')
+            return pharmacist
+        }
+        catch (e) { console.log(e)}
     }
 
     /**

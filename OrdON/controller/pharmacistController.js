@@ -83,7 +83,7 @@ router.post('/inscription', async (req, res) => {
  * Traite la connexion des pharmaciens
  * @method POST
  */
-router.post('/connexion',  async (res,req)=>{
+router.post('/connexion',  async (req,res)=>{
     const password = req.body.password
     const email = requ.body.email
     if (!email || !password) {

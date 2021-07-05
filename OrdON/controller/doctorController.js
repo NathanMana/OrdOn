@@ -3,6 +3,8 @@
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
+const nodemailer = require('../externalsAPI/NodeMailer');
+
 const Council = require('../models/Council')
 const Mention = require('../models/Mention')
 const Patient = require('../models/Patient')
@@ -18,8 +20,50 @@ const DrugServices = require('../services/DrugServices')
 const AttributionServices = require('../services/AttributionServices')
 const CouncilServices = require('../services/CouncilServices')
 
+
 router.get('/connexion', (req, res)=>{
     res.render('Doctor/connectionDoctor')
+})
+
+/**
+ * Traite la connexion des médecins
+ * @method POST
+ */
+ router.post('/connexion',  async (req, res)=>{
+    const password = req.body.password
+    const email = req.body.email
+    if (!email || !password) {
+        req.session.error = "Remplissez tous les champs"
+        return res.redirect('/docteur/connexion')
+    }
+
+    // Récupérer l'objet
+    const doctor = await DoctorServices.getDoctorByEmail(email)
+    if (!doctor) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/docteur/connexion')
+    }
+
+    if (!doctor.getIsEmailVerified()) {
+        req.session.error = "Vous n'avez pas vérifié votre email"
+        return res.redirect('/docteur/connexion')
+    }
+
+    if (!doctor.getIsAccountValidated()) {
+        req.session.error = "Votre compte est toujours en attente de validation par un modérateur"
+        return res.redirect('/docteur/connexion')
+    }
+    
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
+    if (!verifPass) {
+        req.session.error = "L'identifiant ou le mot de passe est incorrect"
+        return res.redirect('/docteur/connexion')
+    }
+
+    req.session.user = {encryptedId: doctor.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'docteur'}
+    nodemailer(doctor.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
+    return res.redirect('/doubleauthentification')
 })
 
 router.get('/inscription', (req, res)=>{
@@ -49,13 +93,64 @@ router.post('/inscription', async(req, res) => {
         return res.redirect('/docteur/inscription')
     }
 
-    const hashPassword = await bcrypt.hash(password, 10)
-    const doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
-    DoctorServices.addDoctor(doctor)
-    return res.render('/Doctor/connexionDoctor')
-    
+    if (password !== password_check) {
+        req.session.error = "Les mots de passe ne correspondent pas"
+        return res.redirect('/pharmacien/inscription')
+    }
 
+    // Vérifier si l'email est déjà utilisé
+    if(await DoctorServices.isEmailPresent(email)) {
+        req.session.error = "Cet email est déjà utilisé"
+        return res.redirect('/docteur/inscription')
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    let doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
+    doctor = await DoctorServices.addDoctor(doctor)
+      
+    // Envoyer l'email de confirmation
+    nodemailer(
+        email, 
+        "Confirmation d'inscription à OrdON", 
+        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail(),
+        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail()
+    )
+    return res.redirect('/email/verification/envoyee')
 })
+
+/**
+ * Traitement de la vérification d'un patient
+ */
+ router.get('/email/verification/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) return res.status(500).send("Une erreur est survenue")
+ 
+    // Essayer de récupérer le patient correspondant
+    const doctor = await DoctorServices.getDoctorByTokenEmail(token)
+    if (!doctor) return res.status(500).send("Une erreur est survenue")
+ 
+    // On peut certifier que l'email est vérifié
+    doctor.setIsEmailVerified(true)
+    doctor.setTokenEmail(null)
+    DoctorServices.updateDoctor(doctor)
+
+    req.session.flash = {
+        success : "Votre email a été validé, vous devez attendre maintenant que votre compte soit validé par un modérateur. Un email vous sera envoyé pour confirmer votre inscription"
+    }
+    return res.redirect('/')
+})
+
+/**
+ * Vérifie les droits d'accès a chaque requête
+ */
+ router.use((req, res, next) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "docteur") {
+        return res.redirect("/docteur/connexion")
+    }
+    if (!req.session.user.isValidated) return res.redirect("/docteur/connexion")
+    next()
+})
+
 /**
  * Gère l'affichage de la page d'accueil du docteur
  */
@@ -70,31 +165,10 @@ router.post('/inscription', async(req, res) => {
     res.render('Doctor/profil')
 })
 
-/**
- * Traite la connexion des médecins
- * @method POST
- */
-router.post('/connexion',  async (res,req)=>{
-    const password = req.body.password
-    const email = requ.body.email
-    if (!email || !password) {
-        req.session.error = "Remplissez tous les champs"
-        return res.redirect('/Doctor/registerDoctor')
-    }
-
-    // Récupérer l'objet
-    const doctor = await DoctorServices.getDoctorByEmail(email)
-    
-    // Vérification mdp
-    const verifPass = await bcrypt.compare(JSON.stringify(password), doctor.getPassword())
-    if (!verifPass) {
-        req.session.error = "L'identifiant ou le mot de passe est incorrect"
-        return res.redirect('/Doctor/registerDoctor')
-    }
-
-    req.session.user = {encryptedId: doctor.getEncryptedId(), type: 'docteur'}
-    return res.redirect('/doubleauthentification')
-})
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 //Donne l'accès à la page de création d'ordonnance
 router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{

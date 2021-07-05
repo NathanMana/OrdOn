@@ -24,12 +24,12 @@
         </div>
 
         <div class="fixedRight">
-            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le <%= locals.PrescriptionObjects.madeDate %></h3>
+            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le</h3>
         </div>
 
         <div id="infosPatient">
-            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
-            <h3><%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " " + locals.PrescriptionObjects.patient.weight %></h3>
+            <h3>Mmme/M</h3>
+            <h3></h3>
         </div>
 
         <div id="prescription">
@@ -37,20 +37,36 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="firtLine" style="width: 25%;">Nom du médicament</th>
-                            <th scope="firtLine" style="width: 35%;">Description du traiement</th>
+                            <th scope="firtLine" style="width: 20%;">Nom du médicament</th>
+                            <th scope="firtLine" style="width: 25%;">Description du traiement</th>
+                            <th scope="firtLine" style="width: 15%;">Mentions (facultatif)</th>
                             <th scope="firtLine" style="width: 10%;">Quantité</th>
-                            <th scope="firtLine" style="width: 25%;">Mentions (facultatif)</th>
-                            <th scope="firtLine" style="width: 5%;">
-                                
-                            </th>
+                            <th scope="firtLine" style="width: 10%;">Reste a délivrer</th>
+                            <th scope="firtLine" style="width: 10%;">Délivrer</th>
+                            <th scope="firtLine" style="width: 10%;"></th>
                         </tr>
                     </thead>
                     <tbody id="prescriptionBody">
+                        <td>Medoc</td>
+                        <td>Descriptionblablabla</td>
+                        <td>
+                            <div id="mentionsRow">
+                                <p class="mentionInRow">Mention1</p>
+                                <p class="mentionInRow">Mention2</p>
+                            </div>
+                        </td>
+                        <td>5</td>
+                        <td>2</td>
+                        <td class="tdcase">
+                            <select class="greencase">
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </td>
+                        <td class="signal">Signaler un problème</td>
                     </tbody>
                 </table>   
             </div>
-            <button class="greenButton" id="addMedic" type="button" onclick="showMedicWindow()">Ajouter une prescription d'un médicament</button>
         </div>
 
         <div id="tips">
@@ -58,64 +74,18 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="firtLine" style="width: 95%;">Description du conseil</th>
-                            <th scope="firtLine" style="width: 5%;"></th>
+                            <th scope="firtLine" style="width: 100%;">Conseils</th>
                         </tr>
                     </thead>
                     <tbody id="tipsBody">
+                        <td style="text-align: left;padding-left: 30px;">Conseils tah lewandoski</td>
                     </tbody>
                 </table>  
             </div> 
-            <div class="fixedLeft">
-                <button class="blueButton" id="addTip" type="button" onclick="showTipWindow()">Ajouter une prescription d'un médicament</button>
-
-            </div>
         </div>
 
         <div class="center">
-            <button class="greenButton" id="createOrdonnanceButton" type="button" onclick="createOrdonnance()">Valider mon ordonnance</button>
-        </div>
-
-        <div id="coverPage" >
-        </div>
-        <div id="newMedicWindow" style="display: none;">
-
-            <h5 onclick="closeMedicWindow()">Fermer</h5>
-            <h2>Ajouter un médicament</h2>
-            
-            <input id="nameInput" type="text" name="medicName" placeholder="Médicament" required>
-            <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
-            <input id="descriptionInput" type="text" name="medicDescription" placeholder="Description" required>
-            <!--Cette div est cachée et apparait lorsque l'utilisateur clique sur ajouter un médicament-->
-            
-            <h3 style="margin-top: 15px; margin-bottom: 8px;">Mentions</h3>
-            <div id="inputMentions">
-                <select id="selectMention">
-                    <option value="">--Choisir une mention--</option>
-                    <% for(var i=0; i < locals.PrescriptionObjects.mentions.length; i++){ %>
-                        <option value="<%=locals.PrescriptionObjects.mentions[i]%>"><%=locals.PrescriptionObjects.mentions[i]%></option>
-                    
-                    <%}%>
-                </select>
-                <button id="addMention" type="button" onclick="addMention()">Ajouter</button>
-
-
-                <!-- Afficher la liste des mentions ajoutées-->
-            </div>
-            <div id="mentions">
-                
-            </div>
-            <button id="validMedic" type="button" onclick="validMedic()">Valider cette prescription</button>
-        </div>
-
-        <div id="newTipWindow" style="display: none;">
-            <h5 onclick="closeTipWindow()">Fermer</h5>
-            <h2>Ajouter un conseil</h2>
-
-            <textarea id="tipInput" type="text" name="tipInput" placeholder="Description" required ></textarea>
-
-            <button class="blueButton" id="validTip" type="button" onclick="validTip()">Valider ce conseil</button>
-
+            <button class="btngreen" style="margin-top: 40px;" id="createOrdonnanceButton" type="button" onclick="">Valider et fermer</button>
         </div>
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>

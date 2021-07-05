@@ -69,11 +69,23 @@ h3{
 
 #prescription tbody td{
     text-align: center;
-    background-color: #F4F6F6;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
+.tdcase{
+    color:var(--white);
+    background-color: var(--green);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    transition: 0.3s ease-out;
+}
+.tdcase:hover{
+    background-color:var(--darkblue);
+}
 .greenButton{
     font-weight: bold;
     padding:10px;
@@ -81,6 +93,27 @@ h3{
     background-color: #31E093;
     border:none;
     border-radius: 25px;
+}
+
+.greencase{
+    color:var(--white);
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding-left: 45%;
+    font-size: 1rem;
+    text-decoration:underline;
+    transition: 0.3s ease-out;
+}
+.greencase:hover{
+    color:var(--danger_light);
+}
+
+.signal{
+    color:var(--danger_light);
+    font-size: 0.9rem;
+    text-decoration: underline;
 }
 
 #addMedic{
@@ -227,8 +260,8 @@ input, textarea, select{
 #tips thead th{
     color: white;
     background-color: #356D80;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px 15px 15px 30px;
+    text-align:left;
 }
 
 #tips tbody td{

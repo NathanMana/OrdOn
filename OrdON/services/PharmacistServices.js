@@ -32,9 +32,14 @@ const pool = require('./DatabaseConnection')
             if (!result) throw 'Une erreur est survenue'
             pharmacist.setPharmacistId(result[0].insertId)
             pharmacist.setEncryptedId(pharmacist.encryptId(pharmacist.getPharmacistId()))
-            await connection.query('UPDATE pharmacist SET encryptedId = ? WHERE id_pharmacist = ? ', [pharmacist.getEncryptedId(), pharmacist.getPharmacistId()])
+            pharmacist.setTokenEmail(pharmacist.getEncryptedId() + pharmacist.encryptId(pharmacist.getPharmacistId()))
+            await connection.query(
+                'UPDATE pharmacist SET encryptedId = ?, tokenEmail = ? WHERE id_pharmacist = ? ', 
+                [pharmacist.getEncryptedId(), pharmacist.getTokenEmail(), pharmacist.getPharmacistId()]
+            )
             console.log("Pharmacien inséré")
             connection.release()
+            return pharmacist
         } catch(e){
             console.log(e)
         }
@@ -50,11 +55,11 @@ const pool = require('./DatabaseConnection')
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE pharmacist SET name = ?, firstname = ?, email = ?, password = ?, 
-                isAccountValidated = ? WHERE id_pharmacist = ?`, 
+                `UPDATE pharmacist SET name = ?, firstname = ?, email = ?, password = ?, isEmailVerified = ?,
+                isAccountValidated = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_pharmacist = ?`, 
                 [
-                   pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(),
-                    pharmacist.getPassword(), pharmacist.getIsAccountValidated(), pharmacist.getPharmacistId()
+                   pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(), pharmacist.getPassword(), pharmacist.getIsEmailVerified(),
+                   pharmacist.getIsAccountValidated(), pharmacist.getTokenEmail(), pharmacist.getTokenResetPassword(), pharmacist.getPharmacistId()
                 ]
             )
             connection.release()
@@ -117,11 +122,56 @@ const pool = require('./DatabaseConnection')
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setEncryptedId(pharmacistData.encryptedId)
             pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
+            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
+            pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            pharmacist.setIsAccountValidated(pharmacistData.isAccountValidated)
             return pharmacist
         }
         catch (e) { console.log(e)}
     }
 
+    /**
+     * Récupère un pharmacien spécifique via son token email
+     * @param {string} token 
+     * @returns {Pharmacist} le pharmacien cherché
+     */
+     static async getPhamacistByTokenEmail(token) {
+        try {
+            if (!token || token <= 0) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE tokenEmail = ?', 
+                [token]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('pharmacien récupéré')
+            const pharmacistData = result[0][0]
+            if (!pharmacistData) return null
+
+            let pharmacist = new Pharmacist(
+                pharmacistData.name,
+                pharmacistData.firstname,
+                pharmacistData.email,
+                pharmacistData.password, 
+                pharmacistData.city,
+                pharmacistData.address,
+                pharmacistData.zipcode
+            )
+            pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
+            pharmacist.setEncryptedId(pharmacistData.encryptedId)
+            pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
+            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
+            pharmacist.setIsAccountValidated(pharmacistData.isEmailVerified)
+            pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            return pharmacist
+        }
+        catch (e) { console.log(e)}
+    }
 
     /**
      * Récupère un pharmacien a partir d'un email et d'un mdp
@@ -146,6 +196,10 @@ const pool = require('./DatabaseConnection')
             )
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
+            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
+            pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            pharmacist.setIsAccountValidated(pharmacistData.isAccountValidated)
             return pharmacist
         }
         catch (e) {
@@ -180,6 +234,10 @@ const pool = require('./DatabaseConnection')
                 pharmacist.setPharmacistId(data.id_pharmacist)
                 pharmacist.setEncryptedId(data.encryptedId)
                 pharmacist.setProfessionnalId(data.id_professionnal)
+                pharmacist.setTokenEmail(data.tokenEmail)
+                pharmacist.setTokenResetPassword(data.tokenResetPassword)
+                pharmacist.setIsEmailVerified(data.isEmailVerified)
+                pharmacist.setIsAccountValidated(data.isAccountValidated)
                 listPharmacists.push(pharmacist)
             })
             return listPharmacists
@@ -207,6 +265,25 @@ const pool = require('./DatabaseConnection')
             )
             connection.release()
         }catch(e) {console.log(e)}
+    }
+
+    /**
+     * vérifie si un email est déjà présent en bdd
+     * @param {string} email 
+     */
+      static async isEmailPresent(email) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT email FROM pharmacist WHERE email = ?', 
+                [email]
+            )
+            connection.release()
+            if (result[0][0]) return true
+            return false
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 }

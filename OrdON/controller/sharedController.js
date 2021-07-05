@@ -76,6 +76,13 @@ router.get('/deconnexion', (req, res) => {
 })
 
 
+/**
+ * View indiquant de suivre les indications envoyées dans le mail
+ */
+ router.get('/email/verification/envoyee', (req, res) => {
+    return res.render('layouts/emailVerification.ejs')
+})
+ 
 
 router.post('/doubleauthentification', async (req, res) => {
     const code= req.body.code
@@ -83,10 +90,10 @@ router.post('/doubleauthentification', async (req, res) => {
         req.session.error = "Remplis bien le champ"
         return res.redirect('/doubleauthentification')
     }
-    if (!req.session.user.entier)
+    if (!req.session.user || !req.session.user.entier)
     {
-        req.session.error = "Une erreur est surevenue"
-        return res.redirect('/doubleauthentification')
+        req.session.error = "Une erreur est survenue"
+        return res.redirect('/')
     }
     // Vérification code
     if (code != req.session.user.entier)
@@ -94,7 +101,17 @@ router.post('/doubleauthentification', async (req, res) => {
         req.session.error = "ce n'est pas le bon code"
         return res.redirect('/doubleauthentification')
     }
+
     req.session.user.isValidated = true
-    return res.redirect('/patient/')
+
+    if(req.session.user.type === "patient")
+        return res.redirect('/patient/')
+    if(req.session.user.type === "docteur")
+        return res.redirect('/docteur/')
+    if (req.session.user.type === 'pharmacien')
+        return res.redirect('/pharmacien/')
+    
+    req.session.user = undefined
+    res.redirect('/')
 })
 module.exports = router

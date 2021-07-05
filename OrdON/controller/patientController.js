@@ -138,7 +138,7 @@ router.post('/inscription', async (req, res) => {
         "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail()
     )
  
-    return res.redirect('/patient/email/verification/envoyee')
+    return res.redirect('/email/verification/envoyee')
 })
 
 /**
@@ -227,14 +227,6 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     return res.redirect('/patient/')
 })
 
-
-/**
- * View indiquant de suivre les indications envoyées dans le mail
- */
- router.get('/email/verification/envoyee', (req, res) => {
-    return res.render('layouts/emailVerification.ejs')
-})
- 
 /**
  * Traitement de la vérification d'un patient
  */

@@ -1,7 +1,7 @@
 <% if (locals.user && locals.user.isValidated) { %>
     <% if (locals.user.type === "patient") { %>
         <%- include('./navConnected'); -%>
-    <% } else if (locals.user.type === "médecin") {%> 
+    <% } else if (locals.user.type === "docteur") {%> 
         <%- include('./navConnectedMed'); -%>
     <% } else if (locals.user.type === "pharmacien") {%> 
         <%- include('./navConnectedPhar'); -%>

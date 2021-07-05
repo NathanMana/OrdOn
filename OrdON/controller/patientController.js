@@ -293,16 +293,15 @@ router.get('/', async (req, res) => {
 /**
  * Gère l'affichage de la page profile du patient
  */
- router.get('/profil', (req, res) => {
+ router.get('/profil', async (req, res) => {
     const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
-    const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
- 
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
  
         return res.render("Patient/profil", { ProfilObject: {
             qrcode : qr,
-            user: patient
+            user: patient.toObject()
         } })
     })
 })
@@ -311,8 +310,8 @@ router.get('/', async (req, res) => {
 /**
  * Génère le qr code d'un ordonnance
  */
- router.get('/getordonnance', (req, res)=>{
-    const ordo_id = req.body.id_prescription
+ router.get('/getordonnance/:id', (req, res)=>{
+    const ordo_id = req.params.id
  
     const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
     

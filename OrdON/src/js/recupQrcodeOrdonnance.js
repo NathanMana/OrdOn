@@ -3,11 +3,11 @@
 // const $ = require( "jquery" )( window );
 
 
-function getQRcode() {
+function getQRcode(id) {
     console.log("Appel de get QR");
 
     $.ajax({
-        url : '/patient/getordonnance',
+        url : '/patient/getordonnance/'+id,
         type : 'GET',
         success : function(res){
             console.log(res)
@@ -29,8 +29,9 @@ function getQRcode() {
 }
 
 
-function showQR(){
-    getQRcode()
+function showQR(id){
+    console.log("l id     "+id)
+    getQRcode(id)
 
     var qrDiv = document.getElementById("QRCodeDiv");
     qrDiv.style.display = "block";

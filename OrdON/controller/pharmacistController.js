@@ -51,8 +51,8 @@ router.get('/connexion', (req, res)=>{
         return res.redirect('/pharmacien/connexion')
     }
 
-    req.session.user = {encryptedId: pharmacist.getEncryptedId(), entier: entierAleatoire(100000,199999), type: 'pharmacien'}
-    nodemailer(pharmacist.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacien'}
+   
     return res.redirect('/doubleauthentification')
 })
 

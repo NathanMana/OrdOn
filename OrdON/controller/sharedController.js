@@ -4,8 +4,11 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 
+const nodemailer = require('../externalsAPI/NodeMailer');
 const Patient = require('../models/Patient')
 const PatientServices = require('../services/PatientServices')
+const DoctorServices = require('../services/DoctorServices')
+const PharmacistServices = require('../services/PharmacistServices')
 /**
  * Gère l'affichage de la page d'accueil
  */
@@ -60,7 +63,22 @@ router.get('/motdepasseoublie/:typeUser', (req, res) => {
 /**
  * Gère l'affichage de la page de double authentification
  */
- router.get('/doubleauthentification', (req, res) => {
+ router.get('/doubleauthentification', async (req, res) => {
+    function entierAleatoire(min, max)
+    {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    if(!req.session.user)
+        return res.redirect('/')
+    req.session.user.entier = entierAleatoire(100000,199999)
+    let person
+    if(req.session.user.type === "patient")
+        person  = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    if(req.session.user.type === "docteur")
+        person  = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+    if (req.session.user.type === 'pharmacien')
+        person  = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    nodemailer(person.getEmail(),'Votre  code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     res.render('doubleAuth')
 })
 

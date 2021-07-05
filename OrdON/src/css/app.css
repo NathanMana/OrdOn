@@ -24,6 +24,14 @@ a {
     color:var(--white);
 }
 
+a.renvoyer{
+    color:var(--darkblue);
+
+}
+a.renvoyer:hover{
+    text-decoration: none;
+    color:var(--darkblue);
+}
 a:focus, a:hover, a:active{
     text-decoration:none; 
     cursor: pointer;

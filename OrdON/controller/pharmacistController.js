@@ -219,6 +219,30 @@ function entierAleatoire(min, max)
     res.render ('/Pharmacist/viewOrdonnance', { ordonnance : ordonnance })
 })
 
+router.post('/profil', async (req, res) => {
+    const firstname = req.body.firstname
+    const name = req.body.name
+    const city = req.body.city
+    const email = req.body.email
+    const gender = req.body.gender
+
+    if (!firstname || !name || !city || !email || !gender) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/pharmacien/profil/')
+    }
+
+    let pharmacist = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    pharmacist.setFirstname(firstname)
+    pharmacist.setName(name)
+    pharmacist.setEmail(email)
+    pharmacist.setGender(gender)
+    pharmacist.setCity(city)
+    PharmacistServices.updatePharmacist(pharmacist)
+    return res.redirect('/pharmacien/profil/')
+
+})
+
+
 /**
  * Gère la suppression du compte
  */

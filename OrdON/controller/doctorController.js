@@ -286,6 +286,30 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
     res.send({status: true})
 })
 
+router.post('/profil', async (req, res) => {
+    const firstname = req.body.firstname
+    const name = req.body.name
+    const city = req.body.city
+    const email = req.body.email
+    const gender = req.body.gender
+
+    if (!firstname || !name || !city || !email || !gender) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/docteur/profil/')
+    }
+
+    let doctor = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+    doctor.setFirstname(firstname)
+    doctor.setName(name)
+    doctor.setEmail(email)
+    doctor.setGender(gender)
+    doctor.setCity(city)
+    DoctorServices.updateDoctor(doctor)
+    return res.redirect('/docteur/profil/')
+
+})
+
+
 router.get('/ordonnance/envoyee', (req, res) => {
     res.render('Doctor/prescription_sent')
 })
@@ -320,5 +344,7 @@ router.get('/ordonnance/envoyee', (req, res) => {
     }
     res.redirect('/')
 })
+
+
 
 module.exports = router

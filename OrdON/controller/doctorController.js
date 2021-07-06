@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 const nodemailer = require('../externalsAPI/NodeMailer');
 var formidable = require('formidable');
 var fs = require('fs');
+const pathToProofFolder = require('../modules/pathToProofFolder');
 
 const Council = require('../models/Council')
 const Mention = require('../models/Mention')
@@ -115,7 +116,7 @@ router.post('/inscription', async(req, res) => {
             return res.redirect('/docteur/inscription')
         }
         var oldpath = files.fileUpload.path;
-        var newpath = 'C:/EFREI/Mastercamp/SolutionFactory/Ordon/OrdOn/OrdON/src/proof/' + files.fileUpload.name;
+        var newpath = pathToProofFolder + files.fileUpload.name;
         fs.rename(oldpath, newpath, function (err) {
             if (err) throw err;
         });

@@ -5,6 +5,7 @@ const router = express.Router()
 const bcrypt = require('bcrypt')
 var formidable = require('formidable');
 var fs = require('fs');
+const pathToProofFolder = require('../modules/pathToProofFolder');
 
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
@@ -105,7 +106,7 @@ router.post('/inscription', async (req, res) => {
         }
 
         var oldpath = files.fileUpload.path;
-        var newpath = 'C:/EFREI/Mastercamp/SolutionFactory/Ordon/OrdOn/OrdON/src/proof/' + files.fileUpload.name;
+        var newpath = pathToProofFolder + files.fileUpload.name;
         fs.rename(oldpath, newpath, function (err) {
             if (err) throw err;
         });

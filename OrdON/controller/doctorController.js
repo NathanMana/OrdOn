@@ -195,9 +195,9 @@ function entierAleatoire(min, max)
 }
 
 //Donne l'accès à la page de création d'ordonnance
-router.get('/ordonnance/creer/:encryptedIdPatient', async (req,res)=>{
-    const id_patient = req.params.encryptedIdPatient;
-    const patient = await PatientServices.getPatientByEncryptedId(id_patient);
+router.get('/ordonnance/creer/:qrCodeAccess', async (req,res)=>{
+    const qrCodeAccess= req.params.qrCodeAccess;
+    const patient = await PatientServices.getPatientByQRCodeAccess(qrCodeAccess);
     if (!patient) {
         req.session.flash = {
             error : "Patient introuvable"

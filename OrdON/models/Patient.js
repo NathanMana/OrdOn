@@ -8,9 +8,9 @@ class Patient extends Person {
     #id_patient
 
     /**
-     * Indique si le QRCode du patient est visible
+     * Code d'accès pour le qr code
      */
-    #isQrCodeVisible = false
+    #qrCodeAccess
 
     /**
      * Indique si le compte du patient est validée
@@ -46,9 +46,9 @@ class Patient extends Person {
     getPatientId(){return this.#id_patient}
     setPatientId(idpatient){this.#id_patient = idpatient}
     
-    getIsQrCodeVisible() {return this.#isQrCodeVisible}
-    setIsQrCodeVisible(isQrCodeVisible) {
-        this.#isQrCodeVisible = isQrCodeVisible
+    getQRCodeAccess() {return this.#qrCodeAccess}
+    setQRCodeAccess(qrCodeAccess) {
+        this.#qrCodeAccess = qrCodeAccess
     }
 
     isAccountValidated(){return this.#isAccountValidated}
@@ -61,6 +61,16 @@ class Patient extends Person {
 
     getWeight(){return this.#weight}
     setWeight(weight){this.#weight = weight}
+
+     /**
+     * Permet de générer un id unique temportaire
+     */
+    generateQrCode() {
+        this.#qrCodeAccess = ('QRxxxxxxxCodex-xxxx-x'+ this.#id_patient +'xxx-yxxx-xxxxxxxxxxxx').replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
     /**
      * Permet une insertion plus rapide dans le service
@@ -76,7 +86,7 @@ class Patient extends Person {
             birthdate : this.#birthdate,
             weight: this.#weight,
             id_patient : this.#id_patient,
-            isQrCodeVisible : this.#isQrCodeVisible,
+            qrCodeAccess : this.#qrCodeAccess,
             isAccountValidated : this.isAccountValidated(),
             encryptedId : this.getEncryptedId(),
             gender : this.getGender(),

@@ -300,30 +300,48 @@ router.get('/', async (req, res) => {
  * Gère l'affichage de la page profile du patient
  */
  router.get('/profil', async (req, res) => {
-    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
     const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
-    QRcode.toDataURL(url, (err,qr) =>{
-        if (err) res.send("error occurred")
- 
-        return res.render("Patient/profil", { ProfilObject: {
-            qrcode : qr,
-            user: patient.toObject()
-        } })
-    })
+    return res.render("Patient/profil", { ProfilObject: {
+        user: patient.toObject()
+    } })
 })
  
 
 /**
  * Génère le qr code d'un ordonnance
  */
- router.get('/getordonnance/:id', (req, res)=>{
+ router.get('/getordonnance/:id', async (req, res)=>{
     const ordo_id = req.params.id
+    if (!ordo_id) throw "erreur"
+
+    // récupérer la prescription
+    const prescription = await PrescriptionServices.getPrescriptionById(ordo_id)
+    if (!prescription) throw "erreur"
+    prescription.generateQrCode()
+    PrescriptionServices.updateQRCodeAccess(prescription)
  
-    const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
+    const url = 'http://localhost:8000/pharmacien/ordonnance/'+prescription.getQRCodeAccess()
     
     QRcode.toDataURL(url, (err, qr) => {
         if (err) res.send('error occurred')
 
+        return res.send(qr) 
+    })
+
+    return null
+})
+
+/**
+ * Génère le qr code du profil
+ */
+ router.get('/profil/qrcode', async (req, res)=>{
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId);
+    patient.generateQrCode()
+    PatientServices.updatePatient(patient)
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+patient.getQRCodeAccess()
+    
+    QRcode.toDataURL(url, (err, qr) => {
+        if (err) res.send('error occurred')
         return res.send(qr) 
     })
 

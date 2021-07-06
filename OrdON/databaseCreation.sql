@@ -21,7 +21,7 @@ create table ordonPatient.Patient(
         encryptedId        Varchar (100) ,
         birthdate          Date NOT NULL ,
         weight             FLOAT, 
-        isQRCodeVisible    Bool NOT NULL ,
+        qrCodeAccess       Varchar (100) ,
         name               Varchar (100) NOT NULL ,
         firstname          Varchar (100) NOT NULL ,
         email              Varchar (100) NOT NULL ,
@@ -112,9 +112,9 @@ create table ordonDoctor.Doctor(
 
 create table ordon.Prescription(
         id_prescription  Int  Auto_increment  NOT NULL ,
-        encryptedId        Varchar (100) ,
+        encryptedId      Varchar (100) ,
         date_creation    Date NOT NULL ,
-        isQRCodeVisible  Bool NOT NULL ,
+        qrCodeAccess     Varchar (100) ,
         date_archived    Date ,
         id_doctor        Int,
         id_patient       Int

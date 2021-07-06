@@ -26,9 +26,9 @@ const Patient = require("./Patient")
      #date_archived
 
     /**
-     * Indique si le QRCode esy visible
+     * Accesseur au qr code
      */
-    #isQrCodeVisible = false
+    #qrCodeAccess
 
     /**
      * la liste des médicaments prescrits
@@ -116,9 +116,9 @@ const Patient = require("./Patient")
     }
     setListCouncils(listCouncils){this.#listCouncils = listCouncils}
 
-    isQrCodeVisible(){return this.#isQrCodeVisible}
-    setIsQrCodeVisible(isQrCodeVisible){
-        this.isQrCodeVisible = isQrCodeVisible
+    getQRCodeAccess(){return this.#qrCodeAccess}
+    setQRCodeAccess(qrCodeAccess){
+        this.qrCodeAccess = qrCodeAccess
     }
 
     getListAttributions(){return this.#listAttributions}
@@ -160,13 +160,23 @@ const Patient = require("./Patient")
         });
     }
 
+    /**
+     * Permet de générer un id unique temportaire
+     */
+    generateQrCode() {
+        this.#qrCodeAccess = ('QRxxxxxxxCodex-xxxx-x'+ this.#id_prescription +'xxx-yxxx-xxxxxxxxxxxx').replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     toObject() {
         return {
             id_prescription: this.#id_prescription,
             encryptedId: this.#encryptedId,
             date_creation: this.#date_creation,
             date_archived: this.#date_archived,
-            isQrCodeVisible: this.#isQrCodeVisible,
+            qrCodeAccess: this.#qrCodeAccess,
             listAttributions: this.#listAttributions.map((a) => a.toObject()),
             listCouncils: this.#listCouncils.map((c) => c.toObject()),
             id_patient: this.#id_patient,

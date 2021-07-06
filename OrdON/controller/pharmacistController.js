@@ -205,18 +205,14 @@ function entierAleatoire(min, max)
  * Gère l'affichage de l'ordonnance du patient après le scanne du qr code
  * @method GET
  */
- router.get('/ordonnance/:id_ordo', async (req, res) => {
-    const id = req.params.id_ordo
+ router.get('/ordonnance/:qrCodeAccess', async (req, res) => {
+    const qrCodeAccess = req.params.qrCodeAccess
+    if (!qrCodeAccess) return res.redirect('/pharmacien')
 
-    const prescription = await PrescriptionService.getPrescriptionById(id)
-    const patient = await PatientService.getPatientById(prescription.getPatientId())
-    const doctor = await DoctorService.getDoctorById(prescription.getDoctorId())
-    const ordonnance = {
-        prescription: prescription,
-        patient: patient,
-        docteur: doctor
-    }
-    res.render ('/Pharmacist/viewOrdonnance', { ordonnance : ordonnance })
+    const prescription = await PrescriptionService.getPrescriptionByQRCodeAccess(qrCodeAccess)
+    if (!prescription) return res.redirect('/pharmacien')
+
+    res.render ('/Pharmacist/viewOrdonnance', { prescription : prescription })
 })
 
 router.post('/profil', async (req, res) => {

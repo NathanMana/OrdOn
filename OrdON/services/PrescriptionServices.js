@@ -19,7 +19,7 @@ class PrescriptionServices {
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'INSERT INTO prescription(date_creation, isQRCodeVisible, id_doctor, id_patient) VALUES (?, false, ?, ?) ', 
+                'INSERT INTO prescription(date_creation, id_doctor, id_patient) VALUES (?, ?, ?) ', 
                 [prescription.getDateCreation(), prescription.getDoctorId(), prescription.getPatientId()]
             )
             if (!result) throw 'Une erreur est survenue'
@@ -35,6 +35,24 @@ class PrescriptionServices {
         } catch(e){
             console.log(e)
         }
+    }
+
+    /**
+     * Met à jour le qr code access
+     * @param {Prescription} prescription 
+     */
+    static async updateQRCodeAccess(prescription) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE prescription SET qrCodeAccess = ? WHERE encryptedId = ?',
+                [prescription.getQRCodeAccess(), prescription.getEncryptedId()]
+            )
+            connection.release()
+            console.log('Qr code mis à jour')
+            return
+        }
+        catch (e) { console.log(e)}
     }
 
     /**
@@ -65,12 +83,54 @@ class PrescriptionServices {
             prescription.setListAttributions(listAttributions)
             const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
             prescription.setListCouncils(listCouncils)
-            prescription.setPrescriptionId(prescriptionData.prescription_id)
             prescription.setEncryptedId(prescriptionData.encryptedId)
             const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
             prescription.setDoctor(doctor)
             const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
             prescription.setPatient(patient)
+            prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
+            
+            connection.release()
+            console.log('Presriptions récupérées')
+            return prescription
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère une ordonnance via son qr code
+     * @param {long} idPrescription 
+     * @returns {Prescription} l'ordonnance cherchée
+     */
+     static async getPrescriptionByQRCodeAccess(qrCodeAccess) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM prescription WHERE qrCodeAccess = ?',
+                [qrCodeAccess]
+            )
+            connection.release()
+            const prescriptionData = result[0][0]
+            if (!prescriptionData) return null
+
+            const prescription = new Prescription(
+                prescriptionData.id_doctor,
+                prescriptionData.id_patient,
+                null,
+                null
+            )
+            //On complete l'objet prescription avec les Attributions et les conseils
+            prescription.setPrescriptionId(prescriptionData.id_prescription)
+            const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListAttributions(listAttributions)
+            const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListCouncils(listCouncils)
+            prescription.setEncryptedId(prescriptionData.encryptedId)
+            const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+            prescription.setDoctor(doctor)
+            const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+            prescription.setPatient(patient)
+            prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
             
             connection.release()
             console.log('Presriptions récupérées')
@@ -110,12 +170,12 @@ class PrescriptionServices {
                 prescription.setListAttributions(listAttributions)
                 const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
                 prescription.setListCouncils(listCouncils)
-                prescription.setPrescriptionId(prescriptionData.prescription_id)
                 prescription.setEncryptedId(prescriptionData.encryptedId)
                 const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
                 prescription.setDoctor(doctor)
                 const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
                 prescription.setPatient(patient)
+                prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
 
                 listPrescriptions.push(prescription)
             }
@@ -160,12 +220,12 @@ class PrescriptionServices {
                 prescription.setListAttributions(listAttributions)
                 const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
                 prescription.setListCouncils(listCouncils)
-                prescription.setPrescriptionId(prescriptionData.prescription_id)
                 prescription.setEncryptedId(prescriptionData.encryptedId)
                 const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
                 prescription.setDoctor(doctor)
                 const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
                 prescription.setPatient(patient)
+                prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
 
                 listPrescriptions.push(prescription)
             }

@@ -40,10 +40,10 @@ class PatientServices {
 
             const connection = await pool.getConnection();
             await connection.query(
-                `UPDATE patient SET birthdate = ?, isQRCodeVisible = ?, name = ?, firstname = ?, email = ?, password = ?, 
+                `UPDATE patient SET birthdate = ?, qrCodeAccess = ?, name = ?, firstname = ?, email = ?, password = ?, 
                 isAccountValidated = ?, weight = ?, gender = ?, isEmailVerified = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_patient = ?`, 
                 [
-                    patient.getBirthdate(), patient.getIsQrCodeVisible(), patient.getName(), patient.getFirstname(), patient.getEmail(),
+                    patient.getBirthdate(), patient.getQRCodeAccess(), patient.getName(), patient.getFirstname(), patient.getEmail(),
                     patient.getPassword(), patient.isAccountValidated(), patient.getWeight(), patient.getGender(), patient.getIsEmailVerified(), 
                     patient.getTokenEmail(), patient.getTokenResetPassword(), patient.getPatientId()
                 ]
@@ -141,6 +141,7 @@ class PatientServices {
         catch (e) { console.log(e)}
     }
 
+
     /**
      * Récupère un patient spécifique via son id clair
      * @param {long} encryptedId 
@@ -155,6 +156,45 @@ class PatientServices {
             const result = await connection.query(
                 'SELECT * FROM patient WHERE encryptedId = ?', 
                 [encryptedId]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('Patient récupéré')
+            const patientData = result[0][0]
+            if (!patientData) return null
+            const patient = new Patient(
+                patientData.name,
+                patientData.firstname,
+                patientData.email,
+                patientData.password,
+                patientData.birthdate,
+                patientData.gender,
+                patientData.weight
+            )
+            patient.setPatientId(patientData.id_patient)
+            patient.setEncryptedId(patientData.encryptedId)
+            patient.setIsEmailVerified(patientData.isEmailVerified)
+            patient.setTokenEmail(patientData.tokenEmail)
+            patient.setTokenResetPassword(patientData.tokenResetPassword)
+            return patient
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère un patient via son qr code
+     * @param {long} qrCodeAccess 
+     * @returns {Patient} le patient cherché
+     */
+     static async getPatientByQRCodeAccess(qrCodeAccess) {
+        try {
+            if (!qrCodeAccess) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM patient WHERE qrCodeAccess = ?', 
+                [qrCodeAccess]
             )
             connection.release()
             // On convertit le résultat en objet js

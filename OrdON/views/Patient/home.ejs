@@ -4,18 +4,19 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/home.css">
+    <script src="../../src/js/patientProfile.js"></script>
 </head>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
     <section class="sectiondark">
         <p>En consultation chez un médecin ?</p>
-        <button class="btngreensmall">Je génère mon QR Code</button>
+        <button class="btngreensmall" onclick="showQR()">Je génère mon QR Code</button>
     </section>
     <section class="sectionblueConnected">
         <h2>Vos ordonnances valides</h2>
         <div class="triple" style="justify-content: flex-start;">
-            <% if (locals.listValidPrescriptions.length > 0) { %> 
-                <% locals.listValidPrescriptions.forEach((prescription) => { %>
+            <% if (locals.HomeObjects.listValidPrescriptions.length > 0) { %> 
+                <% locals.HomeObjects.listValidPrescriptions.forEach((prescription) => { %>
                     <article class="articleOrd">
                         <h6 style="color:var(--danger_light);">Prescrite le <%= prescription.date_creation.toLocaleDateString() %> </h6>
                         <p class="parBlue">Émise par le Dr <%= prescription.doctor.name %> à <%= prescription.doctor.city %> </p>
@@ -32,13 +33,13 @@
                 <p style="display: block; margin: 0 auto;">Il n'y aucune ordonnance à afficher</p>
             <% } %> 
         </div>
-        <a><btn class="btngreensmall" style="margin: 5px auto;padding: 10px 20px;">Tout voir</btn> </a>
+        <a href="/patient/ordonnances"><btn class="btngreensmall" style="margin: 5px auto;padding: 10px 20px;">Tout voir</btn> </a>
     </section>
     <section class="sectionwhiteConnected">
         <h2 class="darkbluefont">Historique de mes ordonnances</h2>
         <div class="triple" style="justify-content: flex-start;">
-            <% if (locals.listInvalidPrescriptions.length > 0) { %> 
-                <% locals.listInvalidPrescriptions.forEach((prescription) => { %>
+            <% if (locals.HomeObjects.listInvalidPrescriptions.length > 0) { %> 
+                <% locals.HomeObjects.listInvalidPrescriptions.forEach((prescription) => { %>
                     <article class="articleOrdpass">
                         <h6 style="color:var(--white);">Prescrite le <%= prescription.date_creation.toLocaleDateString() %> </h6>
                         <p class="parWhite">Émise par le Dr <%= prescription.doctor.name %> à <%= prescription.doctor.city %> </p>
@@ -55,8 +56,16 @@
                 <p style="color: var(--darkblue);display: block; margin: 0 auto;">Il n'y aucune ordonnance à afficher</p>
             <% } %> 
         </div>
-        <a><btn class="btngreensmall" style="margin: 10px auto;padding: 10px 20px;">Tout voir</btn> </a>
+        <a href="/patient/historique"><btn class="btngreensmall" style="margin: 10px auto;padding: 10px 20px;">Tout voir</btn> </a>
     </section>
+
+    <div id="coverPage" >
+    </div>
+   <div id="QRCodeDiv" style="display: none;">
+        <h3 id="qrPatientText">Votre QR Code patient</h3>
+        <img id="qrcode" src=<%= HomeObjects.qrcode %> >  
+        <p class="textCenter" onclick="closeQR()">Fermer</p>
+    </div>
     <%- include('../layouts/greenfaq'); -%>
     <%- include('../layouts/footer/footerManager'); -%>
     <%- include('../layouts/scripts'); -%>

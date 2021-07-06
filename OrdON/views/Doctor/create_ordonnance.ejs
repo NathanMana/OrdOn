@@ -27,7 +27,7 @@
             <h3 id="madeWhereWhen" class="doctorText">Fait à <%= locals.PrescriptionObjects.doctor.city %>, le <%= locals.PrescriptionObjects.madeDate %></h3>
         </div>
 
-        <div id="infosPatient">
+        <div id="infosPatient" class="fixedLeft">
             <h3>
                 <% if (locals.PrescriptionObjects.patient.gender === 'homme') { %>
                     M.
@@ -46,11 +46,11 @@
                 <% } %> 
                 le <%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10)  %>
             </h3>
-            <h4>
+            <h3>
                 <% if (locals.PrescriptionObjects.patient.weight) { %>
                     Pesant <%= locals.PrescriptionObjects.patient.weight %>kg
                 <% } %>
-            </h4>
+            </h3>
         </div>
         <p id="errorMessage" style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"></p>
         <div id="prescription">

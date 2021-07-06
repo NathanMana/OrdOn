@@ -282,10 +282,18 @@ router.get('/', async (req, res) => {
     const listInvalidPrescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId(), 4)
     const listInvalidPrescriptionsToObject = listInvalidPrescriptions.map(p => p.toObject())
 
-    res.render('Patient/home', {
-        listValidPrescriptions: listValidPrescriptionsToObject,
-        listInvalidPrescriptions: listInvalidPrescriptionsToObject
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
+    QRcode.toDataURL(url, (err,qr) =>{
+        if (err) res.send("error occurred")
+ 
+        return res.render("Patient/home", { HomeObjects : {
+            qrcode : qr,
+            user: patient.toObject(),
+            listValidPrescriptions: listValidPrescriptionsToObject,
+            listInvalidPrescriptions: listInvalidPrescriptionsToObject
+        } })
     })
+
 })
  
 /**
@@ -379,6 +387,30 @@ router.get('/', async (req, res) => {
     res.redirect('/')
 })
 
+router.post('/patient/profil/', async (req, res) => {
+    const firstname = req.body.firstname
+    const name = req.body.name
+    const birthdate = req.body.birthdate
+    const email = req.bodyl.email
+
+    if (!firstname || !name || !birthdate || !email) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/patient/profil/')
+    }
+
+    let birthdateToAdd
+    try {
+        birthdateToAdd = new Date(birthdate)
+    } catch(e){
+        req.session.error = "Le format de la date ne convient pas"
+        return res.redirect('/patient/profil')
+    }
+
+    let patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    PatientServices.updatePatient(patient)
+    res.redirect('/')
+
+})
 
 
 module.exports = router

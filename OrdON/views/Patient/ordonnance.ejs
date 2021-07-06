@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../layouts/header'); -%>
+        <link rel='stylesheet' type='text/css' media='screen' href='/src/css/createPrescription.css'>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script defer src="/src/js/all.js"></script> <!--load all styles -->
+    </head>
+    <body>
+        <%- include('../layouts/nav/connectionManager'); -%>
+        <div id="doctorInfos">
+            <div id="doctorInfosLeft">
+                <h3 class="doctorTextLeft">Dr <%= locals.prescription.doctor.name %> </h3>
+                <h3 class="doctorTextLeft">Médecine générale</h3>
+            </div>
+            <div id="doctorInfosRight">
+                <div id="doctorInfosRightTop">
+                    <h3 class="doctorTextRight"><%= locals.prescription.doctor.address %></h3>
+                    <h3 class="doctorTextRight"><%= locals.prescription.doctor.zipcode + ", " + locals.prescription.doctor.city %></h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixedRight">
+            <h3 id="madeWhereWhen" class="doctorText">Fait à <%= locals.prescription.doctor.city %>, le <%= locals.prescription.date_creation.toLocaleDateString() %></h3>
+        </div>
+
+        <div id="infosPatient" class="fixedLeft">
+            <h3>
+                <% if (locals.prescription.patient.gender === 'homme') { %>
+                    M.
+                <% } else if (locals.prescription.patient.gender === 'femme') { %>  
+                    Mme.
+                <% } %> 
+                <%= locals.prescription.patient.name + " " + locals.prescription.patient.firstname %> 
+            </h3>
+            <h3>
+                <% if (locals.prescription.patient.gender === 'homme') { %>
+                    Né
+                <% } else if (locals.prescription.patient.gender === 'femme') { %>  
+                    Née
+                <% } else { %> 
+                    Né(e)
+                <% } %> 
+                le <%= locals.prescription.patient.birthdate.toLocaleString().substring(0,10)  %>
+            </h3>
+            <h3>
+                <% if (locals.prescription.patient.weight) { %>
+                    Pesant <%= locals.prescription.patient.weight %>kg
+                <% } %>
+            </h3>
+        </div>
+        <p id="errorMessage" style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"></p>
+        <% if (locals.prescription.listAttributions.length > 0) { %> 
+            <div id="prescription">
+                <div id="prescriptionTab">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="firtLine" style="width: 25%;">Nom du médicament</th>
+                                <th scope="firtLine" style="width: 35%;">Description du traiement</th>
+                                <th scope="firtLine" style="width: 10%;">Quantité</th>
+                                <th scope="firtLine" style="width: 25%;">Mentions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="prescriptionBody">
+                            <% locals.prescription.listAttributions.forEach((attribution) => { %> 
+                                <tr class="medicRow">
+                                    <td><%= attribution.drug.name %> </td>
+                                    <td><%= attribution.description %> </td>
+                                    <td><%= attribution.quantity %> </td>
+                                    <td>
+                                        <div id="mentionsRow">
+                                            <% attribution.listMentions.forEach((mention) => { %>
+                                                <p class="mentionInRow">
+                                                    <%= mention.name %>
+                                                </p>
+                                            <% }); %> 
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %> 
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        <% } %>
+        <% if (locals.prescription.listCouncils.length > 0) { %> 
+            <div id="tips">
+                <div id="tipsTab">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="firtLine" style="width: 95%;">Description du conseil</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tipsBody">
+                            <% locals.prescription.listCouncils.forEach((council) => { %> 
+                                <tr class="medicRow">
+                                    <td><%= council.description %> </td>
+                                </tr>
+                            <% }) %> 
+                        </tbody>
+                    </table>  
+                </div> 
+            </div>
+        <% } %>
+        <div class="center">
+            <a href="/patient/"><button class="btngreen" id="createOrdonnanceButton" type="button">Fermer</button></a>
+        </div>
+        <%- include('../layouts/footer/footerManager'); -%>
+        <%- include('../layouts/scripts'); -%>
+        <script src='/src/js/createPrescription.js'></script>
+        <script defer src="/src/js/all.js"></script> <!--load all styles -->
+    </body>
+</html>

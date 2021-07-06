@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('../layouts/header'); -%>
+    <link rel="stylesheet" href="../../src/css/connectionPage.css"/>
+    <title>OrdON</title>
+  </head>
+  <body>
+    <%- include('../layouts/nav/connectionManagerAdmin'); -%>
+        <div class="body" style="margin: 7%;">
+            <h2 class="title">Veuillez entrer le code à 6 chiffres envoyé par mail</h1>
+            <section>
+                <div class="container">
+                    <form method="post">
+                        <div class="modifier__input__container">
+                            <input class="modifBox" name="code" type="text"  placeholder="ex:123456">
+                        <div style="width: 100%;">
+                            <p class="register"style="font-style: italic;margin-left: 4rem;"><a class="renvoyer"  href="/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/doubleauthentification">Renvoyer le code</a></p>
+                        </div>
+                        <% if (locals.error){ %> 
+                            <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"><%= locals.error %> </p>
+                        <% } %>                            
+                        <input class="btngreen" type="submit" value="Se connecter">
+                    </form>
+                </div>
+            </section>
+        </div>
+        <%- include('../layouts/footer/footerManager'); -%>
+        <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>
+  </body>
+</html>

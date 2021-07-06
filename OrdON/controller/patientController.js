@@ -379,6 +379,29 @@ router.get('/', async (req, res) => {
     res.redirect('/')
 })
 
+router.post('/patient/profil/', async (req, res) => {
+    const firstname = req.body.firstname
+    const name = req.body.name
+    const birthdate = req.body.birthdate
+    const email = req.bodyl.email
+
+    if (!firstname || !name || !birthdate || !email) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/patient/profil/')
+    }
+
+    let birthdateToAdd
+    try {
+        birthdateToAdd = new Date(birthdate)
+    } catch(e){
+        req.session.error = "Le format de la date ne convient pas"
+        return res.redirect('/patient/profil')
+    }
+    let patient = new Patient(name, firstname, email, hashPassword, birthdateToAdd, gender, weightDouble)
+    patient = await PatientServices.updatePatient(patient)
+    res.redirect('/')
+
+})
 
 
 module.exports = router

@@ -282,10 +282,18 @@ router.get('/', async (req, res) => {
     const listInvalidPrescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId(), 4)
     const listInvalidPrescriptionsToObject = listInvalidPrescriptions.map(p => p.toObject())
 
-    res.render('Patient/home', {
-        listValidPrescriptions: listValidPrescriptionsToObject,
-        listInvalidPrescriptions: listInvalidPrescriptionsToObject
+    const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
+    QRcode.toDataURL(url, (err,qr) =>{
+        if (err) res.send("error occurred")
+ 
+        return res.render("Patient/home", { HomeObjects : {
+            qrcode : qr,
+            user: patient.toObject(),
+            listValidPrescriptions: listValidPrescriptionsToObject,
+            listInvalidPrescriptions: listInvalidPrescriptionsToObject
+        } })
     })
+
 })
  
 /**

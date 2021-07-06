@@ -258,12 +258,12 @@ function addTipRow(tip){
     row.id = "tipRow" + tipRowCounter
     row.className = "tipRow";
 
-    var tipColumn = document.createElement("th");
+    var tipColumn = document.createElement("td");
     tipColumn.className = "tipColumn";
     tipColumn.textContent = tip;
     row.appendChild(tipColumn);
 
-    var editColumn = document.createElement("th");
+    var editColumn = document.createElement("td");
     editColumn.className = "editColumn";
 
     var editDiv = document.createElement("div");

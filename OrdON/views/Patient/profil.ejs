@@ -36,13 +36,13 @@
         <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Votre profil</h2>
-           <form class="form" action="">
+           <form class="form" action="" method="post">
                 <div class="profile__input__container">
                     <% const user = ProfilObject.user %> 
-                    <input class="profilBoxGrey"  value = "<%- user.name %>" >
-                    <input class="profilBoxGrey" value = "<%- user.firstname %>" >
-                    <input class="profilBox" type="date" value = "<%- user.birthdate.toISOString().slice(0, 10) %>" >
-                    <input class="profilBoxGrey" value = "<%- user.email %> ">
+                    <input name="name" class="profilBox"  value = "<%- user.name %>" >
+                    <input name="firstname" class="profilBox" value = "<%- user.firstname %>" >
+                    <input name="birthdate" class="profilBox" type="date" value = "<%- user.birthdate.toISOString().slice(0, 10) %>" >
+                    <input name="email" class="profilBox" value = "<%- user.email %> ">
                 </div>
                 <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
                 <button class="btngreen btn">Valider</button>

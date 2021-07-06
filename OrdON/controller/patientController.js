@@ -405,8 +405,9 @@ router.post('/patient/profil/', async (req, res) => {
         req.session.error = "Le format de la date ne convient pas"
         return res.redirect('/patient/profil')
     }
-    let patient = new Patient(name, firstname, email, hashPassword, birthdateToAdd, gender, weightDouble)
-    patient = await PatientServices.updatePatient(patient)
+
+    let patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    PatientServices.updatePatient(patient)
     res.redirect('/')
 
 })

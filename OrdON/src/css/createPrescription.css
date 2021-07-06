@@ -46,6 +46,7 @@ h3{
 
 #infosPatient h3{
     width: fit-content;
+
 }
 
 #prescription{
@@ -114,6 +115,14 @@ h3{
     color:var(--danger_light);
     font-size: 0.9rem;
     text-decoration: underline;
+}
+
+.medicRow td{
+    background-color: #F2F4F4;
+}
+
+.tipRow td{
+    background-color: #F2F4F4;
 }
 
 #addMedic{

@@ -22,8 +22,8 @@ class Doctor extends Profesionnal {
      * @param {string} address 
      * @param {string} zipcode 
      */
-    constructor(name, firstname, email, password, city, address, zipcode) {
-        super(name, firstname, email, password, city, address, zipcode);
+     constructor(name, firstname, email, password, city, address, zipcode, gender){
+        super(name, firstname, email, password, city, address, zipcode, gender)
     }
 
     getDoctorId() {return this.#id_doctor}
@@ -48,7 +48,8 @@ class Doctor extends Profesionnal {
             encryptedId : this.getEncryptedId(),
             city : this.getCity(),
             zipcode : this.getZipcode(),
-            address : this.getAddress()
+            address : this.getAddress(),
+            gender: this.getGender()
         }
     }
 }

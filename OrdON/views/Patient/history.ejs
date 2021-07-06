@@ -12,25 +12,33 @@
         <p>Montrez votre ordonnance à la pharmacie afin de récupérer vos médicaments</p>
     </section>
     <section class="sectionwhiteConnected" style="height:100%;">
-        <h2 style="color: var(--darkblue);">Vos ordonnances valides</h2>
-        <p style="color:var(--dark);font-size:1.1rem;margin: 0 auto; display:block;text-align:center;">Vous avez 3 mois pour récupérer vos médicaments prescrits en pharmacie. La durée du traitement est elle valide pendant maximum un an</p>
+        <h2 style="color: var(--darkblue);">Vos ordonnances archivées</h2>
+        <p style="color:var(--dark);font-size:1.1rem;margin: 0 auto; display:block;text-align:center;">
+            Une ordonnance peut être archivée lorsque tous les médicaments ont été transmis ou quand la date de péremption est dépassée
+        </p>
         <div class="mesordonnances" style="margin-top: 2rem;">
         <% locals.listPrescriptions.forEach((prescription) => { %>
                 <article class="consultation">
                     <div>
-                        <% let dateCreation = new Date(prescription.date_creation) %>
-                        <% dateCreation.setMonth(dateCreation.getMonth() + 3) %> 
                         <p class="date">Ma consultation du <%= prescription.date_creation.toLocaleDateString() %></p>
-                        <p class="peremption" style="font-size: 1rem;padding-top: 0.35rem;">Date péremption prescription : <%= dateCreation.toLocaleDateString() %></p>
+                        <p class="peremption" style="font-size: 1rem;padding-top: 0.35rem;">
+                            Date archivage : 
+                            <% if (!prescription.date_archived) { %> 
+                                <% let dateArchived = new Date(prescription.date_creation) %>
+                                <% dateArchived.setMonth(dateArchived.getMonth() + 3) %> 
+                                <%= dateArchived.toLocaleDateString() %> 
+                            <% } else { %>
+                                <%= prescription.date_archived.toLocaleDateString() %>
+                            <% } %> 
+                        </p>
                     </div>
                     <div>
-                        <% if (prescription.doctor.name) { %> 
+                        <% if ( prescription.doctor.name) { %> 
                             <p class="doctor">Dr <%= prescription.doctor.name %></p>
                         <% } %> 
                     </div>
                     <div class="voirgenerer">
                         <a href=""><button class="btngreensmall">Voir</button></a>
-                        <button class="btndark" onclick="showQR('<%= prescription.encryptedId %>')">Générer QR CODE </button>
                     </div>
                 </article>
             <% }) %>

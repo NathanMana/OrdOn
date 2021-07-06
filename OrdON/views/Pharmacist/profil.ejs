@@ -28,11 +28,11 @@
            <h2 style="color:var(--darkblue)">Votre profil</h2>
            <form>
                 <div class="profile__input__container">
-                    <input class="profilBoxGrey" placeholder="Nom" disabled>
-                    <input class="profilBoxGrey" placeholder="Prénom" disabled>
-                    <input class="profilBoxGrey" placeholder="mail@mail.com" disabled>
-                    <input class="profilBoxGrey" placeholder="Lieu d'exercice" disabled>
-                    <input class="profilBoxGrey" placeholder="Numéro professionnel" disabled>
+                    <input class="profilBoxGrey"  value = <%- profil.name %>  disabled>
+                    <input class="profilBoxGrey" value = <%- profil.firstname %> disabled>
+                    <input class="profilBoxGrey" value = <%- profil.email %>  disabled>
+                    <input class="profilBoxGrey" value = <%- profil.city %> disabled>
+                    <input class="profilBoxGrey" value = <%- profil.gender %> disabled>
                 </div> 
             </form>
        </div>

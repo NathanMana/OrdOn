@@ -38,10 +38,11 @@
            <h2 style="color:var(--darkblue)">Votre profil</h2>
            <form class="form" action="">
                 <div class="profile__input__container">
-                   <input class="profilBox" type="text" name="" id="" placeholder="Nom">
-                   <input class="profilBox" type="text" name="" id="" placeholder="Prénom">
-                   <input class="profilBox" type="text" name="" id="" placeholder="Date de naissance">
-                   <input class="profilBoxGrey" type="text" name="" id="" placeholder="email@email.com" disabled>
+                    <% const user = ProfilObject.user %> 
+                    <input class="profilBoxGrey"  value = "<%- user.name %>"  disabled>
+                    <input class="profilBoxGrey" value = "<%- user.firstname %>" disabled>
+                    <input class="profilBox" type="date" value = "<%- user.birthdate.toISOString().slice(0, 10) %>" disabled>
+                    <input class="profilBoxGrey" value = "<%- user.email %> " disabled>
                 </div>
                 <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
                 <button class="btngreen btn">Valider</button>

@@ -60,12 +60,14 @@ class PatientServices {
      * Supprime un patient
      * @param {Patient} patient 
      */
-    static async deletePatientWithId(patient) {
+    static async deletePatient(patient) {
         try {
             if (!patient || patient.getPatientId() <= 0) throw 'L\id indiqué est erroné'
-
+            // récupérer la largeur de l'id clair
+            const lengthId = (patient.getPatientId() + "").length
+            const a = patient.getEncryptedId().substring(29, 29 + lengthId)
             // Double vérification avec l'id encrypté
-            if (patient.getPatientId() != patient.getEncryptedId().substring(29, 2)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
+            if (patient.getPatientId() != patient.getEncryptedId().substring(29, 29 + lengthId)) throw 'L{\id clair et l\'id encrypté ne corresponde pas'
             const connection = await pool.getConnection();
             await connection.query(
                 'DELETE FROM patient WHERE id_patient = ? AND encryptedId = ?', 
@@ -116,6 +118,30 @@ class PatientServices {
     }
 
     /**
+     * Récupère l'id d'un patient spécifique via son id encrypté
+     * @param {long} encryptedId 
+     * @returns {long} l'id clair
+     */
+    static async getPatientIdByEncryptedId(encryptedId) {
+        try {
+            if (!encryptedId) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT id_patient FROM patient WHERE encryptedId = ?', 
+                [encryptedId]
+            )
+            if (!result[0][0]) return
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('patient récupéré')
+            return result[0][0].id_patient
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
      * Récupère un patient spécifique via son id clair
      * @param {long} encryptedId 
      * @returns {Patient} le patient cherché
@@ -135,7 +161,6 @@ class PatientServices {
             console.log('Patient récupéré')
             const patientData = result[0][0]
             if (!patientData) return null
-            console.log("weight : " + patientData.weight)
             const patient = new Patient(
                 patientData.name,
                 patientData.firstname,

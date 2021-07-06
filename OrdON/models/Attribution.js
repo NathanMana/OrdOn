@@ -43,7 +43,7 @@ class Attribution {
     #id_drug
 
     //Manque l'id de la prescription
-    constructor(description, quantity, id_drug, idPrescription, listMentions){
+    constructor(description, quantity, id_drug, idPrescription, listMentions = null){
         this.#description = description
         this.#quantity = quantity
         this.#id_drug = id_drug
@@ -52,6 +52,7 @@ class Attribution {
     }
 
     getAttributionId(){return this.#id_attribution}
+    setAttributionId(id){this.#id_attribution = id}
 
     getDescription(){return this.#description}
     setDescription(description){this.#description = description}
@@ -87,6 +88,18 @@ class Attribution {
 
     getDrugId(){return this.#id_drug}
     setDrugId(id){this.#id_drug = id}
+
+    toObject() {
+        return {
+            id_attribution: this.#id_attribution,
+            description: this.#description,
+            quantity: this.#quantity,
+            drug: this.#drug.toObject(),
+            listMentions: this.#listMentions.map((m) => m.toObject()),
+            id_prescription: this.#id_prescription,
+            id_drug: this.#id_drug
+        }
+    }
 }
 
 module.exports = Attribution

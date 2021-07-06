@@ -378,28 +378,33 @@ function getAllTipsInArray(){
 
 function createOrdonnance(){
     //1 - Get the attributions and the tips in an array of their classes*
-    console.log("calling this")
     attributionList = new Array()
     attributionList = getAllAttributionsInArray();
-    console.log("attris : " + attributionList)
     tipList = new Array()
     tipList = getAllTipsInArray();
-    console.log("tips : " + tipList)
     callPostRoute(attributionList, tipList);
 }
 
 function callPostRoute(attributionList, tipList){
+    let encryptedIdPatient = document.getElementById('encryptedPatientId').value
     //2 - Call the post route
-    console.log("calling post route")
     $.ajax({
-        url : '/docteur/ordonnance/creer/:encryptedIdPatient',
+        url : '/docteur/ordonnance/creer/' + encryptedIdPatient,
         type : 'POST',
         dataType : 'json',
         data: { 'data' : JSON.stringify({tipList : tipList, attributionList : attributionList})},
         success : function(res){
+            if (!res) {
+                return
+            } 
 
-            console.log("bien joué mon frère")
+            if (res && res.status){
+                window.location = "/docteur/ordonnance/envoyee"
+            }
 
+            if (res && res.status === false) {
+                $('#errorMessage').text(res.message)
+            }
         }
     });
 }

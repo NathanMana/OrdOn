@@ -12,27 +12,47 @@
         <%- include('../layouts/nav/connectionManager'); -%>
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
-                <h3 class="doctorTextLeft">Docteur</h3>
-                <h3 class="doctorTextLeft">Nom du docteur</h3>
+                <h3 class="doctorTextLeft">Dr <%= locals.PrescriptionObjects.doctor.name %> </h3>
+                <h3 class="doctorTextLeft">Médecine générale</h3>
             </div>
             <div id="doctorInfosRight">
                 <div id="doctorInfosRightTop">
-                    <h3 class="doctorTextRight">Adresse du docteur</h3>
-                    <h3 class="doctorTextRight">CP et ville</h3>
-                    <h3 class="doctorTextRight">Tel cabinet</h3>
+                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.address %></h3>
+                    <h3 class="doctorTextRight"><%= locals.PrescriptionObjects.doctor.zipcode + ", " + locals.PrescriptionObjects.doctor.city %></h3>
                 </div>
             </div>
         </div>
 
         <div class="fixedRight">
-            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le <%= locals.PrescriptionObjects.madeDate %></h3>
+            <h3 id="madeWhereWhen" class="doctorText">Fait à <%= locals.PrescriptionObjects.doctor.city %>, le <%= locals.PrescriptionObjects.madeDate %></h3>
         </div>
 
-        <div class="fixedLeft" id="infosPatient">
-            <h3>Madame/Monsieur <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
-            <h3>Né le : <%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " , Poids : " + locals.PrescriptionObjects.patient.weight %></h3>
+        <div id="infosPatient">
+            <h3>
+                <% if (locals.PrescriptionObjects.patient.gender === 'homme') { %>
+                    M.
+                <% } else if (locals.PrescriptionObjects.patient.gender === 'femme') { %>  
+                    Mme.
+                <% } %> 
+                <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> 
+            </h3>
+            <h3>
+                <% if (locals.PrescriptionObjects.patient.gender === 'homme') { %>
+                    Né
+                <% } else if (locals.PrescriptionObjects.patient.gender === 'femme') { %>  
+                    Née
+                <% } else { %> 
+                    Né(e)
+                <% } %> 
+                le <%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10)  %>
+            </h3>
+            <h4>
+                <% if (locals.PrescriptionObjects.patient.weight) { %>
+                    Pesant <%= locals.PrescriptionObjects.patient.weight %>kg
+                <% } %>
+            </h4>
         </div>
-
+        <p id="errorMessage" style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"></p>
         <div id="prescription">
             <div id="prescriptionTab">
                 <table>
@@ -48,6 +68,7 @@
                         </tr>
                     </thead>
                     <tbody id="prescriptionBody">
+            
                     </tbody>
                 </table>   
             </div>
@@ -74,7 +95,7 @@
         </div>
 
         <div class="center">
-            <button class="greenButton" id="createOrdonnanceButton" type="button" onclick="createOrdonnance()">Valider mon ordonnance</button>
+            <button class="btngreen" id="createOrdonnanceButton" type="button" onclick="createOrdonnance()">Valider mon ordonnance</button>
         </div>
 
         <div id="coverPage" >
@@ -87,9 +108,11 @@
 
             <input list="drugList" id="nameInput" type="text" placeholder="Médicament"/>
             <datalist id="drugList">
-                <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
-                    <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
-                <%}%>
+                <% if (locals.PrescriptionObjects.drugs) { %> 
+                    <% for(var i=0; i < locals.PrescriptionObjects.drugs.length; i++){ %>
+                        <option><%= locals.PrescriptionObjects.drugs[i] %> </option>
+                    <% } %>
+                <% } %>
             </datalist>
 
             <input id="quantityInput" type="number" name="medicQuantity" placeholder="Quantité" required>
@@ -125,9 +148,9 @@
             <button class="blueButton" id="validTip" type="button" onclick="validTip()">Valider ce conseil</button>
 
         </div>
+        <input type="hidden" id="encryptedPatientId" value="<%= locals.PrescriptionObjects.patient.encryptedId %> ">
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>
-
         <script src='/src/js/createPrescription.js'></script>
         <script defer src="/src/js/all.js"></script> <!--load all styles -->
     </body>

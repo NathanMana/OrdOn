@@ -1,3 +1,5 @@
+const Patient = require("./Patient")
+
 /**
  * Classe représentant l'ordonnance
  */
@@ -11,12 +13,17 @@
     /**
      * id de l'ordonnance hashée
      */
-     #encryptedId
+    #encryptedId
 
     /**
      * Date a laquelle l'ordonnance a été prescrite
      */
     #date_creation
+
+    /**
+     * Date a laquelle l'ordonnance a été prescrite
+     */
+     #date_archived
 
     /**
      * Indique si le QRCode esy visible
@@ -47,16 +54,26 @@
     #id_doctor
 
     /**
+     * @type {Doctor}
+     */
+     #doctor 
+
+    /**
+     * @type {Patient}
+     */
+    #patient 
+
+    /**
      * Constructeur de la classe Prescription
      * @param {long} id_doctor 
      * @param {long} id_patient 
      * @param {Array(Attribution)} listAttributions 
      * @param {Array(Council)} listCouncils 
      */
-    constructor(id_doctor, id_patient, listAttributions, listCouncils){
+    constructor(id_doctor, id_patient, listAttributions = null, listCouncils = null){
         this.#id_doctor = id_doctor
         this.#id_patient = id_patient
-        this.#date_creation = date_creation
+        this.#date_creation = new Date()
         this.#listCouncils = listCouncils
         this.#listAttributions = listAttributions
     }
@@ -69,6 +86,10 @@
     getPatientId(){return this.#id_patient}
 
     getDateCreation(){return this.#date_creation}
+    setDateCreation(date) {this.#date_creation = date}
+
+    getDateArchived(){return this.#date_archived}
+    setDateArchived(date) {this.#date_archived = date}
 
     // Permet de récupérer l'id encrypté
     getEncryptedId() { return this.#encryptedId }
@@ -120,6 +141,12 @@
     }
     setListAttributions(listAttributions){this.#listAttributions = listAttributions}
 
+    getDoctor(){return this.#doctor}
+    setDoctor(doctor) { this.#doctor = doctor}
+
+    getPatient(){return this.#patient}
+    setPatient(patient) { this.#patient = patient}
+
     /**
      * Permet de transformer l'id de l'ordonnance en un id plus secret
      * Algorithme inspiré par https://www.codegrepper.com/code-examples/javascript/javascript+generate+unique+key
@@ -138,11 +165,14 @@
             id_prescription: this.#id_prescription,
             encryptedId: this.#encryptedId,
             date_creation: this.#date_creation,
+            date_archived: this.#date_archived,
             isQrCodeVisible: this.#isQrCodeVisible,
-            listAttributions: this.#listAttributions,
-            listCouncils: this.#listCouncils,
+            listAttributions: this.#listAttributions.map((a) => a.toObject()),
+            listCouncils: this.#listCouncils.map((c) => c.toObject()),
             id_patient: this.#id_patient,
-            id_doctor: this.#id_doctor
+            id_doctor: this.#id_doctor,
+            patient: this.#patient.toObject(),
+            doctor: this.#doctor.toObject()
         }
     }
 

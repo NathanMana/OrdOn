@@ -24,12 +24,37 @@ const pool = require('./DatabaseConnection')
             // On convertit le résultat en objet js
             console.log('Drug récupérée')
             const drugData = result[0][0]
+            if (!drugData) return
+
             let drug = new Drug(
                 drugData.name
             )
             drug.setDrugId(drugData.id_drug)
            
             return drug
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère un médicament spécifique via son nom
+     * @param {string} name 
+     * @returns {Drug} le medicament cherché
+     */
+     static async getDrugIdByName(name) {
+        try {
+            if (!name) throw 'Le nom indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT id_drug FROM drug WHERE name = ?', 
+                [name]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('Drug récupérée')
+            return result[0][0].id_drug
         }
         catch (e) { console.log(e)}
     }

@@ -15,8 +15,15 @@
                     <form action="/docteur/inscription" method="post" class="form">
                         <div class="profile__input__container" style="margin-bottom: 0px;">
                             <input class="profilBox" name="name" placeholder="Nom" required>
-                            <input class="profilBox" name="firstname" placeholder="Prenom" required>
-                            <input class="profilBox" name="firstname" placeholder="Lieu de travail" required>
+                            <input class="profilBox" name="firstName" placeholder="Prenom" required>
+                            <input class="profilBox" name="city" placeholder="ville de travail" required>
+                            <input class="profilBox" name="address" placeholder="adresse de travail" required>
+                            <input class="profilBox" name="zipcode" placeholder="code postale" required>
+                            <select class="profilBox" name="gender" id="" required>
+                                <option value="homme">Homme</option>
+                                <option value="femme">Femme</option>
+                                <option value="neutre">Ne se prononce pas</option>
+                            </select>
                             <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
                         </div>
                         <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
@@ -34,10 +41,10 @@
                             </p>
                         </div>
                         <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Mot de passe" require>
+                            <input class="profilBox" name="password" type="password"  placeholder="Mot de passe" require>
                         </div>
                         <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
-                            <input class="profilBox" name=" password" type="password"  placeholder="Répéter le mot de passe" require>
+                            <input class="profilBox" name="password_check" type="password"  placeholder="Répéter le mot de passe" require>
                         </div>
                         <% if (locals.error){ %> 
                             <p style="color:var(--danger_light);display:block;width:100%;text-align:center;margin:0 auto;"><%= locals.error %> </p>

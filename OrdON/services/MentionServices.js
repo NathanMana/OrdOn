@@ -36,7 +36,7 @@ class MentionServices {
                 'SELECT id_mention FROM mention WHERE name = ?', 
                 [name]
             )
-            if (!result) throw 'Une erreur est survenue'
+            if (!result[0][0]) throw 'Une erreur est survenue'
             return result[0][0].id_mention
         } catch (e) {console.log(e)}
     }

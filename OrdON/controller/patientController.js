@@ -48,13 +48,18 @@ router.get('/connexion', (req, res)=>{
         return res.redirect('/patient/connexion')
     }
 
+    // Vérification validation email
+    if (!patient.getIsEmailVerified()) {
+        req.session.error = "L'adresse email de ce compte n'a pas été vérifiée"
+        return res.redirect('/patient/connexion')
+    }
+
     req.session.user = {
         encryptedId: patient.getEncryptedId(),
         type: 'patient',
         isValidated: false,
-        entier : entierAleatoire(100000,199999)
     } // on ne met pas le type, car on est pas sur que le mec se connecte a 100% 
-    nodemailer(patient.getEmail(),'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
+    
     return res.redirect('/doubleauthentification')
 })
  
@@ -132,7 +137,7 @@ router.post('/inscription', async (req, res) => {
         "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/patient/email/verification/" + patient.getTokenEmail()
     )
  
-    return res.redirect('/patient/email/verification/envoyee')
+    return res.redirect('/email/verification/envoyee')
 })
 
 /**
@@ -221,14 +226,6 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     return res.redirect('/patient/')
 })
 
-
-/**
- * View indiquant de suivre les indications envoyées dans le mail
- */
- router.get('/email/verification/envoyee', (req, res) => {
-    return res.render('layouts/emailVerification.ejs')
-})
- 
 /**
  * Traitement de la vérification d'un patient
  */
@@ -263,32 +260,46 @@ router.get('/email/verification/:token', async (req, res) => {
  */
  router.use((req, res, next) => {
     if (typeof req.session.user === 'undefined' || !req.session.user || req.session.user.type != "patient") {
+        req.session.desiredUrl = req.originalUrl
         return res.redirect("/patient/connexion")
     }
-    if (!req.session.user.isValidated) return res.redirect("/patient/connexion")
+    if (!req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/patient/connexion")
+    }
     next()
 })
  
 /**
  * Gère l'affichage de la page d'accueil du patient
  */
-router.get('/', (req, res) => {
-    res.render('Patient/home')
+router.get('/', async (req, res) => {
+    // Récupérer les ordonnances valides
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const listValidPrescriptions = await PrescriptionServices.getListValidPrescriptionsByPatientId(patient.getPatientId(), 4)
+    const listValidPrescriptionsToObject = listValidPrescriptions.map(p => p.toObject())
+
+    const listInvalidPrescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId(), 4)
+    const listInvalidPrescriptionsToObject = listInvalidPrescriptions.map(p => p.toObject())
+
+    res.render('Patient/home', {
+        listValidPrescriptions: listValidPrescriptionsToObject,
+        listInvalidPrescriptions: listInvalidPrescriptionsToObject
+    })
 })
  
 /**
  * Gère l'affichage de la page profile du patient
  */
- router.get('/profil', (req, res) => {
+ router.get('/profil', async (req, res) => {
     const url = 'http://localhost:8000/docteur/ordonnance/creer/'+req.session.user.encryptedId
-    const patient = PatientServices.getPatientByEncryptedId(req.session.encryptedId)
- 
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
     QRcode.toDataURL(url, (err,qr) =>{
         if (err) res.send("error occurred")
  
         return res.render("Patient/profil", { ProfilObject: {
             qrcode : qr,
-            user: patient
+            user: patient.toObject()
         } })
     })
 })
@@ -297,8 +308,8 @@ router.get('/', (req, res) => {
 /**
  * Génère le qr code d'un ordonnance
  */
- router.get('/getordonnance', (req, res)=>{
-    const ordo_id = req.body.id_prescription
+ router.get('/getordonnance/:id', (req, res)=>{
+    const ordo_id = req.params.id
  
     const url = 'http://localhost:8000/pharmacien/ordonnance/'+ordo_id
     
@@ -314,21 +325,83 @@ router.get('/', (req, res) => {
 /**
  * Gère l'affichage de la page profile du patient
  */
- router.get('/ordonnances', (req, res) => {
-    const prescriptions = PrescriptionServices.displayPrescriptionPatient(req.session.user.encryptedId)
-    ordoViewModels = new Array()
-    for (let i=0; i<prescriptions.length; i++){
-        ordoViewModels.push(new OrdonnanceViewModel(prescriptions[i].getPrescriptionId(), prescriptions[i].getDoctorId))
-    }
+ router.get('/ordonnances', async (req, res) => {
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const prescriptions = await PrescriptionServices.getListValidPrescriptionsByPatientId(patient.getPatientId())
+    const prescriptionsToObject = prescriptions.map(p => p.toObject());
 
-    res.render('Patient/ordonnances', {OrdonnancesObjects: {
-            Prescriptions: prescriptions,
-            OrdonnancesViewModels: ordoViewModels
-            
-        }
+    res.render('Patient/ordonnances', {
+        listPrescriptions : prescriptionsToObject
     })
 })
 
+/**
+ * Gère l'affichage de la page historique du patient
+ */
+ router.get('/historique', async (req, res) => {
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    const prescriptions = await PrescriptionServices.getListInvalidPrescriptionsByPatientId(patient.getPatientId())
+    const prescriptionsToObject = prescriptions.map(p => p.toObject());
+
+    res.render('Patient/history', {
+        listPrescriptions : prescriptionsToObject
+    })
+})
+
+/**
+ * Gère la suppression du compte
+ */
+ router.post('/profil/supprimermoncompte', async (req, res) => {
+    const {password} = req.body
+    if (!password) {
+        req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    // Récupérer la patient
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    if (!patient) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
+    if (!verifPass) {
+        req.session.error = "Mot de passe incorrect"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    await PatientServices.deletePatient(patient)
+    req.session.user = undefined
+    req.session.flash = {
+        success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"
+    }
+    res.redirect('/')
+})
+
+router.post('/patient/profil/', async (req, res) => {
+    const firstname = req.body.firstname
+    const name = req.body.name
+    const birthdate = req.body.birthdate
+    const email = req.bodyl.email
+
+    if (!firstname || !name || !birthdate || !email) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/patient/profil/')
+    }
+
+    let birthdateToAdd
+    try {
+        birthdateToAdd = new Date(birthdate)
+    } catch(e){
+        req.session.error = "Le format de la date ne convient pas"
+        return res.redirect('/patient/profil')
+    }
+    let patient = new Patient(name, firstname, email, hashPassword, birthdateToAdd, gender, weightDouble)
+    patient = await PatientServices.updatePatient(patient)
+    res.redirect('/')
+
+})
 
 
 module.exports = router

@@ -16,21 +16,28 @@ article{
 .articleOrd{
     background-color: var(--white);
     width: 250px;
-    height:200px;
     border-radius: 40px;
     align-items: center;
-    display: block;
-    margin-right: 50px;
-    margin-left: 50px;
+    display: flex;
+    margin: 1rem 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: column;
 }
+.articleOrd p {
+    width: 100%;
+}
+
 .articleOrdpass{
     background-color: var(--darkblue);
-    color:var(--white);
     width: 250px;
-    height:200px;
     border-radius: 40px;
     align-items: center;
-    display: block;
+    display: flex;
+    margin: 1rem 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 .liste{
@@ -57,10 +64,9 @@ article{
 }
 .sectionblueConnected{
     width: 100%;
-    height: 360px;
     background-color: var(--blue);
     color: var(--white);
-    padding: 0px 30px;
+    padding: 30px;
     display: inline-block;
     font-size: 1.2rem;
     justify-content: space-between;
@@ -79,7 +85,7 @@ article{
 .sectionwhiteConnected{
     width: 100%;
     color: var(--white);
-    padding: 0px 30px;
+    padding: 30px;
     display: inline-block;
     font-size: 1.2rem;
     justify-content: space-between;

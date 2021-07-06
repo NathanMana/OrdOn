@@ -1,7 +1,11 @@
 const Attribution = require('../models/Attribution');
 const Prescription = require('../models/Prescription');
-const AttributionService = require('./AttributionService');
-const pool = require('./DatabaseConnection')
+const AttributionServices = require('./AttributionServices');
+const AttributionService = require('./AttributionServices');
+const CouncilServices = require('./CouncilServices');
+const pool = require('./DatabaseConnection');
+const DoctorServices = require('./DoctorServices');
+const PatientServices = require('./PatientServices');
 
 /**
  * Gère toutes les opérations sur la table Prescription
@@ -16,7 +20,7 @@ class PrescriptionServices {
             const connection = await pool.getConnection();
             const result = await connection.query(
                 'INSERT INTO prescription(date_creation, isQRCodeVisible, id_doctor, id_patient) VALUES (?, false, ?, ?) ', 
-                [prescription.getDateCreation(), prescription.getIdDoctor(), prescription.getIdPatient()]
+                [prescription.getDateCreation(), prescription.getDoctorId(), prescription.getPatientId()]
             )
             if (!result) throw 'Une erreur est survenue'
             prescription.setPrescriptionId(result[0].insertId)
@@ -38,19 +42,17 @@ class PrescriptionServices {
      * @param {long} idPrescription 
      * @returns {Prescription} l'ordonnance cherchée
      */
-    static async getPrescriptionById(idPrescription) {
+    static async getPrescriptionById(encryptedId) {
         try {
-            if (!idPrescription || idPrescription <= 0) throw 'L\id indiqué est erroné'
-
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_prescription = ?', 
-                [idPrescription]
+                'SELECT * FROM prescription WHERE encryptedId = ?', // rajouter un et 3 ans <
+                [encryptedId]
             )
-            if (!result[0][0]) throw 'Une erreur est survenue'
-
-            // On convertit le résultat en objet js
+            connection.release()
             const prescriptionData = result[0][0]
+            if (!prescriptionData) return null
+
             const prescription = new Prescription(
                 prescriptionData.id_doctor,
                 prescriptionData.id_patient,
@@ -58,60 +60,121 @@ class PrescriptionServices {
                 null
             )
             //On complete l'objet prescription avec les Attributions et les conseils
-            prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
-            prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
+            prescription.setPrescriptionId(prescriptionData.id_prescription)
+            const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListAttributions(listAttributions)
+            const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListCouncils(listCouncils)
             prescription.setPrescriptionId(prescriptionData.prescription_id)
             prescription.setEncryptedId(prescriptionData.encryptedId)
+            const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+            prescription.setDoctor(doctor)
+            const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+            prescription.setPatient(patient)
             
             connection.release()
-            console.log('Presription récupérée')
+            console.log('Presriptions récupérées')
             return prescription
         }
         catch (e) { console.log(e)}
     }
 
-
-
-
-     /**
-     * @returns {listPrescription} la liste d'ordonnance
+    /**
+     * Récupère une liste d'ordonnances valides et qui n'ont pas encore été archivées
+     * @return Array(Prescription)
      */
-      static async displayPrescriptionPatient(id_patient){
+    static async getListValidPrescriptionsByPatientId(id, limit = null) {
         try {
-            listPrescriptionNoneArchived = []
-            listePrescriptionArchived = []
             const connection = await pool.getConnection();
+            let limitQuery = ''
+            if (limit) {
+                limitQuery = 'LIMIT ' + limit
+            }
             const result = await connection.query(
-                'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NULL',
-                [id_patient], function(err,rows){
-                    rows.forEach(element => {
-                        // On convertit le résultat en objet js
-                        const prescription = new Prescription()
-                        Object.assign(prescription, element[0][0])
-                        //On complete l'objet prescription avec les Attributions et les conseils
-                        prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
-                        prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
-                        listPrescriptionNoneArchived.add(prescription)
-                    });    
-                })
-                if (!result) throw 'Une erreur est survenue'
-                const result2 = await connection.query(
-                    'SELECT * FROM prescription WHERE id_patient= ? AND date_archived IS NOT NULL',
-                    [id_patient], function(err,rows){
-                        rows.forEach(element => {
-                            // On convertit le résultat en objet js
-                            const prescription = new Prescription()
-                            Object.assign(prescription, element[0][0])
-                            //On complete l'objet prescription avec les Attributions et les conseils
-                            prescription.setListAttributions(AttributionService.getListAttributionsByPrescriptionId(prescription.getIdPrescription()))
-                            prescription.setListCouncils(CouncilService.getListCouncilsByPrescriptionId(prescription.getIdPrescription()))
-                            listPrescriptionArchived.add(prescription)
-                        });    
-                    })
-            if (!result2) throw 'Une erreur est survenue'
+                'SELECT * FROM prescription WHERE id_patient = ? AND date_archived IS NULL AND DATE_ADD(date_creation, INTERVAL 3 MONTH) >= CURDATE() ' + limitQuery, // rajouter un et 3 ans <
+                [id]
+            )
             connection.release()
-            return listPrescriptionNoneArchived, listePrescriptionArchived
-        }catch(e){ console.log(e)}     
+            const listPrescriptions = []
+            for (let i = 0; i < result[0].length; i++) {
+                const prescriptionData = result[0][i]
+                const prescription = new Prescription(
+                    prescriptionData.id_doctor,
+                    prescriptionData.id_patient,
+                    null,
+                    null
+                )
+                //On complete l'objet prescription avec les Attributions et les conseils
+                prescription.setPrescriptionId(prescriptionData.id_prescription)
+                const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListAttributions(listAttributions)
+                const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListCouncils(listCouncils)
+                prescription.setPrescriptionId(prescriptionData.prescription_id)
+                prescription.setEncryptedId(prescriptionData.encryptedId)
+                const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+                prescription.setDoctor(doctor)
+                const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+                prescription.setPatient(patient)
+
+                listPrescriptions.push(prescription)
+            }
+            
+            connection.release()
+            console.log('Presriptions récupérées')
+            return listPrescriptions
+        }
+        catch(e) {console.log(e)}
+    }
+
+    /**
+     * Récupère une liste d'ordonnances valides et qui n'ont pas encore été archivées
+     * @return Array(Prescription)
+     */
+     static async getListInvalidPrescriptionsByPatientId(id, limit = null) {
+        try {
+            const connection = await pool.getConnection();
+            let limitQuery = ''
+            if (limit) {
+                limitQuery = 'LIMIT ' + limit
+            }
+            const result = await connection.query(
+                'SELECT * FROM prescription WHERE id_patient = ? AND (date_archived IS NOT NULL OR (date_archived IS NULL AND DATE_ADD(date_creation, INTERVAL 3 MONTH) < CURDATE())) ' + limitQuery,
+                [id]
+            )
+            connection.release()
+            const listPrescriptions = []
+            for (let i = 0; i < result[0].length; i++) {
+                const prescriptionData = result[0][i]
+                const prescription = new Prescription(
+                    prescriptionData.id_doctor,
+                    prescriptionData.id_patient,
+                    null,
+                    null
+                )
+                //On complete l'objet prescription avec les Attributions et les conseils
+                prescription.setDateCreation(prescriptionData.date_creation)
+                prescription.setDateArchived(prescriptionData.date_archived)
+                prescription.setPrescriptionId(prescriptionData.id_prescription)
+                const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListAttributions(listAttributions)
+                const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListCouncils(listCouncils)
+                prescription.setPrescriptionId(prescriptionData.prescription_id)
+                prescription.setEncryptedId(prescriptionData.encryptedId)
+                const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+                prescription.setDoctor(doctor)
+                const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+                prescription.setPatient(patient)
+
+                listPrescriptions.push(prescription)
+            }
+            
+            connection.release()
+            console.log('Presriptions récupérées')
+            return listPrescriptions
+        }
+        catch(e) {console.log(e)}
     }
 
 }

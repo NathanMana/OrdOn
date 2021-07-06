@@ -5,9 +5,7 @@ window.addEventListener('resize', resizing, false)
  */
 function openResponsiveMenu() {
     document.querySelector('aside').style.left = "0"
-    const background = document.querySelector('.background-black')
-    background.style.visibility = "visible"
-    background.style.opacity = "1"
+    showBackground()
 }
 
 /**
@@ -34,4 +32,18 @@ function resizing(){
             background.style.visibility = "hidden"
         }
     }
+}
+
+function showBackground() {
+    const background = document.querySelector('.background-black')
+    background.style.visibility = "visible"
+    background.style.opacity = "1"
+}
+
+function checkPassword(url) {
+    if (!url) return
+    showBackground()
+    const div = document.querySelector('.pop-up__password')
+    div.style.display = "block"
+    document.getElementById('js-pathDesired').value = url
 }

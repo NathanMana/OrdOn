@@ -12,9 +12,10 @@
     <%- include('./nav'); -%>
 <% } %> 
 <% if (locals.flash) { %> 
-    <% if (typeof locals.flash.success != undefined) { %> 
+    <% if (typeof locals.flash.success != undefined && locals.flash.success) { %> 
         <div class="sectiongreen flash"><span><%= locals.flash.success %></span></div>
-    <% } else if(typeof locals.flash.error != undefined) { %> 
+    <% } %> 
+    <% if(typeof locals.flash.error != undefined && locals.flash.error) { %> 
         <div class="sectionred flash"><span><%= locals.flash.error %></span></div>
     <% } %> 
 <% } %> 

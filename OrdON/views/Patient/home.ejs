@@ -26,7 +26,7 @@
                         <% if (prescription.listCouncils.length > 0) { %> 
                             <p class="parBlue">Comprenant des avis médicaux</p>
                         <% } %>  
-                        <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+                        <a  onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
                     </article>
                 <% }) %> 
             <% } else { %> 
@@ -58,7 +58,6 @@
         </div>
         <a href="/patient/historique"><btn class="btngreensmall" style="margin: 10px auto;padding: 10px 20px;">Tout voir</btn> </a>
     </section>
-
     <div id="coverPage" >
     </div>
    <div id="QRCodeDiv" style="display: none;">

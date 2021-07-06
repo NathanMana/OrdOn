@@ -329,6 +329,36 @@ router.get('/', async (req, res) => {
 
     return null
 })
+
+router.post('/checkpassword', async (req, res) => {
+    const password = JSON.stringify(req.body.password)
+    const url = req.body.url
+    if (!password || !url) return redirect('/patient/')
+
+    // récupérer le patient pour comparer le mdp
+    const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+    if (!patient) return res.redirect('/deconnexion')
+
+    const verifPass = await bcrypt.compare(password, patient.getPassword())
+    if (!verifPass) {
+        req.session.flash = {
+            error : 'Mot de passe eronné'
+        }
+        return res.redirect('/patient/')
+    }
+    
+    return res.redirect(url)
+})
+
+router.get('/ordonnance/:id', async (req, res) => {
+    const encryptedId = req.params.id
+    if (!encryptedId) return redirect('/patient/')
+
+    const prescription = await PrescriptionServices.getPrescriptionById(encryptedId);
+    if (!prescription) return redirect('/patient/')
+
+    return res.render('Patient/ordonnance', {prescription : prescription.toObject()})
+})
  
 /**
  * Gère l'affichage de la page profile du patient

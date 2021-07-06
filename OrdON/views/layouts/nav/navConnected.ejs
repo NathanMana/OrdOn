@@ -14,6 +14,14 @@
     </div>
 </nav>
 <div class="background-black"></div>
+<div class="pop-up__password">
+    <h3>Indiquez votre mot de passe</h3>
+    <form method="post" action="/patient/checkpassword">
+        <input class="modifBox" type="password" placeholder="Mot de passe" name="password" id="">
+        <input type="hidden" name="url" id="js-pathDesired">
+        <button class="btngreen" type="submit">Valider</button>
+    </form>
+</div>
 <aside>
     <ul>
         <li style="text-align: right;display: flex;justify-content: flex-end;">

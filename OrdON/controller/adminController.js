@@ -55,16 +55,44 @@ router.post('/connexion', async (req, res) => {
         return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
     }
 
-    req.session.user = {email: email}
+    req.session.user = {email: email, isValidated: false}
 
-    return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
+    return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/doubleauthentification')
+})
+
+router.get('/doubleauthentification', (req, res) => {
+    if (!req.session.user || !req.session.user.email) {
+        return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
+    }
+    req.session.user.entier = Math.floor(Math.random() * (199999 - 100000 + 1)) + 100000;
+    nodemailer(
+        req.session.user.email,
+        'Votre  code est '+req.session.user.entier,
+        'votre code est '+req.session.user.entier,
+        'votre code est '+req.session.user.entier
+    )
+    res.render('Admin/doubleAuth')
+})
+
+router.post('/doubleauthentification', (req, res) => {
+    if (!req.session.user || !req.session.user.email) {
+        return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
+    }
+
+    if (req.body.code != req.session.user.entier) {
+        req.session.error = "Le code est mauvais"
+        return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/doubleauthentification')
+    }
+    req.session.user.entier = undefined;
+    req.session.user.isValidated = true
+    res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
 })
 
 /**
  * Vérifie les droits d'accès a chaque requête
  */
  router.use((req, res, next) => {
-    if (typeof req.session.user === 'undefined' || !req.session.user) {
+    if (typeof req.session.user === 'undefined' || !req.session.user || !req.session.user.isValidated) {
         return res.redirect("/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion")
     }
     next()

@@ -29,8 +29,8 @@
                         <% } %> 
                     </div>
                     <div class="voirgenerer">
-                        <a href=""><button class="btngreensmall">Voir</button></a>
-                        <button class="btndark" onclick="showQR('<%= prescription.encryptedId %>')">Générer QR CODE </button>
+                        <a onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><button class="btngreensmall">Voir</button></a>
+                        <a><button class="btndark" onclick="showQR('<%= prescription.encryptedId %>')">Générer QR CODE </button></a>
                     </div>
                 </article>
             <% }) %>

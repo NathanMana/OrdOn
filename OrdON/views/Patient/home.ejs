@@ -26,7 +26,7 @@
                         <% if (prescription.listCouncils.length > 0) { %> 
                             <p class="parBlue">Comprenant des avis médicaux</p>
                         <% } %>  
-                        <a  onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+                        <a onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
                     </article>
                 <% }) %> 
             <% } else { %> 
@@ -49,7 +49,7 @@
                         <% if (prescription.listCouncils.length > 0) { %> 
                             <p class="parWhite">Comprenant des avis médicaux</p>
                         <% } %>  
-                        <a><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
+                        <a onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><btn class="btngreensmall" style="margin: 20px auto;">Voir</btn> </a>
                     </article>
                 <% }) %> 
             <% } else { %> 

@@ -643,6 +643,13 @@ input:focus {
     display: block;
 }
 
+#pd {
+    cursor: pointer;
+}
+#pd:hover {
+    text-decoration: underline;
+}
+
 /** Gestion du MDP */
 .pop-up__password {
     z-index: 17;

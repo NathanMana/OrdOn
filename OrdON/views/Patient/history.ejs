@@ -38,7 +38,7 @@
                         <% } %> 
                     </div>
                     <div class="voirgenerer">
-                        <a href=""><button class="btngreensmall">Voir</button></a>
+                        <a onclick="checkPassword('/patient/ordonnance/<%= prescription.encryptedId %>')"><button class="btngreensmall">Voir</button></a>
                     </div>
                 </article>
             <% }) %>

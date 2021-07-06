@@ -3,7 +3,7 @@ const Prescription = require('../models/Prescription');
 const AttributionServices = require('./AttributionServices');
 const AttributionService = require('./AttributionServices');
 const CouncilServices = require('./CouncilServices');
-const pool = require('./DatabaseConnection');
+const pool = require('./DatabaseConnection')('ordon');
 const DoctorServices = require('./DoctorServices');
 const PatientServices = require('./PatientServices');
 

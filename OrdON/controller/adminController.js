@@ -135,7 +135,7 @@ router.get('/accepter/medecin/:id', async (req, res) => {
      */
      nodemailer(
         doctor.getEmail(),
-        'Validation du compte acceptée',
+        'Création du compte acceptée',
         "Bonjour, nous sommes ravi de vous annoncer que votre demande de validation a été validée."
     )
     res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
@@ -156,7 +156,7 @@ router.get('/accepter/medecin/:id', async (req, res) => {
      */
     nodemailer(
         pharmacist.getEmail(),
-        'Validation du compte acceptée',
+        'Création du compte acceptée',
         "Bonjour, nous sommes ravi de vous annoncer que votre demande de validation a été validée."
     )
     res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
@@ -179,7 +179,7 @@ router.get('/accepter/medecin/:id', async (req, res) => {
      */
     nodemailer(
         doctor.getEmail(),
-        'Validation du compte refusée',
+        'Création du compte refusée',
         "Bonjour, nous sommes désolé de vous annoncer que votre demande de validation de compte a été refusée."
     )
 
@@ -203,7 +203,7 @@ router.get('/accepter/medecin/:id', async (req, res) => {
      */
     nodemailer(
         pharmacist.getEmail(),
-        'Validation du compte refusée',
+        'Création du compte refusée',
         "Bonjour, nous sommes désolé de vous annoncer que votre demande de validation de compte a été refusée."
     )
 

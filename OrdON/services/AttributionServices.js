@@ -1,4 +1,4 @@
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordon')
 
 const Attribution = require('../models/Attribution');
 const MentionService = require('./MentionServices');

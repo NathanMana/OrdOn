@@ -49,7 +49,8 @@ class Pharmacist extends Profesionnal{
             city : this.getCity(),
             zipcode : this.getZipcode(),
             address : this.getAddress(),
-            gender: this.getGender()
+            gender: this.getGender(),
+            proofPath : this.getProofPath()
         }
     }
 }

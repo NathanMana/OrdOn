@@ -1,5 +1,5 @@
 const Mention = require('../models/Mention');
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordon')
 
 /**
  * Gère toutes les opérations sur la table MentionAttribution

@@ -4,6 +4,11 @@
     <%- include('../layouts/header'); -%>
     <title>OrdOn</title>
     <link rel="stylesheet" href="/src/css/connectionPage.css"/>
+    <style>
+        .textConsigne span {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
@@ -13,7 +18,7 @@
             <div class="container">
                 <div class="container">
                     <div class="formulaire">
-                        <form action="/pharmacien/inscription" method="post" class="form">
+                        <form action="/pharmacien/inscription" method="post" class="form" enctype="multipart/form-data">
                             <div class="profile__input__container" style="margin-bottom: 0px;">
                                 <input class="profilBox" name="name" placeholder="Nom" required>
                                 <input class="profilBox" name="firstName" placeholder="Prenom" required>
@@ -28,21 +33,27 @@
                                 <input class="profilBox" name="email" placeholder="Email" pattern="^[a-z0-9._+-]+@[a-z0-9.-_]+\.[a-z]{2,4}$" required>
                             </div>
                             <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
+                                <p class="titleConsigne" style="margin: 10px 30px 10px 0;display:block;">
+                                    Preuve de profession
+                                </p>
+                                <input type="file" name="fileUpload">
+                            </div>
+                            <div class="profile__input__container" style="padding-left: 1rem;margin-bottom: 0px;margin-top:0px;">
                                 <p class="titleConsigne" margin-bottom: 0px;>
                                     Consigne du mot de passe
                                 </p>
                             </div>
                             <div class="profile__input__container" style="margin-bottom: 0px;margin-top:0px;">
                                 <p class="textConsigne">
-                                    Au moins 8 caractères<br>
-                                    Au moins 1 minuscule<br>
-                                    Au moins 1 majuscule<br>
-                                    Au moins 1 chifre<br>
-                                    Au moins 1 caractère spécial<br>
+                                    <span id="js-password__length"> Au moins 8 caractères</span>
+                                    <span id="js-password__mini"> Au moins 1 minuscule</span>
+                                    <span id="js-password__cap"> Au moins 1 majuscule</span>
+                                    <span id="js-password__digit"> Au moins 1 chiffre</span>
+                                    <span id="js-password__special-char"> Au moins 1 caractère spécial</span>
                                 </p>
                             </div>
                             <div class="profile__input__container" style="margin-top:0px; margin-bottom: 0px;">
-                                <input class="profilBox" name="password" type="password"  placeholder="Mot de passe" require>
+                                <input id="js-password" class="profilBox" name="password" type="password"  placeholder="Mot de passe" require>
                             </div>
                             <div class="profile__input__container" style="margin-top:0px;margin-bottom: 0px;">
                                 <input class="profilBox" name="password_check" type="password"  placeholder="Répéter le mot de passe" require>
@@ -60,6 +71,7 @@
                 </div>
         </section>
     </div>
+    <script src="/src/js/register.js"></script>
     <%- include('../layouts/footer/footerManager'); -%>
     <%- include('../layouts/scripts'); -%>
     <script src="https://kit.fontawesome.com/7c35e24fba.js" crossorigin="anonymous"></script>

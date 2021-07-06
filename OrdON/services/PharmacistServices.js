@@ -1,5 +1,5 @@
 const Pharmacist = require('../models/Pharmacist');
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordonpharmacist')
 
 
 /**
@@ -14,8 +14,8 @@ const pool = require('./DatabaseConnection')
         try {
             const object = pharmacist.toObject();
             const connection = await pool.getConnection();
-            const result_pro = await connection.query('INSERT INTO professionnal (city, address, zipcode) VALUES (?, ?, ?)', 
-                [pharmacist.getCity(), pharmacist.getAddress(), pharmacist.getZipcode()])
+            const result_pro = await connection.query('INSERT INTO ordon.professionnal (city, address, zipcode, proofPath) VALUES (?, ?, ?, ?)', 
+                [pharmacist.getCity(), pharmacist.getAddress(), pharmacist.getZipcode(), pharmacist.getProofPath()])
             if (!result_pro) throw 'Une erreur est survenue'
             pharmacist.setProfessionnalId(result_pro[0].insertId)
             const pharma_insert = {
@@ -59,7 +59,14 @@ const pool = require('./DatabaseConnection')
                 isAccountValidated = ?, tokenEmail = ?, tokenResetPassword = ? WHERE id_pharmacist = ?`, 
                 [
                    pharmacist.getName(), pharmacist.getFirstname(), pharmacist.getEmail(), pharmacist.getPassword(), pharmacist.getIsEmailVerified(),
-                   pharmacist.getIsAccountValidated(), pharmacist.getTokenEmail(), pharmacist.getTokenResetPassword(), pharmacist.getPharmacistId()
+                   pharmacist.getIsAccountValidated(), pharmacist.getTokenEmail(), pharmacist.getTokenResetPassword(),
+                   pharmacist.getPharmacistId()
+                ]
+            )
+            await connection.query(
+                `UPDATE ordon.professionnal SET city = ?, address = ?, zipcode = ?, proofPath = ? WHERE id_professionnal = ?`, 
+                [
+                   pharmacist.getCity(), pharmacist.getAddress(), pharmacist.getZipcode(), pharmacist.getProofPath(), pharmacist.getProfessionnalId()
                 ]
             )
             connection.release()
@@ -88,7 +95,7 @@ const pool = require('./DatabaseConnection')
                 [pharmacist.getPharmacistId(), pharmacist.getEncryptedId()]
             )
             connection.query(
-                'DELETE FROM professionnal WHERE id_professionnal = ?', 
+                'DELETE FROM ordon.professionnal WHERE id_professionnal = ?', 
                 [pharmacist.getProfessionnalId()]
             )
             connection.release()
@@ -109,7 +116,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE id_pharmacist = ?', 
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE id_pharmacist = ?', 
                 [idPharmacist]
             )
             connection.release()
@@ -132,6 +139,7 @@ const pool = require('./DatabaseConnection')
             pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
             pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
             pharmacist.setIsAccountValidated(pharmacistData.isAccountValidated)
+            pharmacist.setProofPath(pharmacistData.proofpath)
             return pharmacist
         }
         catch (e) { console.log(e)}
@@ -149,7 +157,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE tokenEmail = ?', 
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE tokenEmail = ?', 
                 [token]
             )
             connection.release()
@@ -174,6 +182,7 @@ const pool = require('./DatabaseConnection')
             pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
             pharmacist.setIsAccountValidated(pharmacistData.isEmailVerified)
             pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            pharmacist.setProofPath(pharmacistData.proofpath)
             return pharmacist
         }
         catch (e) { console.log(e)}
@@ -207,6 +216,7 @@ const pool = require('./DatabaseConnection')
             pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
             pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
             pharmacist.setIsAccountValidated(pharmacistData.isAccountValidated)
+            pharmacist.setProofPath(pharmacistData.proofpath)
             return pharmacist
         }
         catch (e) {
@@ -226,7 +236,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE encryptedId = ?', 
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE encryptedId = ?', 
                 [encryptedId]
             )
             connection.release()
@@ -249,6 +259,7 @@ const pool = require('./DatabaseConnection')
             pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
             pharmacist.setIsAccountValidated(pharmacistData.isEmailVerified)
             pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            pharmacist.setProofPath(pharmacistData.proofpath)
             // On convertit le résultat en objet js
             console.log('doctor récupéré')
             return pharmacist
@@ -264,7 +275,7 @@ const pool = require('./DatabaseConnection')
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist NATURAL JOIN professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
             )
             connection.release()
             if (!result[0]) return
@@ -287,6 +298,7 @@ const pool = require('./DatabaseConnection')
                 pharmacist.setTokenResetPassword(data.tokenResetPassword)
                 pharmacist.setIsEmailVerified(data.isEmailVerified)
                 pharmacist.setIsAccountValidated(data.isAccountValidated)
+                pharmacist.setProofPath(data.proofpath)
                 listPharmacists.push(pharmacist)
             })
             return listPharmacists

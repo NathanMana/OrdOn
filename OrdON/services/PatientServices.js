@@ -1,4 +1,4 @@
-const pool = require('./DatabaseConnection');
+const pool = require('./DatabaseConnection')('ordonPatient');
 const Patient = require('../models/Patient')
 
 /**

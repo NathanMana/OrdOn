@@ -1,5 +1,5 @@
 const Drug = require('../models/Drug');
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordon')
 
 /**
  * Gère toutes les opérations sur la table Docteur

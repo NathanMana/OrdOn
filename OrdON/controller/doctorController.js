@@ -4,6 +4,8 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const nodemailer = require('../externalsAPI/NodeMailer');
+var formidable = require('formidable');
+var fs = require('fs');
 
 const Council = require('../models/Council')
 const Mention = require('../models/Mention')
@@ -75,48 +77,63 @@ router.get('/inscription', (req, res)=>{
  * @method POST
  */
 router.post('/inscription', async(req, res) => {
-    const name = req.body.name
-    const firstName = req.body.firstName
-    const email = req.body.email
-    const password = JSON.stringify(req.body.password)
-    const city = req.body.city
-    const address = req.body.address
-    const zipcode = req.body.zipcode
-    const password_check = JSON.stringify(req.body.password_check)
-    const gender = req.body.gender
+    // Traitement du fichier
+    let form = new formidable.IncomingForm();
+    form.parse(req, async function (err, fields, files) {
+        const name = fields.name
+        const firstName = fields.firstName
+        const email = fields.email
+        const password = JSON.stringify(fields.password)
+        const city = fields.city
+        const address = fields.address
+        const zipcode = fields.zipcode
+        const password_check = JSON.stringify(fields.password_check)
+        const gender = fields.gender
 
-    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
+        if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
             req.session.error = "Tous les champs n'ont pas été remplis"
             return res.redirect('/docteur/inscription')
-    }
-    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
-        req.session.error = "Le mot de passe ne respecte pas tous les critères"
-        return res.redirect('/docteur/inscription')
-    }
+        }
+        if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+            req.session.error = "Le mot de passe ne respecte pas tous les critères"
+            return res.redirect('/docteur/inscription')
+        }
+    
+        if (password !== password_check) {
+            req.session.error = "Les mots de passe ne correspondent pas"
+            return res.redirect('/pharmacien/inscription')
+        }
+    
+        // Vérifier si l'email est déjà utilisé
+        if(await DoctorServices.isEmailPresent(email)) {
+            req.session.error = "Cet email est déjà utilisé"
+            return res.redirect('/docteur/inscription')
+        }
+       
+        if (!files.fileUpload.name) {
+            req.session.error = "La preuve de profession est obligatoire !"
+            return res.redirect('/docteur/inscription')
+        }
+        var oldpath = files.fileUpload.path;
+        var newpath = 'C:/EFREI/Mastercamp/SolutionFactory/Ordon/OrdOn/OrdON/src/proof/' + files.fileUpload.name;
+        fs.rename(oldpath, newpath, function (err) {
+            if (err) throw err;
+        });
 
-    if (password !== password_check) {
-        req.session.error = "Les mots de passe ne correspondent pas"
-        return res.redirect('/pharmacien/inscription')
-    }
-
-    // Vérifier si l'email est déjà utilisé
-    if(await DoctorServices.isEmailPresent(email)) {
-        req.session.error = "Cet email est déjà utilisé"
-        return res.redirect('/docteur/inscription')
-    }
-
-    const hashPassword = await bcrypt.hash(password, 10)
-    let doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
-    doctor = await DoctorServices.addDoctor(doctor)
-      
-    // Envoyer l'email de confirmation
-    nodemailer(
-        email, 
-        "Confirmation d'inscription à OrdON", 
-        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail(),
-        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail()
-    )
-    return res.redirect('/email/verification/envoyee')
+        const hashPassword = await bcrypt.hash(password, 10)
+        let doctor = new Doctor(name, firstName, email, hashPassword, city, address, zipcode, gender)
+        doctor.setProofPath(files.fileUpload.name)
+        doctor = await DoctorServices.addDoctor(doctor)
+        
+        // Envoyer l'email de confirmation
+        nodemailer(
+            email, 
+            "Confirmation d'inscription à OrdON", 
+            "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail(),
+            "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/docteur/email/verification/" + doctor.getTokenEmail()
+        )
+        return res.redirect('/email/verification/envoyee')
+    }); 
 })
 
 /**

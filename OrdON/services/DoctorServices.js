@@ -1,5 +1,5 @@
 const Doctor = require('../models/Doctor');
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordondoctor')
 
 /**
  * Gère toutes les opérations sur la table Docteur
@@ -13,8 +13,8 @@ const pool = require('./DatabaseConnection')
         try {
             const object = doctor.toObject();
             const connection = await pool.getConnection();
-            const result_pro = await connection.query('INSERT INTO professionnal (city, address, zipcode) VALUES (?, ?, ?)', 
-                [doctor.getCity(), doctor.getAddress(), doctor.getZipcode()])
+            const result_pro = await connection.query('INSERT INTO ordon.professionnal (city, address, zipcode, proofPath) VALUES (?, ?, ?, ?)', 
+                [doctor.getCity(), doctor.getAddress(), doctor.getZipcode(), doctor.getProofPath()])
             if (!result_pro) throw 'Une erreur est survenue'
             doctor.setProfessionnalId(result_pro[0].insertId)
             const doctor_insert = {
@@ -61,6 +61,12 @@ const pool = require('./DatabaseConnection')
                     doctor.getIsAccountValidated(), doctor.getTokenEmail(), doctor.getTokenResetPassword(), doctor.getDoctorId()
                 ]
             )
+            await connection.query(
+                `UPDATE ordon.professionnal SET city = ?, address = ?, zipcode = ?, proofPath = ? WHERE id_professionnal = ?`, 
+                [
+                   doctor.getCity(), doctor.getAddress(), doctor.getZipcode(), doctor.getProofPath(), doctor.getProfessionnalId()
+                ]
+            )
             connection.release()
             console.log("Docteur modifié")
         }
@@ -88,7 +94,7 @@ const pool = require('./DatabaseConnection')
                 [doctor.getDoctorId(), doctor.getEncryptedId()]
             )
             connection.query(
-                'DELETE FROM professionnal WHERE id_professionnal = ?', 
+                'DELETE FROM ordon.professionnal WHERE id_professionnal = ?', 
                 [doctor.getProfessionnalId()]
             )
             connection.release()
@@ -110,7 +116,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE id_doctor = ?', 
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE id_doctor = ?', 
                 [idDoctor]
             )
             connection.release()
@@ -133,6 +139,7 @@ const pool = require('./DatabaseConnection')
             doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             doctor.setIsAccountValidated(doctorData.isEmailVerified)
             doctor.setIsEmailVerified(doctorData.isEmailVerified)
+            doctor.setProofPath(doctorData.proofpath)
             return doctor
         }
         catch (e) { console.log(e)}
@@ -150,7 +157,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE tokenEmail = ?', 
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE tokenEmail = ?', 
                 [token]
             )
             connection.release()
@@ -173,6 +180,7 @@ const pool = require('./DatabaseConnection')
             doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             doctor.setIsAccountValidated(doctorData.isEmailVerified)
             doctor.setIsEmailVerified(doctorData.isEmailVerified)
+            doctor.setProofPath(doctorData.proofpath)
             return doctor
         }
         catch (e) { console.log(e)}
@@ -190,7 +198,7 @@ const pool = require('./DatabaseConnection')
             // Double vérification avec l'id encrypté
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE encryptedId = ?', 
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE encryptedId = ?', 
                 [encryptedId]
             )
             connection.release()
@@ -213,6 +221,7 @@ const pool = require('./DatabaseConnection')
             doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             doctor.setIsAccountValidated(doctorData.isEmailVerified)
             doctor.setIsEmailVerified(doctorData.isEmailVerified)
+            doctor.setProofPath(doctorData.proofpath)
             // On convertit le résultat en objet js
             console.log('doctor récupéré')
             return doctor
@@ -248,6 +257,7 @@ const pool = require('./DatabaseConnection')
             doctor.setTokenResetPassword(doctorData.tokenResetPassword)
             doctor.setIsAccountValidated(doctorData.isAccountValidated)
             doctor.setIsEmailVerified(doctorData.isEmailVerified)
+            doctor.setProofPath(doctorData.proofpath)
             return doctor
         }
         catch (e) {
@@ -263,7 +273,7 @@ const pool = require('./DatabaseConnection')
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor NATURAL JOIN professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE isAccountValidated = false AND proofpath IS NOT NULL'
             )
             connection.release()
             if (!result[0]) return
@@ -286,6 +296,7 @@ const pool = require('./DatabaseConnection')
                 doctor.setTokenResetPassword(data.tokenResetPassword)
                 doctor.setIsAccountValidated(data.isAccountValidated)
                 doctor.setIsEmailVerified(data.isEmailVerified)
+                doctor.setProofPath(data.proofpath)
                 listDoctors.push(doctor)
             })
             return listDoctors

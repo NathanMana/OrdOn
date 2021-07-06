@@ -1,15 +1,22 @@
 #------------------------------------------------------------
 #        Script MySQL.
 #------------------------------------------------------------
-
+SET FOREIGN_KEY_CHECKS = 0;
 DROP SCHEMA IF EXISTS `ordon`;
 CREATE SCHEMA `ordon` ;
+DROP SCHEMA IF EXISTS `ordonPatient`;
+CREATE SCHEMA `ordonPatient` ;
+DROP SCHEMA IF EXISTS `ordonDoctor`;
+CREATE SCHEMA `ordonDoctor` ;
+DROP SCHEMA IF EXISTS `ordonPharmacist`;
+CREATE SCHEMA `ordonPharmacist` ;
+SET FOREIGN_KEY_CHECKS = 1;
 
 #------------------------------------------------------------
 # Table: Patient
 #------------------------------------------------------------
 
-create table ordon.Patient(
+create table ordonPatient.Patient(
         id_patient         Int  Auto_increment  NOT NULL ,
         encryptedId        Varchar (100) ,
         birthdate          Date NOT NULL ,
@@ -57,7 +64,7 @@ create table ordon.Professionnal(
 # Table: Pharmacist
 #------------------------------------------------------------
 
-create table ordon.Pharmacist(
+create table ordonPharmacist.Pharmacist(
         id_pharmacist      Int Auto_increment NOT NULL ,
         encryptedId        Varchar (100) ,
         name               Varchar (100) NOT NULL ,
@@ -72,7 +79,7 @@ create table ordon.Pharmacist(
         id_professionnal   Int NOT NULL
 	,CONSTRAINT Pharmacist_PK PRIMARY KEY (id_pharmacist)
 
-	,CONSTRAINT Pharmacist_Professionnal_FK FOREIGN KEY (id_professionnal) REFERENCES Professionnal(id_professionnal) ON DELETE CASCADE
+	,CONSTRAINT Pharmacist_Professionnal_FK FOREIGN KEY (id_professionnal) REFERENCES ordon.Professionnal(id_professionnal) ON DELETE CASCADE
 )ENGINE=InnoDB;
 
 
@@ -80,7 +87,7 @@ create table ordon.Pharmacist(
 # Table: Doctor
 #------------------------------------------------------------
 
-create table ordon.Doctor(
+create table ordonDoctor.Doctor(
         id_doctor          Int Auto_increment NOT NULL ,
         encryptedId        Varchar (100) ,
         name               Varchar (100) NOT NULL ,
@@ -95,7 +102,7 @@ create table ordon.Doctor(
         id_professionnal   Int NOT NULL 
 	,CONSTRAINT Doctor_PK PRIMARY KEY (id_doctor)
 
-	,CONSTRAINT Doctor_Professionnal_FK FOREIGN KEY (id_professionnal) REFERENCES Professionnal(id_professionnal) ON DELETE CASCADE
+	,CONSTRAINT Doctor_Professionnal_FK FOREIGN KEY (id_professionnal) REFERENCES ordon.Professionnal(id_professionnal) ON DELETE CASCADE
 )ENGINE=InnoDB;
 
 
@@ -113,8 +120,8 @@ create table ordon.Prescription(
         id_patient       Int
 	,CONSTRAINT Prescription_PK PRIMARY KEY (id_prescription)
 
-	,CONSTRAINT Prescription_Doctor_FK FOREIGN KEY (id_doctor) REFERENCES Doctor(id_doctor) ON DELETE SET NULL
-	,CONSTRAINT Prescription_Patient0_FK FOREIGN KEY (id_patient) REFERENCES Patient(id_patient) ON DELETE SET NULL
+	,CONSTRAINT Prescription_Doctor_FK FOREIGN KEY (id_doctor) REFERENCES ordonDoctor.Doctor(id_doctor) ON DELETE SET NULL
+	,CONSTRAINT Prescription_Patient0_FK FOREIGN KEY (id_patient) REFERENCES ordonPatient.Patient(id_patient) ON DELETE SET NULL
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
@@ -127,7 +134,7 @@ create table ordon.Council(
         id_prescription Int NOT NULL
 	,CONSTRAINT Council_PK PRIMARY KEY (id_council)
 
-	,CONSTRAINT Council_Prescription_FK FOREIGN KEY (id_prescription) REFERENCES Prescription(id_prescription)
+	,CONSTRAINT Council_Prescription_FK FOREIGN KEY (id_prescription) REFERENCES ordon.Prescription(id_prescription)
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
@@ -142,8 +149,8 @@ create table ordon.Attribution(
         id_drug         Int NOT NULL
 	,CONSTRAINT Attribution_PK PRIMARY KEY (id_attribution)
 
-	,CONSTRAINT Attribution_Prescription_FK FOREIGN KEY (id_prescription) REFERENCES Prescription(id_prescription)
-	,CONSTRAINT Attribution_Drug0_FK FOREIGN KEY (id_drug) REFERENCES Drug(id_drug)
+	,CONSTRAINT Attribution_Prescription_FK FOREIGN KEY (id_prescription) REFERENCES ordon.Prescription(id_prescription)
+	,CONSTRAINT Attribution_Drug0_FK FOREIGN KEY (id_drug) REFERENCES ordon.Drug(id_drug)
 )ENGINE=InnoDB;
 
 
@@ -171,8 +178,8 @@ create table ordon.given_attribution(
         isAlert          Bool NOT NULL
 	,CONSTRAINT given_attribution_PK PRIMARY KEY (id_given_attribution)
 
-	,CONSTRAINT given_attribution_Attribution_FK FOREIGN KEY (id_attribution) REFERENCES Attribution(id_attribution)
-	,CONSTRAINT given_attribution_Pharmacist0_FK FOREIGN KEY (id_pharmacist) REFERENCES Pharmacist(id_pharmacist) ON DELETE SET NULL
+	,CONSTRAINT given_attribution_Attribution_FK FOREIGN KEY (id_attribution) REFERENCES ordon.Attribution(id_attribution)
+	,CONSTRAINT given_attribution_Pharmacist0_FK FOREIGN KEY (id_pharmacist) REFERENCES ordonPharmacist.Pharmacist(id_pharmacist) ON DELETE SET NULL
 )ENGINE=InnoDB;
 
 
@@ -185,8 +192,8 @@ create table ordon.mention_attribution(
         id_mention     Int NOT NULL
 	,CONSTRAINT mention_attribution_PK PRIMARY KEY (id_attribution,id_mention)
 
-	,CONSTRAINT mention_attribution_Attribution_FK FOREIGN KEY (id_attribution) REFERENCES Attribution(id_attribution)
-	,CONSTRAINT mention_attribution_Mention0_FK FOREIGN KEY (id_mention) REFERENCES Mention(id_mention)
+	,CONSTRAINT mention_attribution_Attribution_FK FOREIGN KEY (id_attribution) REFERENCES ordon.Attribution(id_attribution)
+	,CONSTRAINT mention_attribution_Mention0_FK FOREIGN KEY (id_mention) REFERENCES ordon.Mention(id_mention)
 )ENGINE=InnoDB;
 
 

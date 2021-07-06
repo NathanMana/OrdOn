@@ -1,4 +1,4 @@
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordon')
 
 const Council = require('../models/Council');
 

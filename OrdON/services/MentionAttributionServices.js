@@ -1,5 +1,5 @@
 const MentionAttribution = require('../models/AssociationClass/MentionAttribution');
-const pool = require('./DatabaseConnection')
+const pool = require('./DatabaseConnection')('ordon')
 const Mention = require('../models/Mention')
 
 /**

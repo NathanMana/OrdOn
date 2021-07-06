@@ -1,11 +1,5 @@
 const mysql = require('mysql2/promise');
-const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: 'ordonadmin',
-    waitForConnections : true,
-});
+const pool = require('./DatabaseConnection')('ordonadmin')
 
 /**
  * Gère toutes les opérations sur la table Attribution

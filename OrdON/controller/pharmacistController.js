@@ -3,6 +3,9 @@
 const express = require('express');
 const router = express.Router()
 const bcrypt = require('bcrypt')
+var formidable = require('formidable');
+var fs = require('fs');
+
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
 const Prescription = require('./../models/Prescription')
@@ -65,47 +68,63 @@ router.get('/inscription', (req, res)=>{
  * @method POST
  */
 router.post('/inscription', async (req, res) => {
-    const name = req.body.name
-    const firstName = req.body.firstName
-    const email = req.body.email
-    const password = JSON.stringify(req.body.password)
-    const city = req.body.city
-    const address = req.body.address
-    const zipcode = req.body.zipcode
-    const password_check = JSON.stringify(req.body.password_check)
-    const gender = req.body.gender
-
-    if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
-            req.session.error = "Tous les champs n'ont pas été remplis"
-            return res.redirect('/pharmacien/inscription')
-    }
-    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
-        req.session.error = "Le mot de passe ne respecte pas tous les critères"
-        return res.redirect('/pharmacien/inscription')
-    }
-    if (password !== password_check) {
-        req.session.error = "Les mots de passe ne correspondent pas"
-        return res.redirect('/pharmacien/inscription')
-    }
-
-    // Vérifier si l'email est déjà utilisé
-    if(await PharmacistServices.isEmailPresent(email)) {
-        req.session.error = "Cet email est déjà utilisé"
-        return res.redirect('/pharmacien/inscription')
-    }
-
-    const hashPassword = await bcrypt.hash(password, 10)
-    let pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
-    pharmacist = await PharmacistServices.addPharmacist(pharmacist)
+    let form = new formidable.IncomingForm();
+    form.parse(req, async function (err, fields, files) {
+        const name = fields.name
+        const firstName = fields.firstName
+        const email = fields.email
+        const password = JSON.stringify(fields.password)
+        const city = fields.city
+        const address = fields.address
+        const zipcode = fields.zipcode
+        const password_check = JSON.stringify(fields.password_check)
+        const gender = fields.gender
     
-    nodemailer(
-        email, 
-        "Confirmation d'inscription à OrdON", 
-        "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/pharmacien/email/verification/" + pharmacist.getTokenEmail(),
-        "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/pharmacien/email/verification/" + pharmacist.getTokenEmail()
-    )
- 
-    return res.redirect('/email/verification/envoyee')
+        if (!name || !firstName || !email || !password || !city || !zipcode || !address || !password_check || !gender) {
+                req.session.error = "Tous les champs n'ont pas été remplis"
+                return res.redirect('/pharmacien/inscription')
+        }
+        if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+            req.session.error = "Le mot de passe ne respecte pas tous les critères"
+            return res.redirect('/pharmacien/inscription')
+        }
+        if (password !== password_check) {
+            req.session.error = "Les mots de passe ne correspondent pas"
+            return res.redirect('/pharmacien/inscription')
+        }
+    
+        // Vérifier si l'email est déjà utilisé
+        if(await PharmacistServices.isEmailPresent(email)) {
+            req.session.error = "Cet email est déjà utilisé"
+            return res.redirect('/pharmacien/inscription')
+        }
+
+        if (!files.fileUpload.name) {
+            req.session.error = "La preuve de profession est obligatoire !"
+            return res.redirect('/pharmacien/inscription')
+        }
+
+        var oldpath = files.fileUpload.path;
+        var newpath = 'C:/EFREI/Mastercamp/SolutionFactory/Ordon/OrdOn/OrdON/src/proof/' + files.fileUpload.name;
+        fs.rename(oldpath, newpath, function (err) {
+            if (err) throw err;
+        });
+    
+        const hashPassword = await bcrypt.hash(password, 10)
+        let pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
+        pharmacist.setProofPath(files.fileUpload.name)
+        pharmacist = await PharmacistServices.addPharmacist(pharmacist)
+        
+        nodemailer(
+            email, 
+            "Confirmation d'inscription à OrdON", 
+            "Veuillez cliquer sur le lien ci-contre pour valider votre inscription : http://localhost:8000/pharmacien/email/verification/" + pharmacist.getTokenEmail(),
+            "<p>Veuillez cliquer sur le lien ci-contre pour valider votre inscription :</p><a href='http://localhost:8000/pharmacien/email/verification/" + pharmacist.getTokenEmail()
+        )
+     
+        return res.redirect('/email/verification/envoyee')
+    });
+
 })
 
 /**

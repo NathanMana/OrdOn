@@ -28,9 +28,9 @@
             <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le <%= locals.PrescriptionObjects.madeDate %></h3>
         </div>
 
-        <div id="infosPatient">
-            <h3>Mmme/M <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
-            <h3><%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " " + locals.PrescriptionObjects.patient.weight %></h3>
+        <div class="fixedLeft" id="infosPatient">
+            <h3>Madame/Monsieur <%= locals.PrescriptionObjects.patient.name + " " + locals.PrescriptionObjects.patient.firstname %> </h3>
+            <h3>Né le : <%= locals.PrescriptionObjects.patient.birthdate.toLocaleString().substring(0,10) + " , Poids : " + locals.PrescriptionObjects.patient.weight %></h3>
         </div>
 
         <div id="prescription">

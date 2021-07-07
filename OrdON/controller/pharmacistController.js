@@ -13,7 +13,10 @@ const Prescription = require('./../models/Prescription')
 const PrescriptionService = require('./../services/PrescriptionServices')
 const PatientService = require('./../services/PatientServices')
 const DoctorService = require('./../services/DoctorServices')
+const GivenAttribution = require('./../models/AssociationClass/GivenAttribution')
+const GivenAttributionServices = require('./../services/GivenAttributionServices')
 const nodemailer = require('../externalsAPI/NodeMailer');
+const { Console } = require('console');
 
 router.get('/connexion', (req, res)=>{
     res.render('Pharmacist/connectionPharmacist')
@@ -105,15 +108,15 @@ router.post('/inscription', async (req, res) => {
             return res.redirect('/pharmacien/inscription')
         }
 
-        var oldpath = files.fileUpload.path;
+       /* var oldpath = files.fileUpload.path;
         var newpath = pathToProofFolder + files.fileUpload.name;
         fs.rename(oldpath, newpath, function (err) {
             if (err) throw err;
-        });
+        });*/
     
         const hashPassword = await bcrypt.hash(password, 10)
         let pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
-        pharmacist.setProofPath(files.fileUpload.name)
+        //pharmacist.setProofPath(files.fileUpload.name)
         pharmacist = await PharmacistServices.addPharmacist(pharmacist)
         
         nodemailer(
@@ -211,6 +214,29 @@ function entierAleatoire(min, max)
     const prescription = await PrescriptionService.getPrescriptionById(id)
     res.render ('Pharmacist/viewOrdonnance', { ordonnance : prescription.toObject() })
 })
+
+/**
+ * Gère l'enrgistrement d'une given attributions
+ * @method POST
+ */
+router.post('/givenAttribution', async (req, res)=>{
+    const encryptedId = req.session.user.encryptedId
+    
+    const pharmacist = await PharmacistServices.getPharmacistByEncryptedId(encryptedId)
+
+    const data = JSON.parse(req.body.data)
+    const quantity = +data.given_attribution_list.quantity
+    const date = new Date(data.given_attribution_list.date_attribution)
+    const id_attribution = +data.given_attribution_list.id
+    
+    const gAttribution = new GivenAttribution(quantity, date, false)
+    gAttribution.setIdPharm(pharmacist.getPharmacistId())
+    gAttribution.setIdAttribution(id_attribution)
+
+    await GivenAttributionServices.addGivenAttribution(gAttribution)
+    res.redirect('/pharmacist/home')    
+})
+
 
 router.post('/profil', async (req, res) => {
     const firstname = req.body.firstname

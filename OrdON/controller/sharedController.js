@@ -28,31 +28,11 @@ router.get('/inscription', (req, res)=>{
     res.render('registerPath')
 })
 
-/**
- * Gère l'affichage de la page de modification d'email
- */
- router.get('/profil/modifieremail', (req, res) => {
-    res.render('Profile/modifyMail')
-})
-
-/**
- * Gère l'affichage de la page de modification du mot de passe
- */
- router.get('/profil/modifiermotdepasse', (req, res) => {
-    res.render('Profile/modifyPassword')
-})
-
-/**
- * Gère l'affichage de la page de suppression de compte
- */
- router.get('/profil/supprimermoncompte', (req, res) => {
-    res.render('Profile/deleteAccount')
-})
 
 /**
  * Gère l'affichage de la page de l'oublie du mot de passe
  */
-router.get('/motdepasseoublie/:typeUser', (req, res) => {
+ router.get('/motdepasseoublie/:typeUser', (req, res) => {
     const type = req.params.typeUser
     const list = ["patient", "pharmacien", "docteur"]
     if (!list.find(c => c === type)) return res.redirect('/')
@@ -80,17 +60,6 @@ router.get('/motdepasseoublie/:typeUser', (req, res) => {
         person  = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
     nodemailer(person.getEmail(),'Votre  code est '+req.session.user.entier,'votre code est '+req.session.user.entier,'votre code est '+req.session.user.entier)
     res.render('doubleAuth')
-})
-
-/**
- * Deconnecte n'importe quel utilisateur
- */
-router.get('/deconnexion', (req, res) => {
-    req.session.flash = {
-        success : "Merci et à la prochaine !"
-    }
-    req.session.user = undefined
-    res.redirect('/')
 })
 
 
@@ -139,4 +108,124 @@ router.post('/doubleauthentification', async (req, res) => {
     req.session.user = undefined
     res.redirect('/')
 })
+
+/**
+ * Gère l'affichage de la page de modification d'email
+ */
+ router.get('/profil/modifieremail', (req, res) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user || !req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/connexion")
+    }
+    res.render('Profile/modifyMail')
+})
+
+/**
+ * Gère l'affichage de la page de modification du mot de passe
+ */
+ router.get('/profil/modifiermotdepasse', (req, res) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user || !req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/connexion")
+    }
+    res.render('Profile/modifyPassword')
+})
+
+/**
+ * Gère la réinitiliasation du mdp
+ */
+ router.get('/profil/modifiermotdepasse', (req, res) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user || !req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/connexion")
+    }
+    res.render('Profile/modifyPassword')
+})
+
+
+/**
+ * Gère l'affichage de la page de suppression de compte
+ */
+ router.post('/profil/modifiermotdepasse', async (req, res) => {
+    if (typeof req.session.user === 'undefined' || !req.session.user || !req.session.user.isValidated) {
+        req.session.desiredUrl = req.originalUrl
+        return res.redirect("/connexion")
+    }
+
+    const oldPassword = JSON.stringify(req.body.oldPassword)
+    const newPassword = JSON.stringify(req.body.newPassword)
+    const repeatPassword = JSON.stringify(req.body.repeatPassword)
+
+    if (!oldPassword || !newPassword || !repeatPassword) {
+        req.session.error = "Remplissez tous les champs !"
+        return res.redirect('/profil/modifiermotdepasse')
+    }
+
+    if (newPassword !== repeatPassword) {
+        req.session.error = "Les mots de passes ne sont pas les mêmes"
+        return res.redirect('/profil/modifiermotdepasse')
+    }
+
+    if(newPassword.length < 8 || !newPassword.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+        req.session.error = "Le mot de passe ne respecte pas tous les critères"
+        return res.redirect('/patient/inscription')
+    }
+
+    let person 
+    switch(req.session.user.type) {
+        case 'patient':
+            person = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
+            break;
+        case 'docteur':
+            person = await DoctorServices.getDoctorByEncryptedId(req.session.user.encryptedId)
+            break;
+        case 'pharmacien':
+            person = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+            break;
+    }
+
+    if (!person) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(oldPassword, person.getPassword())
+    if (!verifPass) {
+        req.session.error = "Le mot de passe est erroné"
+        return res.redirect('/profil/modifiermotdepasse')
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10)
+    person.setPassword(hashPassword)
+    switch(req.session.user.type) {
+        case 'patient':
+            PatientServices.updatePatient(person)
+            break;
+        case 'docteur':
+            DoctorServices.updateDoctor(person)
+            break;
+        case 'pharmacien':
+            PharmacistServices.updatePharmacist(person)
+            break;
+    }
+
+    req.session.flash = {
+        success : "Mot de passe modifié"
+    }
+    res.redirect('/profil/modifiermotdepasse')
+})
+
+
+/**
+ * Deconnecte n'importe quel utilisateur
+ */
+router.get('/deconnexion', (req, res) => {
+    req.session.flash = {
+        success : "Merci et à la prochaine !"
+    }
+    req.session.user = undefined
+    res.redirect('/')
+})
+
+
 module.exports = router

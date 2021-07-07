@@ -16,12 +16,7 @@ const PrescriptionServices = require('../services/PrescriptionServices');
 router.get('/connexion', (req, res)=>{
     res.render('Patient/connectionPatient')
 })
- function entierAleatoire(min, max)
-        {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-    //Utilisation
-    //La variable contient un nombre aléatoire compris entre 1 et 10
+
 /**
  * Traite la connexion du patient
  * @method POST
@@ -198,7 +193,7 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     if (!token) return res.redirect('/')
     if (!password || !check_password || !encryptedId) {
         req.session.error = "Tous les champs n'ont pas été renseignés"
-        return redirect('/reinitialisation/motdepasse/' + token)
+        return res.redirect('/reinitialisation/motdepasse/' + token)
     }
 
     if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
@@ -207,11 +202,11 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     }
     if (password !== check_password) {
         req.session.error = "Les mots de passe ne correspondent pas"
-        return redirect('/reinitialisation/motdepasse/' + token)
+        return res.redirect('/reinitialisation/motdepasse/' + token)
     }
 
     const patient = await PatientServices.getPatientByTokenResetPassword(token)
-    if (!patient) return redirect('/reinitialisation/motdepasse/' + token)
+    if (!patient) return res.redirect('/reinitialisation/motdepasse/' + token)
 
     const hashPassword = await bcrypt.hash(password, 10)
     patient.setPassword(hashPassword)
@@ -351,7 +346,7 @@ router.get('/', async (req, res) => {
 router.post('/checkpassword', async (req, res) => {
     const password = JSON.stringify(req.body.password)
     const url = req.body.url
-    if (!password || !url) return redirect('/patient/')
+    if (!password || !url) return res.redirect('/patient/')
 
     // récupérer le patient pour comparer le mdp
     const patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
@@ -360,7 +355,7 @@ router.post('/checkpassword', async (req, res) => {
     const verifPass = await bcrypt.compare(password, patient.getPassword())
     if (!verifPass) {
         req.session.flash = {
-            error : 'Mot de passe eronné'
+            error : 'Mot de passe erroné'
         }
         return res.redirect('/patient/')
     }
@@ -370,10 +365,10 @@ router.post('/checkpassword', async (req, res) => {
 
 router.get('/ordonnance/:id', async (req, res) => {
     const encryptedId = req.params.id
-    if (!encryptedId) return redirect('/patient/')
+    if (!encryptedId) return res.redirect('/patient/')
 
     const prescription = await PrescriptionServices.getPrescriptionById(encryptedId);
-    if (!prescription) return redirect('/patient/')
+    if (!prescription) return res.redirect('/patient/')
 
     return res.render('Patient/ordonnance', {prescription : prescription.toObject()})
 })

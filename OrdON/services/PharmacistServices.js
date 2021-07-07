@@ -197,7 +197,7 @@ const pool = require('./DatabaseConnection')('ordonpharmacist')
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM pharmacist WHERE email = ?',
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE email = ?',
                 [email]
             )
             connection.release()
@@ -208,6 +208,10 @@ const pool = require('./DatabaseConnection')('ordonpharmacist')
                 pharmacistData.firstname,
                 pharmacistData.email,
                 pharmacistData.password,
+                pharmacistData.city,
+                pharmacistData.address,
+                pharmacistData.zipcode,
+                pharmacistData.gender
             )
             pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
             pharmacist.setEncryptedId(pharmacistData.encryptedId)
@@ -241,6 +245,49 @@ const pool = require('./DatabaseConnection')('ordonpharmacist')
             )
             connection.release()
             if(!result[0][0]) throw 'Pas de résultat'
+            const pharmacistData = result[0][0]
+            let pharmacist = new Pharmacist(
+                pharmacistData.name,
+                pharmacistData.firstname,
+                pharmacistData.email,
+                pharmacistData.password, 
+                pharmacistData.city,
+                pharmacistData.address,
+                pharmacistData.zipcode,
+                pharmacistData.gender
+            )
+            pharmacist.setPharmacistId(pharmacistData.id_pharmacist)
+            pharmacist.setEncryptedId(pharmacistData.encryptedId)
+            pharmacist.setProfessionnalId(pharmacistData.id_professionnal)
+            pharmacist.setTokenEmail(pharmacistData.tokenEmail)
+            pharmacist.setTokenResetPassword(pharmacistData.tokenResetPassword)
+            pharmacist.setIsAccountValidated(pharmacistData.isEmailVerified)
+            pharmacist.setIsEmailVerified(pharmacistData.isEmailVerified)
+            pharmacist.setProofPath(pharmacistData.proofpath)
+            // On convertit le résultat en objet js
+            console.log('doctor récupéré')
+            return pharmacist
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère un pharmacien spécifique via son token mdp
+     * @param {string} token 
+     * @returns {Pharmacist} le pharmacien cherché
+     */
+     static async getPharmacistByTokenResetPassword(token) {
+        try {
+            if (!token) throw 'L\id indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM pharmacist NATURAL JOIN ordon.professionnal WHERE tokenResetPassword = ?', 
+                [token]
+            )
+            connection.release()
+            if(!result[0][0]) return null
             const pharmacistData = result[0][0]
             let pharmacist = new Pharmacist(
                 pharmacistData.name,

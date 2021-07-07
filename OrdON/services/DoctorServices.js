@@ -146,6 +146,48 @@ const pool = require('./DatabaseConnection')('ordondoctor')
     }
 
     /**
+     * Récupère un docteur spécifique via son token de réinitialisation de mdp
+     * @param {string} token 
+     * @returns {Doctor} le docteur cherché
+     */
+     static async getDoctorByTokenResetPassword(token) {
+        try {
+            if (!token) throw 'Le token indiqué est erroné'
+
+            // Double vérification avec l'id encrypté
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE tokenResetPassword = ?', 
+                [token]
+            )
+            connection.release()
+            // On convertit le résultat en objet js
+            console.log('doctor récupéré')
+            const doctorData = result[0][0]
+            if (!doctorData) return null
+            let doctor = new Doctor(
+                doctorData.name,
+                doctorData.firstname,
+                doctorData.email,
+                doctorData.password, 
+                doctorData.city,
+                doctorData.address,
+                doctorData.zipcode
+            )
+            doctor.setDoctorId(doctorData.id_doctor)
+            doctor.setEncryptedId(doctorData.encryptedId)
+            doctor.setProfessionnalId(doctorData.id_professionnal)
+            doctor.setTokenEmail(doctorData.tokenEmail)
+            doctor.setTokenResetPassword(doctorData.tokenResetPassword)
+            doctor.setIsAccountValidated(doctorData.isEmailVerified)
+            doctor.setIsEmailVerified(doctorData.isEmailVerified)
+            doctor.setProofPath(doctorData.proofpath)
+            return doctor
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
      * Récupère un docteur spécifique via son token email
      * @param {string} token 
      * @returns {Doctor} le docteur cherché
@@ -238,7 +280,7 @@ const pool = require('./DatabaseConnection')('ordondoctor')
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'SELECT * FROM doctor WHERE email = ?',
+                'SELECT * FROM doctor NATURAL JOIN ordon.professionnal WHERE email = ?',
                 [email]
             )
             connection.release()
@@ -249,6 +291,9 @@ const pool = require('./DatabaseConnection')('ordondoctor')
                 doctorData.firstname,
                 doctorData.email,
                 doctorData.password,
+                doctorData.city,
+                doctorData.address,
+                doctorData.zipcode
             )
             doctor.setDoctorId(doctorData.id_doctor)
             doctor.setEncryptedId(doctorData.encryptedId)

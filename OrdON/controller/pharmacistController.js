@@ -9,10 +9,7 @@ const pathToProofFolder = require('../modules/pathToProofFolder');
 
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
-const Prescription = require('./../models/Prescription')
 const PrescriptionService = require('./../services/PrescriptionServices')
-const PatientService = require('./../services/PatientServices')
-const DoctorService = require('./../services/DoctorServices')
 const nodemailer = require('../externalsAPI/NodeMailer');
 
 router.get('/connexion', (req, res)=>{
@@ -156,6 +153,94 @@ function entierAleatoire(min, max)
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
+/**
+ * Envoi l'email de réinitialisation de mot de passe
+ */
+ router.post('/motdepasseoublie', async (req, res) => {
+    const email = req.body.email
+    if (!email) {
+        req.session.error = "Vous devez remplir l'email"
+        res.redirect('/motdepasseoublie/pharmacien')
+    } 
+
+    // On cherche un patient avec cet email
+    const pharmacist = await PharmacistServices.getPharmacistByEmail(email)
+    if (!pharmacist) {
+        req.session.error = "Cet email n'existe pas"
+        res.redirect('/motdepasseoublie/pharmacien')
+    }
+
+    // On commence le setup pour envoyer le mail
+    pharmacist.setTokenResetPassword(pharmacist.encryptId(pharmacist.getPharmacistId()))
+    PharmacistServices.updatePharmacist(pharmacist)
+
+    nodemailer(
+        pharmacist.getEmail(),
+        "Réinitialisation de votre mot de passe",
+        "Cliquez sur ce lien pour réinitialiser votre mot de passe : http://localhost:8000/pharmacien/reinitialisation/motdepasse/" + pharmacist.getTokenResetPassword(),
+        "Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href='http://localhost:8000/pharmacien/reinitialisation/motdepasse/" + pharmacist.getTokenResetPassword() + "'>http://localhost:8000/pharmacien/reinitialisation/motdepasse/" + pharmacist.getTokenResetPassword() + "</a>"
+    )
+
+    return res.render('layouts/emailVerification.ejs')
+})
+
+
+/**
+ * Formulaire réinitilsiation mot de passe
+ */
+ router.get('/reinitialisation/motdepasse/:token', async (req, res) => {
+    const token = req.params.token
+    if (!token) {
+        return res.redirect('/')
+    }
+
+    // Trouver le patient
+    const pharmacist = await PharmacistServices.getPharmacistByTokenResetPassword(token)
+    if (!pharmacist) return res.redirect('/')
+
+    res.render('reinitPassword', {patientId : pharmacist.getEncryptedId(), type: 'pharmacien'})
+})
+
+/**
+ * Traitement réinitialisation mot de passe
+ */
+router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
+    const {encryptedId} = req.body
+    const password = JSON.stringify(req.body.password)
+    const check_password = JSON.stringify(req.body.check_password)
+    const token = req.params.token
+    if (!token) return res.redirect('/')
+    if (!password || !check_password || !encryptedId) {
+        req.session.error = "Tous les champs n'ont pas été renseignés"
+        return res.redirect('/pharmacien/reinitialisation/motdepasse/' + token)
+    }
+
+    if(password.length < 8 || !password.match(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?])/g)){
+        req.session.error = "Le mot de passe ne respecte pas tous les critères"
+        return res.redirect('/pharmacien/inscription')
+    }
+    if (password !== check_password) {
+        req.session.error = "Les mots de passe ne correspondent pas"
+        return res.redirect('/pharmacien/reinitialisation/motdepasse/' + token)
+    }
+
+    const pharmacist = await PharmacistServices.getPharmacistByTokenResetPassword(token)
+    if (!pharmacist) return res.redirect('/pharmacien/reinitialisation/motdepasse/' + token)
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    pharmacist.setPassword(hashPassword)
+    pharmacist.setTokenResetPassword(null)
+    PharmacistServices.updatePharmacist(pharmacist)
+
+    // On le connecte directement
+    req.session.user = {encryptedId: pharmacist.getEncryptedId(), type: 'pharmacien'}
+    req.session.flash = {
+        success : "Réinitialisation du mot de passe effectuée avec succès !"
+    }
+    return res.redirect('/pharmacien/')
+})
+
 /**
  * Vérifie les droits d'accès a chaque requête
  */
@@ -263,6 +348,38 @@ router.post('/profil', async (req, res) => {
     }
 
     PharmacistServices.deletePharmacist(pharmacist)
+    req.session.user = undefined
+    req.session.flash = {
+        success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"
+    }
+    res.redirect('/')
+})
+
+
+/**
+ * Gère la suppression du compte
+ */
+ router.post('/profil/supprimermoncompte', async (req, res) => {
+    const {password} = req.body
+    if (!password) {
+        req.session.error = "Tous les champs n'ont pas été remplis"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    // Récupérer la patient
+    const patient = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    if (!patient) {
+        return res.redirect('/deconnexion')
+    }
+
+    // Vérification mdp
+    const verifPass = await bcrypt.compare(JSON.stringify(password), patient.getPassword())
+    if (!verifPass) {
+        req.session.error = "Mot de passe incorrect"
+        return res.redirect('/profil/supprimermoncompte')
+    }
+
+    await PharmacistServices.deletePharmacist(patient)
     req.session.user = undefined
     req.session.flash = {
         success : "Compte bien supprimé ! L'équipe OrdON vous souhaite une bonne journée !"

@@ -209,14 +209,7 @@ function entierAleatoire(min, max)
     const id = req.params.id_ordo
 
     const prescription = await PrescriptionService.getPrescriptionById(id)
-    const patient = await PatientService.getPatientById(prescription.getPatientId())
-    const doctor = await DoctorService.getDoctorById(prescription.getDoctorId())
-    const ordonnance = {
-        prescription: prescription,
-        patient: patient,
-        docteur: doctor
-    }
-    res.render ('/Pharmacist/viewOrdonnance', { ordonnance : ordonnance })
+    res.render ('Pharmacist/viewOrdonnance', { ordonnance : prescription.toObject() })
 })
 
 router.post('/profil', async (req, res) => {

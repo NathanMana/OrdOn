@@ -31,6 +31,12 @@ class Attribution {
     #listMentions = []
 
     /**
+     * la liste des médicaments restant à préscrire
+     * {Array(GivenAttribution)}
+     */
+     #listGivenAttributions = []
+
+    /**
      * Id de l'ordonnance (parent)
      * @type {long}
      */
@@ -89,6 +95,26 @@ class Attribution {
     getDrugId(){return this.#id_drug}
     setDrugId(id){this.#id_drug = id}
 
+    getListGivenAttributions(){return this.#listGivenAttributions}
+    /**
+     * Ajoute une given attribution à l'ordonnance
+     * @param {*} given_attribution
+     */
+    addGivenAttribution(given_attribution){
+        this.#listGivenAttributions.push(given_attribution)
+    }
+    /**
+     * Retire une prescription de l'ordonnance
+     * @param {*} given_attribution 
+     * @returns 
+     */
+    removeGivenAttribution(given_attribution){
+        const index = this.#listGivenAttributions.find(e => e.getIdAttribution() === given_attribution.getIdAttribution())
+        if (index === -1) return
+        this.#listGivenAttributions.splice(index, 1)
+    }
+    setListGivenAttributions(listGivenAttributions){this.#listGivenAttributions = listGivenAttributions}
+
     toObject() {
         return {
             id_attribution: this.#id_attribution,
@@ -96,6 +122,7 @@ class Attribution {
             quantity: this.#quantity,
             drug: this.#drug.toObject(),
             listMentions: this.#listMentions.map((m) => m.toObject()),
+            listGivenAttributions: this.#listGivenAttributions.map((g) => g.toObject()),
             id_prescription: this.#id_prescription,
             id_drug: this.#id_drug
         }

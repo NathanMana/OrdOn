@@ -4,6 +4,7 @@ const Attribution = require('../models/Attribution');
 const MentionService = require('./MentionServices');
 const DrugServices = require('./DrugServices');
 const MentionAttributionServices = require('./MentionAttributionServices');
+const GivenAttributionServices = require('./GivenAttributionServices')
 
 /**
  * Gère toutes les opérations sur la table Attribution
@@ -100,6 +101,8 @@ class AttributionServices {
                 attribution.setDrug(drug)
                 const listMentions = await MentionAttributionServices.getListMentionsByAttributionId(attribution.getAttributionId())
                 attribution.setListMentions(listMentions)
+                const gAttribution = await GivenAttributionServices.getListGivenAttributionById(attribution.getAttributionId())
+                attribution.setListGivenAttributions(gAttribution)                            
                 listAttributions.push(attribution)
             }
 

@@ -4,6 +4,7 @@
         <%- include('../layouts/header'); -%>
         <link rel='stylesheet' type='text/css' media='screen' href='/src/css/createPrescription.css'>
         
+        
     
     </head>
     <body>
@@ -12,24 +13,30 @@
         <div id="doctorInfos">
             <div id="doctorInfosLeft">
                 <h3 class="doctorTextLeft">Docteur</h3>
-                <h3 class="doctorTextLeft">Nom du docteur</h3>
+                <h3 class="doctorTextLeft"><%= ordonnance.doctor.name %></h3>
             </div>
             <div id="doctorInfosRight">
                 <div id="doctorInfosRightTop">
-                    <h3 class="doctorTextRight">Adresse du docteur</h3>
-                    <h3 class="doctorTextRight">CP et ville</h3>
-                    <h3 class="doctorTextRight">Tel cabinet</h3>
+                    <h3 class="doctorTextRight"><%= ordonnance.doctor.address %></h3>
+                    <h3 class="doctorTextRight"><%= ordonnance.doctor.zipcode %>, <%= ordonnance.doctor.city %></h3>
                 </div>
             </div>
         </div>
 
         <div class="fixedRight">
-            <h3 id="madeWhereWhen" class="doctorText">Fait à XXX, le</h3>
+            <h3 id="madeWhereWhen" class="doctorText">Fait le <%= ordonnance.date_creation.toLocaleDateString() %></h3>
         </div>
 
         <div id="infosPatient">
-            <h3>Mmme/M</h3>
-            <h3></h3>
+            <h3>
+                <% if (ordonnance.patient.gender === 'homme'){ %>
+                    M
+                <% } %>
+                <% if (ordonnance.patient.gender === 'femme'){ %> 
+                    Mme
+                <% } %> 
+            </h3>
+            <h3> <%= ordonnance.patient.name %>  <%= ordonnance.patient.firstname %></h3>
         </div>
 
         <div id="prescription">
@@ -43,27 +50,45 @@
                             <th scope="firtLine" style="width: 10%;">Quantité</th>
                             <th scope="firtLine" style="width: 10%;">Reste a délivrer</th>
                             <th scope="firtLine" style="width: 10%;">Délivrer</th>
-                            <th scope="firtLine" style="width: 10%;"></th>
+                            <th scope="firtLine" style="width: 10%;"></th>                            
                         </tr>
                     </thead>
                     <tbody id="prescriptionBody">
-                        <td>Medoc</td>
-                        <td>Descriptionblablabla</td>
-                        <td>
-                            <div id="mentionsRow">
-                                <p class="mentionInRow">Mention1</p>
-                                <p class="mentionInRow">Mention2</p>
-                            </div>
-                        </td>
-                        <td>5</td>
-                        <td>2</td>
-                        <td class="tdcase">
-                            <select class="greencase">
-                                <option>1</option>
-                                <option>2</option>
-                            </select>
-                        </td>
-                        <td class="signal">Signaler un problème</td>
+                        <% ordonnance.listAttributions.forEach((attribution) => { 
+                            let som = 0; %>
+                        <tr>
+                            <td><%= attribution.drug.name %> </td>
+                            <td><%= attribution.description %> </td>
+                            <td>
+                                <div id="mentionsRow">
+                                    <% attribution.listMentions.forEach(mention => { %>
+                                        <p class="mentionInRow"><%= mention.name %> </p>
+                                    <% }) %> 
+                                </div>
+                            </td>
+                            <td><%= attribution.quantity %> </td>
+                            <td><% if (attribution.listGivenAttributions === null) { %>
+                                <%= attribution.quantity %>
+                                <% } %> 
+                                <% if (attribution.listGivenAttributions != null) { %>
+                                    <% const quantity = attribution.listGivenAttributions.map((e) => e.quantity);
+                                        
+                                        for (let i = 0; i < quantity.length;i++) {
+                                            som += quantity[i];
+                                        } %>
+                                            <%= (attribution.quantity - som) %>                                            
+                                <% }  %>
+                            </td>
+                            <td class="tdcase">
+                                <select class="greencase">
+                                    <% for (let j = 0; j <= (attribution.quantity - som); j++) { %>
+                                        <option><%= j %></option>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td class="signal">Signaler un problème</td>
+                        </tr>
+                        <%  }) %> 
                     </tbody>
                 </table>   
             </div>
@@ -77,20 +102,22 @@
                             <th scope="firtLine" style="width: 100%;">Conseils</th>
                         </tr>
                     </thead>
+                    <% ordonnance.listCouncils.forEach(council => { %>
                     <tbody id="tipsBody">
-                        <td style="text-align: left;padding-left: 30px;">Conseils tah lewandoski</td>
+                        <td style="text-align: left;padding-left: 30px;"><%= council.description %> </td>
                     </tbody>
+                    <%  }) %> 
                 </table>  
             </div> 
         </div>
 
         <div class="center">
-            <button class="btngreen" style="margin-top: 40px;" id="createOrdonnanceButton" type="button" onclick="">Valider et fermer</button>
+            <button class="btngreen" style="margin-top: 40px;" id="createOrdonnanceButton" type="button" onclick="validerAttribution()">Valider et fermer</button>
         </div>
         <%- include('../layouts/footer/footerManager'); -%>
         <%- include('../layouts/scripts'); -%>
 
-        <script src='/src/js/createPrescription.js'></script>
+        <script src='/src/js/validerAttribution.js'></script>
         <script defer src="/src/js/all.js"></script> <!--load all styles -->
     </body>
 </html>

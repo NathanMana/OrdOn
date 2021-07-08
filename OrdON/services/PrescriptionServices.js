@@ -56,6 +56,26 @@ class PrescriptionServices {
     }
 
     /**
+     * Met à jour le qr code access
+     * @param {Prescription} prescription 
+     */
+     static async updateDatePrescription(prescription) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'UPDATE prescription SET date_archived = ?  WHERE encryptedId = ?',
+                [
+                    prescription.getDateArchived(), prescription.getEncryptedId()
+                ]
+            )
+            connection.release()
+            console.log('Prescription mise à jour')
+            return
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
      * Récupère une ordonnance spécifique via son id
      * @param {long} idPrescription 
      * @returns {Prescription} l'ordonnance cherchée
@@ -66,6 +86,48 @@ class PrescriptionServices {
             const result = await connection.query(
                 'SELECT * FROM prescription WHERE encryptedId = ?', // rajouter un et 3 ans <
                 [encryptedId]
+            )
+            connection.release()
+            const prescriptionData = result[0][0]
+            if (!prescriptionData) return null
+
+            const prescription = new Prescription(
+                prescriptionData.id_doctor,
+                prescriptionData.id_patient,
+                null,
+                null
+            )
+            //On complete l'objet prescription avec les Attributions et les conseils
+            prescription.setPrescriptionId(prescriptionData.id_prescription)
+            const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListAttributions(listAttributions)
+            const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+            prescription.setListCouncils(listCouncils)
+            prescription.setEncryptedId(prescriptionData.encryptedId)
+            const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+            prescription.setDoctor(doctor)
+            const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+            prescription.setPatient(patient)
+            prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
+            
+            connection.release()
+            console.log('Presriptions récupérées')
+            return prescription
+        }
+        catch (e) { console.log(e)}
+    }
+
+    /**
+     * Récupère une ordonnance spécifique via son id
+     * @param {long} idPrescription 
+     * @returns {Prescription} l'ordonnance cherchée
+     */
+     static async getPrescriptionById2(id) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM prescription WHERE id_prescription = ?', // rajouter un et 3 ans <
+                [id]
             )
             connection.release()
             const prescriptionData = result[0][0]
@@ -176,6 +238,7 @@ class PrescriptionServices {
                 const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
                 prescription.setPatient(patient)
                 prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
+                prescription.setDateCreation(prescriptionData.date_creation)
 
                 listPrescriptions.push(prescription)
             }
@@ -200,6 +263,53 @@ class PrescriptionServices {
             }
             const result = await connection.query(
                 'SELECT * FROM prescription WHERE id_patient = ? AND (date_archived IS NOT NULL OR (date_archived IS NULL AND DATE_ADD(date_creation, INTERVAL 3 MONTH) < CURDATE())) ' + limitQuery,
+                [id]
+            )
+            connection.release()
+            const listPrescriptions = []
+            for (let i = 0; i < result[0].length; i++) {
+                const prescriptionData = result[0][i]
+                const prescription = new Prescription(
+                    prescriptionData.id_doctor,
+                    prescriptionData.id_patient,
+                    null,
+                    null
+                )
+                //On complete l'objet prescription avec les Attributions et les conseils
+                prescription.setDateCreation(prescriptionData.date_creation)
+                prescription.setDateArchived(prescriptionData.date_archived)
+                prescription.setPrescriptionId(prescriptionData.id_prescription)
+                const listAttributions = await AttributionServices.getListAttributionsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListAttributions(listAttributions)
+                const listCouncils = await CouncilServices.getListCouncilsByPrescriptionId(prescription.getPrescriptionId())
+                prescription.setListCouncils(listCouncils)
+                prescription.setEncryptedId(prescriptionData.encryptedId)
+                const doctor = await DoctorServices.getDoctorById(prescriptionData.id_doctor)
+                prescription.setDoctor(doctor)
+                const patient = await PatientServices.getPatientById(prescriptionData.id_patient)
+                prescription.setPatient(patient)
+                prescription.setQRCodeAccess(prescriptionData.qrCodeAccess)
+
+                listPrescriptions.push(prescription)
+            }
+            
+            connection.release()
+            console.log('Presriptions récupérées')
+            return listPrescriptions
+        }
+        catch(e) {console.log(e)}
+    }
+
+
+    /**
+     * Récupère une liste d'ordonnances valides et qui n'ont pas encore été archivées
+     * @return Array(Prescription)
+     */
+     static async getListPrescriptionsByPharmacistId(id) {
+        try {
+            const connection = await pool.getConnection();
+            const result = await connection.query(
+                'SELECT * FROM ordon.prescription NATURAL JOIN ordon.attribution LEFT JOIN ordon.given_attribution ON ordon.given_attribution.id_attribution = ordon.attribution.id_attribution WHERE ordon.given_attribution.id_pharmacist = ?',
                 [id]
             )
             connection.release()

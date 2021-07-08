@@ -10,52 +10,36 @@
     <section class="sectionwhiteConnected">
         <h2 style="color: var(--darkblue);">Recherchez une ordonnance</h2>        
         <div class="profilform">   
-            <form class="form">
+            <form method="get" class="form">
                 <div class="modifier__input__container" style="margin: 10px auto;">
-                    <input class="modifBox" placeholder="Nom du patient" >
-                    <input class="modifBox" placeholder="Prénom du patient" >
-                    <input class="modifBox" placeholder="Date">
+                    <input class="modifBox" name="name" placeholder="Nom du patient" >
+                    <input class="modifBox" name="firstname" placeholder="Prénom du patient" >
                 </div>
-                <button class ="btngreen">Rechercher</button> 
+                <button class ="btngreen" type="submit">Rechercher</button> 
             </form>>
         </div>
         <div class="mesordonnances">
-            <article class="consultation">
-                <div>
-                    <p class="date">Consultation du 17 juin 2021</p>
-                    <p class="doctorright">Ordonnance émise par Dr Pathy - podologue</p>
-                </div>
-                <div>
-                    <p class="doctor">Mme Blanchelle Marie</p>
-                </div>
-                <div class="voirgenerer">
-                    <btn class="btngreensmall">Voir</btn>
-                </div>
-            </article>
-            <article class="consultation">
-                <div>
-                    <p class="date">Consultation du 17 juin 2021</p>
-                    <p class="doctorright">Ordonnance émise par Dr Pathy - podologue</p>
-                </div>
-                <div>
-                    <p class="doctor">Mme Blanchelle Marie</p>
-                </div>
-                <div class="voirgenerer">
-                    <btn class="btngreensmall">Voir</btn>
-                </div>
-            </article>
-            <article class="consultation">
-                <div>
-                    <p class="date">Consultation du 17 juin 2021</p>
-                    <p class="doctorright">Ordonnance émise par Dr Pathy - podologue</p>
-                </div>
-                <div>
-                    <p class="doctor">Mme Blanchelle Marie</p>
-                </div>
-                <div class="voirgenerer">
-                    <btn class="btngreensmall">Voir</btn>
-                </div>
-            </article>
+            <% locals.listPrescriptions.forEach((prescription) => { %> 
+                <article class="consultation">
+                    <div>
+                        <p class="date">Consultation du <%= prescription.date_archived.toLocaleDateString() %></p>
+                        <p class="doctorright">Ordonnance émise par Dr <%= prescription.doctor.name %></p>
+                    </div>
+                    <div>
+                        <p class="doctor">
+                            <% if (prescription.patient.gender === 'homme') { %>
+                                M.
+                            <% } else if (prescription.patient.gender === 'femme') { %>  
+                                Mme.
+                            <% } %> 
+                            <%= prescription.patient.name + " " + prescription.patient.firstname %> 
+                        </p>
+                    </div>
+                    <div class="voirgenerer">
+                        <btn class="btngreensmall">Voir</btn>
+                    </div>
+                </article>
+            <% }) %> 
         </div>
     </section>
     <%- include('../layouts/footer/footerManager'); -%>

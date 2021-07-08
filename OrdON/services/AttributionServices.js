@@ -56,6 +56,7 @@ class AttributionServices {
                 null
             )
             attribution.setAttributionId(attributionData.id_attribution)
+            attribution.setPrescriptionId(attributionData.id_prescription)
             
             //On complete l'objet prescription avec les Attributions et les conseils
             const drug = DrugServices.getDrugById(attributionData.id_drug)

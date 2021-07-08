@@ -10,7 +10,13 @@ const pathToProofFolder = require('../modules/pathToProofFolder');
 const Pharmacist = require('./../models/Pharmacist')
 const PharmacistServices = require('../services/PharmacistServices')
 const PrescriptionService = require('./../services/PrescriptionServices')
+const PatientService = require('./../services/PatientServices')
+const DoctorService = require('./../services/DoctorServices')
+const GivenAttribution = require('./../models/AssociationClass/GivenAttribution')
+const GivenAttributionServices = require('./../services/GivenAttributionServices')
 const nodemailer = require('../externalsAPI/NodeMailer');
+const { Console } = require('console');
+const AttributionServices = require('../services/AttributionServices');
 
 router.get('/connexion', (req, res)=>{
     res.render('Pharmacist/connectionPharmacist')
@@ -110,7 +116,7 @@ router.post('/inscription', async (req, res) => {
     
         const hashPassword = await bcrypt.hash(password, 10)
         let pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
-        pharmacist.setProofPath(files.fileUpload.name)
+        //pharmacist.setProofPath(files.fileUpload.name)
         pharmacist = await PharmacistServices.addPharmacist(pharmacist)
         
         nodemailer(
@@ -275,8 +281,22 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
 /**
  * Gère l'affichage de la page ordonnance archivé du pharmacien
  */
- router.get('/ordonnancesarchivees', (req, res) => {
-    res.render('Pharmacist/ordonnanceArchive')
+router.get('/ordonnancesarchivees', async (req, res) => {
+    const {name, firstname} = req.query
+    const pharmacist = await PharmacistServices.getPharmacistByEncryptedId(req.session.user.encryptedId)
+    if (!pharmacist) return res.redirect('/')
+
+    let listPrescriptions = await PrescriptionService.getListPrescriptionsByPharmacistId(pharmacist.getPharmacistId())
+    listPrescriptions = listPrescriptions.map(e => e.toObject())
+    if (name) {
+        listPrescriptions = listPrescriptions.filter(c => c.patient.name === name)
+    }
+
+    if (firstname) {
+        listPrescriptions = listPrescriptions.filter(c => c.patient.firstname === firstname)
+    }
+
+    res.render('Pharmacist/ordonnanceArchive', {listPrescriptions})
 })
 
 /**
@@ -296,9 +316,64 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
 
     const prescription = await PrescriptionService.getPrescriptionByQRCodeAccess(qrCodeAccess)
     if (!prescription) return res.redirect('/pharmacien')
+    prescription.setQRCodeAccess(null)
+    PrescriptionService.updateQRCodeAccess(prescription)
 
     res.render ('Pharmacist/viewOrdonnance', { ordonnance : prescription.toObject() })
 })
+
+/**
+ * Gère l'enrgistrement d'une given attributions
+ * @method POST
+ */
+router.post('/givenAttribution', async (req, res)=>{
+    const encryptedId = req.session.user.encryptedId
+    const pharmacist = await PharmacistServices.getPharmacistByEncryptedId(encryptedId)
+    if (!pharmacist) res.send({status: false, message: "Une erreur est survenue"})
+
+    // Récupérer les Attributions
+    const data = JSON.parse(req.body.data)
+    const attributionsId = data.given_attribution_list.map(e => e.id)
+    let listAttributions = []
+    for (let i = 0; i < attributionsId.length; i++) {
+        const attribution = await AttributionServices.getAttributionById(attributionsId[i])
+        if (!attribution) res.send({status: false, message: "Une erreur est survenue"})
+        listAttributions.push(attribution)
+    }
+
+    for (let i = 0; i < data.given_attribution_list.length; i++) {
+        const isAlert = (data.given_attribution_list[i].isAlert === 'true')
+        const gAttribution = new GivenAttribution(data.given_attribution_list[i].quantity, new Date(), isAlert)
+        gAttribution.setIdAttribution(data.given_attribution_list[i].id)
+        gAttribution.setIdPharm(pharmacist.getPharmacistId())
+        await GivenAttributionServices.addGivenAttribution(gAttribution)
+    }
+
+    // Check si on a bouclé l'ordonnance
+    let haveToBeArchived = true
+    for (let i = 0; i < listAttributions.length; i++) {
+        // Récupérer l'ensemble des givenAttributions
+        const givenAttributions = await GivenAttributionServices.getListGivenAttributionById(listAttributions[i].getAttributionId())
+        let totalQuantity = 0;
+        givenAttributions.forEach(ga => {
+            totalQuantity += ga.getQuantity()
+        })
+        if (totalQuantity !== listAttributions[i].getQuantity()) {
+            haveToBeArchived = false
+        }
+    }
+
+    if (haveToBeArchived) {
+        const prescription = await PrescriptionService.getPrescriptionById2(listAttributions[0].getPrescriptionId())
+        if (!prescription) return res.send({status: false, message: "Une erreur est survenue"})
+        prescription.setDateArchived(new Date())
+        prescription.setQRCodeAccess(null)
+        PrescriptionService.updateDatePrescription(prescription)
+    }
+
+    res.send({status: true})
+})
+
 
 router.post('/profil', async (req, res) => {
     const firstname = req.body.firstname

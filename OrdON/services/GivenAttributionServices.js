@@ -42,8 +42,11 @@ class GivenAttributionServices {
         try {
             const connection = await pool.getConnection();
             const result = await connection.query(
-                'insert into given_attribution (id_attribution, quantity, date, isAlert)',
-                [given_attribution.getIdAttribution(), given_attribution.getQuantity(), given_attribution.getDate(),false]
+                'insert into given_attribution (id_attribution, quantity, date, isAlert, id_pharmacist) values(?, ?, ?, ?, ?)',
+                [
+                    given_attribution.getIdAttribution(), given_attribution.getQuantity(), given_attribution.getDate(), given_attribution.isAlert(),
+                    given_attribution.getIdPharmacist()
+                ]
             )
             if (!result) throw 'Une erreur est sur'
             connection.release()

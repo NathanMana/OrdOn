@@ -68,6 +68,42 @@ Le montant total estimé pour la première année est 1 015 €.
 
 Comment utiliser notre solution ?
 
-Connectez-vous sur notre plateforme "https:......com" si vous être un patient, un pharmacien ou un médecin pour bénéficier de notre solution.
+Connectez-vous sur notre plateforme "http://localhost:8000/" si vous être un patient, un pharmacien ou un médecin pour bénéficier de notre solution.
+
+***
+
+# Installation
+
+## Prérequis
+Avoir mysql et nodeJS installé
+
+## Cloner le projet
+Clonez le projet via la commande : "git clone https://github.com/NathanMana/OrdOn.git" ou téléchargez simplement le dossier zippé directement.
+
+## Installer la base de données
+Pour installer nos bases de données, importez les fichiers .sql (AdminDBBCreation.sql et databaseCreation.sql) dans votre gestionnaire de base de données (workbench ou phpmyadmin par exemple) et exécutez les scripts. Voilà, vos bases de données sont correctement installées.
+
+## Configurer la connexion à la base de données
+Pour établir le lien à la base de données, modifiez le nom d'utilisateur et le mot de passe du fichier OrdON/services/DatabaseConnetion.js
+
+## Installation des dépendances et lancement de la solution
+Vous êtes actuellement à la racine du projet:
+/
+    -OrdON
+    -Rendus du 18
+    -.gitignore
+    -README.md
+
+Déplacez vous dans le dossier OrdON avec la commande "cd ordON"
+Installez les dépendances en faisant "npm install"
+
+Vous pouvez maintenant lancer le projet avec la commande "npm run start"
+
+## Création d'un compte administrateur
+Pour valider les comptes professionnels vous devez avoir un compte administrateur.
+Décommentez la première route présente dans le fichier /controller/adminController.js (ligne 16)
+Remplacez le mail et le mot de passe par vos informations personelles.
+Allez sur cette route une fois, et votre compte sera créé.
+Vous pouvez la commenter ensuite pour des questions de sécurité
 
 

@@ -6,12 +6,15 @@ const router = express.Router()
 const nodemailer = require('../externalsAPI/NodeMailer')
 
 const AdminServices = require('../services/AdminServices')
-const Profesionnal = require('../models/Profesionnal')
-const ProfessionnalServices = require('../services/ProfessionnalServices')
-const Doctor = require('../models/Doctor')
 const DoctorServices = require('../services/DoctorServices')
 const PharmacistServices = require('../services/PharmacistServices')
-const { request } = require('express')
+
+router.get('/creationCompteRapide', async (req, res) => {
+    const email = "VotreEmail"
+    const password = "VotreMotDePasse"
+    const hashPassword = await bcrypt.hash(password, 10)
+    AdminServices.addAdmin(email, hashPassword)
+})
 
 /**
  * Créer un locals utilisable en ejs
@@ -237,12 +240,6 @@ router.get('/accepter/medecin/:id', async (req, res) => {
 
     res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/')
 })
-
-// router.get('/t', async (req, res) => {
-//     const password = ""
-//     const hashPassword = await bcrypt.hash(password, 10)
-//     AdminServices.addAdmin("nat.manar@gmail.com", hashPassword)
-// })
 
 
 module.exports = router

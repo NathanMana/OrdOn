@@ -297,7 +297,7 @@ router.post('/reinitialisation/motdepasse/:token', async (req, res) => {
     const prescription = await PrescriptionService.getPrescriptionByQRCodeAccess(qrCodeAccess)
     if (!prescription) return res.redirect('/pharmacien')
 
-    res.render ('/Pharmacist/viewOrdonnance', { prescription : prescription })
+    res.render ('Pharmacist/viewOrdonnance', { ordonnance : prescription.toObject() })
 })
 
 router.post('/profil', async (req, res) => {

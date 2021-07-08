@@ -29,24 +29,29 @@
 </style>
 <body>
     <%- include('../layouts/nav/connectionManager'); -%>
-    <section class="sectionred">
-        <h3>Votre adresse mail n'a pas été vérifiée !</h3>
-        <p style="font-size: 0.9rem;">Vous ne pouvez pas transmettre vos informations via un QR code sans avoir vérifié votre email</p>
-    </section>
+    <% if (!locals.ProfilObject.user.isEmailVerified) { %> 
+        <section class="sectionred">
+            <h3>Votre adresse mail n'a pas été vérifiée !</h3>
+            <p style="font-size: 0.9rem;">Vous ne pouvez pas transmettre vos informations via un QR code sans avoir vérifié votre email</p>
+        </section>
+    <% } %> 
    <div class="profil">
         <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Votre profil</h2>
            <form class="form" action="" method="post">
                 <div class="profile__input__container">
+                    <% let disabledString = "" %> 
+                    <% if (ProfilObject.user.isAccountValidated) disabledString = "disabled" %> 
                     <% const user = ProfilObject.user %> 
-                    <input name="name" class="profilBox"  value = "<%- user.name %>" >
-                    <input name="firstname" class="profilBox" value = "<%- user.firstname %>" >
-                    <input name="birthdate" class="profilBox" type="date" value = "<%- user.birthdate.toISOString().slice(0, 10) %>" >
-                    <input name="email" class="profilBox" value = "<%- user.email %> ">
+                    <input name="name" class="profilBox" <%= disabledString %> value = "<%- user.name %>" >
+                    <input name="firstname" class="profilBox" <%= disabledString %> value = "<%- user.firstname %>" >
+                    <input name="birthdate" class="profilBox" <%= disabledString %> type="date" value = "<%- user.birthdate.toISOString().slice(0, 10) %>" >
                 </div>
-                <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
-                <input type="submit" class="btngreen btn" value="Valider">
+                <% if (!ProfilObject.user.isAccountValidated) { %> 
+                    <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
+                    <input type="submit" class="btngreen btn" value="Valider">
+                <% } %> 
            </form>
        </div>
 

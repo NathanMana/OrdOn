@@ -434,9 +434,8 @@ router.post('/profil', async (req, res) => {
     const firstname = req.body.firstname
     const name = req.body.name
     const birthdate = req.body.birthdate
-    const email = req.body.email
 
-    if (!firstname || !name || !birthdate || !email) {
+    if (!firstname || !name || !birthdate) {
         req.session.error = "Tous les champs n'ont pas été renseignés"
         return res.redirect('/patient/profil/')
     }
@@ -451,7 +450,6 @@ router.post('/profil', async (req, res) => {
     let patient = await PatientServices.getPatientByEncryptedId(req.session.user.encryptedId)
     patient.setFirstname(firstname)
     patient.setName(name)
-    patient.setEmail(email)
     patient.setBirthdate(birthdateToAdd)
     PatientServices.updatePatient(patient)
     return res.redirect('/patient/profil/')

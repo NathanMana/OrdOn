@@ -371,6 +371,12 @@ router.post('/ordonnance/creer/:encryptedIdPatient', async (req, res)=>{
         CouncilServices.addCouncil(new Council(councilData, prescription.getPrescriptionId()))
     })
 
+    // Voir si c'est la premiere prescription du patient
+    if (!patient.getIsAccountValidated()) {
+        patient.setIsAccountValidated(true)
+        PatientServices.updatePatient(patient)
+    }
+
     res.send({status: true})
 })
 

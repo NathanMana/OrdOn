@@ -110,6 +110,7 @@ class PatientServices {
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setGender(patientData.gender)
+            patient.setIsAccountValidated(patientData.isAccountValidated)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient
@@ -174,6 +175,7 @@ class PatientServices {
             patient.setPatientId(patientData.id_patient)
             patient.setEncryptedId(patientData.encryptedId)
             patient.setIsEmailVerified(patientData.isEmailVerified)
+            patient.setIsAccountValidated(patientData.isAccountValidated)
             patient.setTokenEmail(patientData.tokenEmail)
             patient.setTokenResetPassword(patientData.tokenResetPassword)
             return patient

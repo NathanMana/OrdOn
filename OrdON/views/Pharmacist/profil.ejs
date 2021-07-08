@@ -26,17 +26,13 @@
         <%- include('../layouts/profiledarknav'); -%>
        <div class="profil__right__section">
            <h2 style="color:var(--darkblue)">Votre profil</h2>
-           <form class="form" action="" method="post">
-                <div class="profile__input__container">
-                    <input name="name" class="profilBoxGrey"  value = <%- profil.name %>  disabled>
-                    <input name="firstname" class="profilBoxGrey" value = <%- profil.firstname %> disabled>
-                    <input name="email" class="profilBoxGrey" value = <%- profil.email %>  disabled>
-                    <input name="city" class="profilBoxGrey" value = <%- profil.city %> disabled>
-                    <input name="gender" class="profilBoxGrey" value = <%- profil.gender %> disabled>
-                </div> 
-                <p style="color:var(--danger_light);display:block;width:100%;text-align:center;padding:1rem 2rem">Attention une fois votre compte validé par un médecin vous ne pourez plus modifier certaines informations</p>
-                <input type="submit" class="btngreen btn" value="Valider">
-            </form>
+           <div class="profile__input__container">
+               <input name="name" class="profilBoxGrey"  value = <%- profil.name %>  disabled>
+               <input name="firstname" class="profilBoxGrey" value = <%- profil.firstname %> disabled>
+               <input name="email" class="profilBoxGrey" value = <%- profil.email %>  disabled>
+               <input name="city" class="profilBoxGrey" value = <%- profil.city %> disabled>
+               <input name="gender" class="profilBoxGrey" value = <%- profil.gender %> disabled>
+           </div> 
        </div>
    </div>
    <%- include('../layouts/footer/footerManager'); -%>

@@ -10,10 +10,11 @@ const DoctorServices = require('../services/DoctorServices')
 const PharmacistServices = require('../services/PharmacistServices')
 
 router.get('/creationCompteRapide', async (req, res) => {
-    const email = "VotreEmail"
-    const password = "VotreMotDePasse"
+    const email = "votreEmail"
+    const password = "votreMdp"
     const hashPassword = await bcrypt.hash(password, 10)
     AdminServices.addAdmin(email, hashPassword)
+    return res.redirect('/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/connexion')
 })
 
 /**

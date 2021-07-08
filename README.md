@@ -84,7 +84,11 @@ Clonez le projet via la commande : "git clone https://github.com/NathanMana/OrdO
 Pour installer nos bases de données, importez les fichiers .sql (AdminDBBCreation.sql et databaseCreation.sql) dans votre gestionnaire de base de données (workbench ou phpmyadmin par exemple) et exécutez les scripts. Voilà, vos bases de données sont correctement installées.
 
 ## Configurer la connexion à la base de données
-Pour établir le lien à la base de données, modifiez le nom d'utilisateur et le mot de passe du fichier OrdON/services/DatabaseConnetion.js
+Pour établir le lien à la base de données, modifiez le nom d'utilisateur et le mot de passe du fichier OrdON/services/DatabaseConnection.js
+
+## Modifier le module pathToProofFolder.js
+Ce fichier permet de stocker les preuves de profession envoyées par les professionnels lors de l'inscription. Vous devez changer la seule ligne 
+présente dans ce fichier pour qu'elle pointe vers le dossier /src/proof du projet.
 
 ## Installation des dépendances et lancement de la solution
 Vous êtes actuellement à la racine du projet:
@@ -103,7 +107,14 @@ Vous pouvez maintenant lancer le projet avec la commande "npm run start"
 Pour valider les comptes professionnels vous devez avoir un compte administrateur.
 Décommentez la première route présente dans le fichier /controller/adminController.js (ligne 16)
 Remplacez le mail et le mot de passe par vos informations personelles.
-Allez sur cette route une fois, et votre compte sera créé.
+Allez sur cette route une fois, et votre compte sera créé (http://localhost:8000/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/creationCompteRapide)
 Vous pouvez la commenter ensuite pour des questions de sécurité
+Vous pouvez valider les comptes des professionnels en attente sur l'espace http://localhost:8000/administration-eazhgzje54456645ghaeza-backoffice-ljdfskdf4545jsd-security/
 
+## Récupération des emails envoyés
+Pour le développement, tous les emails envoyés sont récupérables sur la plateforme https://ethereal.email/
+Il vous suffit de vous connecter avec les identifiants présents dans le fichier /externalsAPI/NodeMailer.js
+A savoir :
+email = sincere.pollich@ethereal.email
+mot de passe = bxrBTrQcJd2Zd3SA3F
 

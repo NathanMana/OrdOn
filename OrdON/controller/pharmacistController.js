@@ -116,7 +116,7 @@ router.post('/inscription', async (req, res) => {
     
         const hashPassword = await bcrypt.hash(password, 10)
         let pharmacist = new Pharmacist(name, firstName, email, hashPassword, city, address, zipcode, gender)
-        //pharmacist.setProofPath(files.fileUpload.name)
+        pharmacist.setProofPath(files.fileUpload.name)
         pharmacist = await PharmacistServices.addPharmacist(pharmacist)
         
         nodemailer(
